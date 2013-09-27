@@ -21,19 +21,27 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 #include "hostcom.h"
 #include "../lcd.h"
 #include "../types.h"
+#include "../macros.h"
 
 #define BUF_SIZE    64
 
+#define LCD_READY    "GPMCU ready"
+#define MSG_READY    "GPMCU ready\n"
+#define MSG_RECVD    "Received: "
+
+#include <string.h> // debug
+
 int main(void)
 {
-	lcd_setup();
 	hostcom_setup();
+	lcd_setup();
 	
 	// Set up port pin RB0 the LED D3
 	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
 	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
 	
-	lcd_write("GPMCU ready");
+	lcd_write(LCD_READY);
+	hostcom_send(MSG_READY, STRLEN(MSG_READY));
 	
 	while (1)
 	{
@@ -46,6 +54,8 @@ int main(void)
 		{
 			buf[copied - 1] = '\0';
 			lcd_write((char *) buf);
+			hostcom_send(MSG_RECVD, STRLEN(MSG_RECVD));
+			hostcom_send((char *) buf, strlen((char *) buf));
 		}
 	}
 	
