@@ -27,9 +27,6 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
 #define LCD_READY    "GPMCU ready"
 #define MSG_READY    "GPMCU ready\n"
-#define MSG_RECVD    "Received: "
-
-#include <string.h> // debug
 
 int main(void)
 {
@@ -46,7 +43,7 @@ int main(void)
 	while (1)
 	{
 		bool_t full;
-		size_t copied;
+		int copied;
 		byte_t buf[BUF_SIZE];
 		
 		copied = hostcom_read_cmd(buf, BUF_SIZE, &full);
@@ -54,8 +51,8 @@ int main(void)
 		{
 			buf[copied - 1] = '\0';
 			lcd_write((char *) buf);
-			hostcom_send(MSG_RECVD, STRLEN(MSG_RECVD));
-			hostcom_send((char *) buf, strlen((char *) buf));
+			buf[copied - 1] = '\n';
+			hostcom_send((char *) buf, copied);
 		}
 	}
 	
