@@ -21,4 +21,9 @@
  */
 void hostcom_setup(void);
 
+/**
+ * UART2 receive ISR.
+ */
+void __attribute__((__interrupt__)) _U2RXInterrupt(void);
+
 #endif

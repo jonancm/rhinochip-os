@@ -1,5 +1,15 @@
 #include "hostcom.h"
 
+#include "../datastruc/buffer.h"
+#include "../hostcmdset/hostcmdset.h"
+
+/**
+ * Receive buffer for the communication with the host PC (using UART2).
+ */
+static buffer_t hostcom_rcv_buf;
+
+static short int first_cmdend = -1;
+
 void hostcom_setup(void)
 {
 	// Set up the receive buffer
@@ -31,4 +41,29 @@ void hostcom_setup(void)
 	
 	// Enable UART2 transmitter
 	U2STAbits.UTXEN = 1;
+}
+
+void __attribute__((__interrupt__)) _U2RXInterrupt(void)
+{
+	int i = 0;
+	
+	while (hostcom_rcv_buf.used < hostcom_rcv_buf.size && i++ < 4)
+	{
+		// Read the received byte from the UART2 receive register
+		hostcom_rcv_buf.data[hostcom_rcv_buf.used] = U2RXREG;
+		
+		// If this byte is a command separator and no command separator has been
+		// found previously, remember its position in the buffer
+		if (first_cmdend < 0 &&
+		    hostcom_rcv_buf.data[hostcom_rcv_buf.used] == *CMDEND)
+		{
+			first_cmdend = hostcom_rcv_buf.used;
+		}
+		
+		// Increment the count of elements stored in the buffer
+		++hostcom_rcv_buf.used;
+	}
+	
+	// Clear the UART2 receiver interrupt flag
+	IFS1bits.U2RXIF = 0;
 }
