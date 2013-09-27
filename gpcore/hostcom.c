@@ -1,7 +1,7 @@
 #include "hostcom.h"
 
 #include "../datastruc/buffer.h"
-#include "../hostcmdset/hostcmdset.h"
+#include "../hostcmdset.h"
 
 /**
  * Receive buffer for the communication with the host PC (using UART2).
