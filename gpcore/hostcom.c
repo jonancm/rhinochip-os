@@ -35,9 +35,8 @@ void hostcom_setup(void)
 	// Disable UART2 transmitter ISR
 	IEC1bits.U2TXIE = 0;
 	
-	// Set up UART2 receiver to interrupt when a character is transferred to the
-	// transmit buffer and, as a result, the transmit buffer becomes full.
-	U2STAbits.URXISEL = 3;
+	// Set up UART2 receiver to interrupt when one character is received
+	U2STAbits.URXISEL = 0;
 	
 	// Enable UART2 transmitter
 	U2STAbits.UTXEN = 1;
@@ -45,9 +44,9 @@ void hostcom_setup(void)
 
 void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 {
-	int i = 0;
-	
-	for (i = 0; i < 4 && hostcom_rcv_buf.used < hostcom_rcv_buf.size; ++i)
+	// While UART2 receive buffer has data and the 'hostcom_rcv_buf' has free
+	// space...
+	while (U2STAbits.URXDA && hostcom_rcv_buf.used < hostcom_rcv_buf.size)
 	{
 		// Read the received byte from the UART2 receive register
 		hostcom_rcv_buf.data[hostcom_rcv_buf.used] = U2RXREG;
