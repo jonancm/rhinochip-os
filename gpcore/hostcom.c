@@ -86,7 +86,7 @@ size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full)
 	// Shift the data in the buffer to remove already copied data
 	if (copied)
 	{
-		for (i = 0, j = copied; j < hostcom_rcv_buf.size; ++i, ++j)
+		for (i = 0, j = copied; j < hostcom_rcv_buf.used; ++i, ++j)
 			hostcom_rcv_buf.data[i] = hostcom_rcv_buf.data[j];
 		hostcom_rcv_buf.used -= copied;
 	}
