@@ -17,7 +17,7 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   //Enable MCLR reset pin and turn off the
                                 //power-up timers.
 _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
-#include "delay.h"
+#include "../delay.h"
 #include "hostcom.h"
 #include "../lcd.h"
 
