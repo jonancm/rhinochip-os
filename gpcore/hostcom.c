@@ -87,6 +87,10 @@ int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
 	// for the next command end marker
 	if (copied)
 	{
+		// Disable UART2 receive interrupt to prevent the ISR from messing
+		// around with 'hostcom_rcv_buf.used'
+		IEC1bits.U2RXIE = 0;
+		
 		for (i = 0, j = copied; j < hostcom_rcv_buf.used; ++i, ++j)
 			hostcom_rcv_buf.data[i] = hostcom_rcv_buf.data[j];
 		hostcom_rcv_buf.used -= copied;
@@ -98,6 +102,9 @@ int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
 			first_cmdend = i;
 		else
 			first_cmdend = -1;
+		
+		// Enable UART2 receive interrupt again
+		IEC1bits.U2RXIE = 1;
 	}
 	
 	return copied;
