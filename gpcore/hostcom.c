@@ -47,7 +47,7 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 {
 	int i = 0;
 	
-	while (hostcom_rcv_buf.used < hostcom_rcv_buf.size && i++ < 4)
+	for (i = 0; i < 4 && hostcom_rcv_buf.used < hostcom_rcv_buf.size; ++i)
 	{
 		// Read the received byte from the UART2 receive register
 		hostcom_rcv_buf.data[hostcom_rcv_buf.used] = U2RXREG;
