@@ -67,3 +67,29 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 	// Clear the UART2 receiver interrupt flag
 	IFS1bits.U2RXIF = 0;
 }
+
+size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full)
+{
+	size_t copied;
+	size_t i, j;
+	
+	// Copy received data to the user's buffer
+	for (copied = 0; copied <= first_cmdend && copied < size; ++copied)
+		buf[copied] = hostcom_rcv_buf.data[copied];
+	
+	// Set the full flag accordingly
+	if (copied < first_cmdend)
+		*full = false;
+	else
+		*full = true;
+	
+	// Shift the data in the buffer to remove already copied data
+	if (copied)
+	{
+		for (i = 0, j = copied; j < hostcom_rcv_buf.size; ++i, ++j)
+			hostcom_rcv_buf.data[i] = hostcom_rcv_buf.data[j];
+		hostcom_rcv_buf.used -= copied;
+	}
+	
+	return copied;
+}

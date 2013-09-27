@@ -28,4 +28,21 @@ void hostcom_setup(void);
  */
 void __attribute__((__interrupt__)) _U2RXInterrupt(void);
 
+/**
+ * Copy the first fully received host command from the receive buffer to the
+ * user's buffer. If no host command has been fully received yet, don't copy
+ * anything. If a host command has been fully received, it will be copied
+ * alongside with the command separator.
+ * 
+ * @param buf     Buffer to copy the command to.
+ * @param size    Size of the buffer.
+ * @param full    Output flag set to true if the command has been fully copied
+ *                (i.e. the buffer had enough free space) and set to false if
+ *                the command could not be fully copied to the buffer (i.e. the
+ *                buffer didn't have enough free space).
+ * 
+ * @returns       Amount of bytes copied.
+ */
+size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full);
+
 #endif
