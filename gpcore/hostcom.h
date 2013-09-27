@@ -16,6 +16,8 @@
                                                 //from dsPIC30F Family
                                                 //Reference Manual
 
+#include "../types.h"
+
 /**
  * Set up the UART2 to be used to communicate with the host PC.
  */
