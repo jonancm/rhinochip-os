@@ -8,7 +8,7 @@
  */
 static buffer_t hostcom_rcv_buf;
 
-static short int first_cmdend = -1;
+static int first_cmdend = -1;
 
 void hostcom_setup(void)
 {
@@ -68,10 +68,10 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 	IFS1bits.U2RXIF = 0;
 }
 
-size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full)
+int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
 {
-	size_t copied;
-	size_t i, j;
+	int copied;
+	int i, j;
 	
 	// Copy received data to the user's buffer
 	for (copied = 0; copied <= first_cmdend && copied < size; ++copied)

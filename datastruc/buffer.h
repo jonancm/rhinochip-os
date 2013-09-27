@@ -10,8 +10,8 @@
  */
 typedef struct {
 	byte_t    data[BUFFER_SIZE];
-	size_t    size;
-	size_t    used;
+	int       size;
+	int       used;
 } buffer_t;
 
 /**

@@ -43,7 +43,7 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void);
  * 
  * @returns       Amount of bytes copied.
  */
-size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full);
+int hostcom_read_cmd(byte_t buf[], int size, bool_t *full);
 
 int hostcom_send(const char * const data, const int size);
 
