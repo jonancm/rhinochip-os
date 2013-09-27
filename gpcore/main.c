@@ -18,9 +18,12 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   //Enable MCLR reset pin and turn off the
 _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
 #include "delay.h"
+#include "hostcom.h"
 
 int main(void)
 {
+	hostcom_setup();
+	
 	// Set up port pin RB0 the LED D3
 	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
 	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
