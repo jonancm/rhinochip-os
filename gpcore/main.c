@@ -17,18 +17,43 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   //Enable MCLR reset pin and turn off the
                                 //power-up timers.
 _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
-#include "delay.h"
+#include "../delay.h"
+#include "hostcom.h"
+#include "../lcd.h"
+#include "../types.h"
+#include "../macros.h"
+
+#define BUF_SIZE    64
+
+#define LCD_READY    "GPMCU ready"
+#define MSG_READY    "GPMCU ready\n"
 
 int main(void)
 {
+	hostcom_setup();
+	lcd_setup();
+	
 	// Set up port pin RB0 the LED D3
 	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
 	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
 	
+	lcd_write(LCD_READY);
+	hostcom_send(MSG_READY, STRLEN(MSG_READY));
+	
 	while (1)
 	{
-		LATBbits.LATB0 = ~LATBbits.LATB0;
-		Delay5ms(100);
+		bool_t full;
+		int copied;
+		byte_t buf[BUF_SIZE];
+		
+		copied = hostcom_read_cmd(buf, BUF_SIZE, &full);
+		if (copied && full)
+		{
+			buf[copied - 1] = '\0';
+			lcd_write((char *) buf);
+			buf[copied - 1] = '\n';
+			hostcom_send((char *) buf, copied);
+		}
 	}
 	
 	return 0;
