@@ -78,10 +78,10 @@ size_t hostcom_read_cmd(byte_t buf[], size_t size, bool_t *full)
 		buf[copied] = hostcom_rcv_buf.data[copied];
 	
 	// Set the full flag accordingly
-	if (copied < first_cmdend)
-		*full = false;
-	else
+	if (copied > first_cmdend)
 		*full = true;
+	else
+		*full = false;
 	
 	// Shift the data in the buffer to remove already copied data
 	if (copied)

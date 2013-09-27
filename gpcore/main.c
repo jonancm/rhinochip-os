@@ -50,7 +50,7 @@ int main(void)
 		byte_t buf[BUF_SIZE];
 		
 		copied = hostcom_read_cmd(buf, BUF_SIZE, &full);
-		if (full)
+		if (copied && full)
 		{
 			buf[copied - 1] = '\0';
 			lcd_write((char *) buf);
