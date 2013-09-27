@@ -19,9 +19,11 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
 #include "delay.h"
 #include "hostcom.h"
+#include "../lcd.h"
 
 int main(void)
 {
+	lcd_setup();
 	hostcom_setup();
 	
 	// Set up port pin RB0 the LED D3
