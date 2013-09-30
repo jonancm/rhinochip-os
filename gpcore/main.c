@@ -22,6 +22,7 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 #include "../lcd.h"
 #include "../types.h"
 #include "../macros.h"
+#include "shell.h"
 
 #define BUF_SIZE    64
 
@@ -40,21 +41,7 @@ int main(void)
 	lcd_write(LCD_READY);
 	hostcom_send(MSG_READY, STRLEN(MSG_READY));
 	
-	while (1)
-	{
-		bool_t full;
-		int copied;
-		byte_t buf[BUF_SIZE];
-		
-		copied = hostcom_read_cmd(buf, BUF_SIZE, &full);
-		if (copied && full)
-		{
-			buf[copied - 1] = '\0';
-			lcd_write((char *) buf);
-			buf[copied - 1] = '\n';
-			hostcom_send((char *) buf, copied);
-		}
-	}
+	shell_run_interactive();
 	
 	return 0;
 }
