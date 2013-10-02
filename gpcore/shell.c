@@ -91,6 +91,101 @@ int letterparam(void);
 int str(void);
 void interpret_cmd(void);
 
+void hostcmd_sa(void);
+void hostcmd_sc(void);
+void hostcmd_sd(void);
+void hostcmd_se(void);
+void hostcmd_sm(void);
+void hostcmd_sp(void);
+void hostcmd_sr(void);
+void hostcmd_ss(void);
+void hostcmd_st(void);
+void hostcmd_su(void);
+void hostcmd_sv(void);
+void hostcmd_sx(void);
+void hostcmd_sz(void);
+void hostcmd_cc(void);
+void hostcmd_cg(void);
+void hostcmd_cm(void);
+void hostcmd_cr(void);
+void hostcmd_ar(void);
+void hostcmd_dr(void);
+void hostcmd_gs(void);
+void hostcmd_hr(void);
+void hostcmd_pa(void);
+void hostcmd_pw(void);
+void hostcmd_pz(void);
+void hostcmd_rl(void);
+void hostcmd_ua(void);
+void hostcmd_uh(void);
+void hostcmd_uo(void);
+void hostcmd_ut(void);
+void hostcmd_uy(void);
+void hostcmd_va(void);
+void hostcmd_vr(void);
+void hostcmd_vx(void);
+void hostcmd_xr(void);
+void hostcmd_ac(void);
+void hostcmd_as(void);
+void hostcmd_ds(void);
+void hostcmd_gc(void);
+void hostcmd_go(void);
+void hostcmd_ha(void);
+void hostcmd_hg(void);
+void hostcmd_hh(void);
+void hostcmd_hl(void);
+void hostcmd_hs(void);
+void hostcmd_ma(void);
+void hostcmd_mc(void);
+void hostcmd_mi(void);
+void hostcmd_mm(void);
+void hostcmd_ms(void);
+void hostcmd_mx(void);
+void hostcmd_pd(void);
+void hostcmd_pr(void);
+void hostcmd_px(void);
+void hostcmd_py(void);
+void hostcmd_vg(void);
+void hostcmd_vs(void);
+void hostcmd_xa(void);
+void hostcmd_xh(void);
+void hostcmd_xo(void);
+void hostcmd_xs(void);
+void hostcmd_xt(void);
+void hostcmd_xy(void);
+void hostcmd_fr(void);
+void hostcmd_ft(void);
+void hostcmd_fx(void);
+void hostcmd_ta(void);
+void hostcmd_tc(void);
+void hostcmd_td(void);
+void hostcmd_te(void);
+void hostcmd_th(void);
+void hostcmd_tx(void);
+void hostcmd_tk(void);
+void hostcmd_tl(void);
+void hostcmd_tr(void);
+void hostcmd_ts(void);
+void hostcmd_tt(void);
+void hostcmd_ka(void);
+void hostcmd_kb(void);
+void hostcmd_kc(void);
+void hostcmd_ra(void);
+void hostcmd_rb(void);
+void hostcmd_rc(void);
+void hostcmd_kr(void);
+void hostcmd_ks(void);
+void hostcmd_kx(void);
+void hostcmd_ib(void);
+void hostcmd_ip(void);
+void hostcmd_ix(void);
+void hostcmd_ob(void);
+void hostcmd_op(void);
+void hostcmd_or(void);
+void hostcmd_ot(void);
+void hostcmd_wa(void);
+void hostcmd_wi(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -375,13 +470,13 @@ void interpret_cmd(void)
 			{
 				// AR: Read System Acceleration
 				case 'R':
-					break;
+					hostcmd_ar(); break;
 				// AC: Clear Actual Position
 				case 'C':
-					break;
+					hostcmd_ac(); break;
 				// AS: Set System Acceleration
 				case 'S':
-					break;
+					hostcmd_as(); break;
 				default:
 					break;
 			}
@@ -391,16 +486,16 @@ void interpret_cmd(void)
 			{
 				// CC: Set Coordinate Position
 				case 'C':
-					break;
+					hostcmd_cc(); break;
 				// CG: Enable/Disable Gripper Mode
 				case 'G':
-					break;
+					hostcmd_cg(); break;
 				// CM: Set Motor Mode
 				case 'M':
-					break;
+					hostcmd_cm(); break;
 				// CR: Set Robot Type
 				case 'R':
-					break;
+					hostcmd_cr(); break;
 				default:
 					break;
 			}
@@ -410,10 +505,10 @@ void interpret_cmd(void)
 			{
 				// DR: Read Motor PWM Level and Direction
 				case 'R':
-					break;
+					hostcmd_dr(); break;
 				// DS: Set PWM Level and Direction
 				case 'S':
-					break;
+					hostcmd_ds(); break;
 				default:
 					break;
 			}
@@ -423,13 +518,13 @@ void interpret_cmd(void)
 			{
 				// FR: Receive Teach Pendant File from Host
 				case 'R':
-					break;
+					hostcmd_fr(); break;
 				// FT: Transmit Teach Pendant File to Host
 				case 'T':
-					break;
+					hostcmd_ft(); break;
 				// FX: Execute Teach Pendant Program
 				case 'X':
-					break;
+					hostcmd_fx(); break;
 				default:
 					break;
 			}
@@ -439,13 +534,13 @@ void interpret_cmd(void)
 			{
 				// GS: Read Gripper Status
 				case 'S':
-					break;
+					hostcmd_gs(); break;
 				// GC: Close Gripper
 				case 'C':
-					break;
+					hostcmd_gc(); break;
 				// GO: Open Gripper
 				case 'O':
-					break;
+					hostcmd_go(); break;
 				default:
 					break;
 			}
@@ -455,22 +550,22 @@ void interpret_cmd(void)
 			{
 				// HR: Read Soft Home Position
 				case 'R':
-					break;
+					hostcmd_hr(); break;
 				// HA: Got To the Hard Home Position
 				case 'A':
-					break;
+					hostcmd_ha(); break;
 				// HG: Go To the Soft Home Position
 				case 'G':
-					break;
+					hostcmd_hg(); break;
 				// HH: Execute a Hard Home
 				case 'H':
-					break;
+					hostcmd_hh(); break;
 				// HL: Hard Home on Limit Switch
 				case 'L':
-					break;
+					hostcmd_hl(); break;
 				// HS: Set Soft Home
 				case 'S':
-					break;
+					hostcmd_hs(); break;
 				default:
 					break;
 			}
@@ -480,13 +575,13 @@ void interpret_cmd(void)
 			{
 				// IB: Read Input or Swicht Bit
 				case 'B':
-					break;
+					hostcmd_ib(); break;
 				// IP: Read Input Port
 				case 'P':
-					break;
+					hostcmd_ip(); break;
 				// IX: Read Switch Port
 				case 'X':
-					break;
+					hostcmd_ix(); break;
 				default:
 					break;
 			}
@@ -496,22 +591,22 @@ void interpret_cmd(void)
 			{
 				// KA: Set Proportional Gain
 				case 'A':
-					break;
+					hostcmd_ka(); break;
 				// KB: Set Differential Gain
 				case 'B':
-					break;
+					hostcmd_kb(); break;
 				// KC: Set Integral Gain
 				case 'C':
-					break;
+					hostcmd_kc(); break;
 				// KR: Restore User Gains from EEPROM
 				case 'R':
-					break;
+					hostcmd_kr(); break;
 				// KS: Store User Gains to EEPROM
 				case 'S':
-					break;
+					hostcmd_ks(); break;
 				// KX: Restore Factory Gains
 				case 'X':
-					break;
+					hostcmd_kx(); break;
 				default:
 					break;
 			}
@@ -521,22 +616,22 @@ void interpret_cmd(void)
 			{
 				// MA: Stop All Motors and Aux Ports
 				case 'A':
-					break;
+					hostcmd_ma(); break;
 				// MC: Start Coordinated Move
 				case 'C':
-					break;
+					hostcmd_mc(); break;
 				// MI: Start All Motors, Immediate Mode
 				case 'I':
-					break;
+					hostcmd_mi(); break;
 				// MM: Stop Single Motor
 				case 'M':
-					break;
+					hostcmd_mm(); break;
 				// MS: Start Single Motor
 				case 'S':
-					break;
+					hostcmd_ms(); break;
 				// MX: Start an XYZ Move
 				case 'X':
-					break;
+					hostcmd_mx(); break;
 				default:
 					break;
 			}
@@ -546,16 +641,16 @@ void interpret_cmd(void)
 			{
 				// OB: Set Output Bit
 				case 'B':
-					break;
+					hostcmd_ob(); break;
 				// OP: Set Output Port
 				case 'P':
-					break;
+					hostcmd_op(); break;
 				// OR: Read Output Port
 				case 'R':
-					break;
+					hostcmd_or(); break;
 				// OT: Toggle Output Bit
 				case 'T':
-					break;
+					hostcmd_ot(); break;
 				default:
 					break;
 			}
@@ -565,25 +660,25 @@ void interpret_cmd(void)
 			{
 				// PA: Read Actual Position
 				case 'A':
-					break;
+					hostcmd_pa(); break;
 				// PW: Read Destination Position
 				case 'W':
-					break;
+					hostcmd_pw(); break;
 				// PZ: Read XYZ Destination Position
 				case 'Z':
-					break;
+					hostcmd_pz(); break;
 				// PD: Set Destination Position, Absolute
 				case 'D':
-					break;
+					hostcmd_pd(); break;
 				// PR: Set Destination Position, Relative
 				case 'R':
-					break;
+					hostcmd_pr(); break;
 				// PX: Set XYZ Destination, Absolute
 				case 'X':
-					break;
+					hostcmd_px(); break;
 				// PY Set XYZ Destination, Relative
 				case 'Y':
-					break;
+					hostcmd_py(); break;
 				default:
 					break;
 			}
@@ -593,16 +688,16 @@ void interpret_cmd(void)
 			{
 				// RL: Read Limit Switches
 				case 'L':
-					break;
+					hostcmd_rl(); break;
 				// RA: Read Proportional Gain
 				case 'A':
-					break;
+					hostcmd_ra(); break;
 				// RB: Read Differential Gain
 				case 'B':
-					break;
+					hostcmd_rb(); break;
 				// RC: Read Integral Gain
 				case 'C':
-					break;
+					hostcmd_rc(); break;
 				default:
 					break;
 			}
@@ -612,43 +707,43 @@ void interpret_cmd(void)
 			{
 				// SA: Read Motor Status
 				case 'A':
-					break;
+					hostcmd_sa(); break;
 				// SC: Read System Configuration
 				case 'C':
-					break;
+					hostcmd_sc(); break;
 				// SD: Stop/Start Delay Timer
 				case 'D':
-					break;
+					hostcmd_sd(); break;
 				// SE: Read Host Error Stack
 				case 'E':
-					break;
+					hostcmd_se(); break;
 				// SM: Read Motor Mode
 				case 'M':
-					break;
+					hostcmd_sm(); break;
 				// SP: Read Teach Pendant Error Byte
 				case 'P':
-					break;
+					hostcmd_sp(); break;
 				// SR: Reset Motor Current Limit Circuitry
 				case 'R':
-					break;
+					hostcmd_sr(); break;
 				// SS: Read System Status
 				case 'S':
-					break;
+					hostcmd_ss(); break;
 				// ST: Execute Diagnostics
 				case 'T':
-					break;
+					hostcmd_st(); break;
 				// SU: Read Usage Time
 				case 'U':
-					break;
+					hostcmd_su(); break;
 				// SV: Read Version and I.D. Number
 				case 'V':
-					break;
+					hostcmd_sv(); break;
 				// SX: Execute Diagnostics and Return Results
 				case 'X':
-					break;
+					hostcmd_sx(); break;
 				// SZ: Read the Delay Timer Value
 				case 'Z':
-					break;
+					hostcmd_sz(); break;
 				default:
 					break;
 			}
@@ -658,37 +753,37 @@ void interpret_cmd(void)
 			{
 				// TA: Abort/Terminate Teach Pendant Program
 				case 'A':
-					break;
+					hostcmd_ta(); break;
 				// TC: Clear Teach Pendant Display
 				case 'C':
-					break;
+					hostcmd_tc(); break;
 				// TD: Print to Teach Pendant Display
 				case 'D':
-					break;
+					hostcmd_td(); break;
 				// TE: Enable/Disable Teach Pendant to Move Motors
 				case 'E':
-					break;
+					hostcmd_te(); break;
 				// TH: Give Control to Host
 				case 'H':
-					break;
+					hostcmd_th(); break;
 				// TX: Give Control to Teach Pendant
 				case 'X':
-					break;
+					hostcmd_tx(); break;
 				// TK: Return to Host the Next Key Code
 				case 'K':
-					break;
+					hostcmd_tk(); break;
 				// TL: Return to Host the Last Key Code
 				case 'L':
-					break;
+					hostcmd_tl(); break;
 				// TR: Reset the Teach Pendant
 				case 'R':
-					break;
+					hostcmd_tr(); break;
 				// TS: Set Teach Pendant Display Cursor
 				case 'S':
-					break;
+					hostcmd_ts(); break;
 				// TT: Execute Teach Pendant Diagnostics and Return Results
 				case 'T':
-					break;
+					hostcmd_tt(); break;
 				default:
 					break;
 			}
@@ -698,19 +793,19 @@ void interpret_cmd(void)
 			{
 				// UA: Read XYZ Rotation Angle
 				case 'A':
-					break;
+					hostcmd_ua(); break;
 				// UH: Read XYZ Home Position
 				case 'H':
-					break;
+					hostcmd_uh(); break;
 				// UO: Read XYZ Offset
 				case 'O':
-					break;
+					hostcmd_uo(); break;
 				// UT: Read Tool Length
 				case 'T':
-					break;
+					hostcmd_ut(); break;
 				// UY: Read Height of Elbow Rotation Axis
 				case 'Y':
-					break;
+					hostcmd_uy(); break;
 				default:
 					break;
 			}
@@ -720,19 +815,19 @@ void interpret_cmd(void)
 			{
 				// VA: Read Motor Actual Velocity
 				case 'A':
-					break;
+					hostcmd_va(); break;
 				// VR: Read Motor Desired Velocity
 				case 'R':
-					break;
+					hostcmd_vr(); break;
 				// VX: Read System Velocity
 				case 'X':
-					break;
+					hostcmd_vx(); break;
 				// VG: Set System Velocity
 				case 'G':
-					break;
+					hostcmd_vg(); break;
 				// VS: Set Motor Velocity
 				case 'S':
-					break;
+					hostcmd_vs(); break;
 				default:
 					break;
 			}
@@ -742,10 +837,10 @@ void interpret_cmd(void)
 			{
 				// WA: Abort all Waits
 				case 'A':
-					break;
+					hostcmd_wa(); break;
 				// WI: Wait on Input or Switch
 				case 'I':
-					break;
+					hostcmd_wi(); break;
 				default:
 					break;
 			}
@@ -755,25 +850,25 @@ void interpret_cmd(void)
 			{
 				// XR: Read Auxiliary Port Level and Direction
 				case 'R':
-					break;
+					hostcmd_xr(); break;
 				// XA: Set XYZ Rotation Angle
 				case 'A':
-					break;
+					hostcmd_xa(); break;
 				// XH: Set XYZ Home Position
 				case 'H':
-					break;
+					hostcmd_xh(); break;
 				// XO: Set XYZ Offset
 				case 'O':
-					break;
+					hostcmd_xo(); break;
 				// XS: Set Aux Port Level and Direction
 				case 'S':
-					break;
+					hostcmd_xs(); break;
 				// XT: Set Tool Length
 				case 'T':
-					break;
+					hostcmd_xt(); break;
 				// XY: Set Height of Elbow Rotation Axis
 				case 'Y':
-					break;
+					hostcmd_xy(); break;
 				default:
 					break;
 			}
@@ -781,4 +876,384 @@ void interpret_cmd(void)
 		default:
 			break;
 	}
+}
+
+/******************************************************************************
+ *                    HOST COMMAND FUNCTION IMPLEMENTATION                    *
+ ******************************************************************************/
+
+void hostcmd_sa(void)
+{
+}
+
+void hostcmd_sc(void)
+{
+}
+
+void hostcmd_sd(void)
+{
+}
+
+void hostcmd_se(void)
+{
+}
+
+void hostcmd_sm(void)
+{
+}
+
+void hostcmd_sp(void)
+{
+}
+
+void hostcmd_sr(void)
+{
+}
+
+void hostcmd_ss(void)
+{
+}
+
+void hostcmd_st(void)
+{
+}
+
+void hostcmd_su(void)
+{
+}
+
+void hostcmd_sv(void)
+{
+}
+
+void hostcmd_sx(void)
+{
+}
+
+void hostcmd_sz(void)
+{
+}
+
+void hostcmd_cc(void)
+{
+}
+
+void hostcmd_cg(void)
+{
+}
+
+void hostcmd_cm(void)
+{
+}
+
+void hostcmd_cr(void)
+{
+}
+
+void hostcmd_ar(void)
+{
+}
+
+void hostcmd_dr(void)
+{
+}
+
+void hostcmd_gs(void)
+{
+}
+
+void hostcmd_hr(void)
+{
+}
+
+void hostcmd_pa(void)
+{
+}
+
+void hostcmd_pw(void)
+{
+}
+
+void hostcmd_pz(void)
+{
+}
+
+void hostcmd_rl(void)
+{
+}
+
+void hostcmd_ua(void)
+{
+}
+
+void hostcmd_uh(void)
+{
+}
+
+void hostcmd_uo(void)
+{
+}
+
+void hostcmd_ut(void)
+{
+}
+
+void hostcmd_uy(void)
+{
+}
+
+void hostcmd_va(void)
+{
+}
+
+void hostcmd_vr(void)
+{
+}
+
+void hostcmd_vx(void)
+{
+}
+
+void hostcmd_xr(void)
+{
+}
+
+void hostcmd_ac(void)
+{
+}
+
+void hostcmd_as(void)
+{
+}
+
+void hostcmd_ds(void)
+{
+}
+
+void hostcmd_gc(void)
+{
+}
+
+void hostcmd_go(void)
+{
+}
+
+void hostcmd_ha(void)
+{
+}
+
+void hostcmd_hg(void)
+{
+}
+
+void hostcmd_hh(void)
+{
+}
+
+void hostcmd_hl(void)
+{
+}
+
+void hostcmd_hs(void)
+{
+}
+
+void hostcmd_ma(void)
+{
+}
+
+void hostcmd_mc(void)
+{
+}
+
+void hostcmd_mi(void)
+{
+}
+
+void hostcmd_mm(void)
+{
+}
+
+void hostcmd_ms(void)
+{
+}
+
+void hostcmd_mx(void)
+{
+}
+
+void hostcmd_pd(void)
+{
+}
+
+void hostcmd_pr(void)
+{
+}
+
+void hostcmd_px(void)
+{
+}
+
+void hostcmd_py(void)
+{
+}
+
+void hostcmd_vg(void)
+{
+}
+
+void hostcmd_vs(void)
+{
+}
+
+void hostcmd_xa(void)
+{
+}
+
+void hostcmd_xh(void)
+{
+}
+
+void hostcmd_xo(void)
+{
+}
+
+void hostcmd_xs(void)
+{
+}
+
+void hostcmd_xt(void)
+{
+}
+
+void hostcmd_xy(void)
+{
+}
+
+void hostcmd_fr(void)
+{
+}
+
+void hostcmd_ft(void)
+{
+}
+
+void hostcmd_fx(void)
+{
+}
+
+void hostcmd_ta(void)
+{
+}
+
+void hostcmd_tc(void)
+{
+}
+
+void hostcmd_td(void)
+{
+}
+
+void hostcmd_te(void)
+{
+}
+
+void hostcmd_th(void)
+{
+}
+
+void hostcmd_tx(void)
+{
+}
+
+void hostcmd_tk(void)
+{
+}
+
+void hostcmd_tl(void)
+{
+}
+
+void hostcmd_tr(void)
+{
+}
+
+void hostcmd_ts(void)
+{
+}
+
+void hostcmd_tt(void)
+{
+}
+
+void hostcmd_ka(void)
+{
+}
+
+void hostcmd_kb(void)
+{
+}
+
+void hostcmd_kc(void)
+{
+}
+
+void hostcmd_ra(void)
+{
+}
+
+void hostcmd_rb(void)
+{
+}
+
+void hostcmd_rc(void)
+{
+}
+
+void hostcmd_kr(void)
+{
+}
+
+void hostcmd_ks(void)
+{
+}
+
+void hostcmd_kx(void)
+{
+}
+
+void hostcmd_ib(void)
+{
+}
+
+void hostcmd_ip(void)
+{
+}
+
+void hostcmd_ix(void)
+{
+}
+
+void hostcmd_ob(void)
+{
+}
+
+void hostcmd_op(void)
+{
+}
+
+void hostcmd_or(void)
+{
+}
+
+void hostcmd_ot(void)
+{
+}
+
+void hostcmd_wa(void)
+{
+}
+
+void hostcmd_wi(void)
+{
 }
