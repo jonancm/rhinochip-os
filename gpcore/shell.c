@@ -292,18 +292,22 @@ void next_token(void)
 			
 			if (cmd_buf_pos < CMD_BUF_SIZE && cmd_buf[cmd_buf_pos] == '.')
 			{
+				int num_dec_digits; // number of decimal digits
+				
 				++cmd_buf_pos;
 				token_type = TOKEN_DEC;
 				token_value.decimal.int_part = token_value.integer.sign * token_value.integer.abs_value;
-			}
-			
-			for (; cmd_buf_pos < CMD_BUF_SIZE &&
-			       cmd_buf[cmd_buf_pos] >= '0' &&
-			       cmd_buf[cmd_buf_pos] <= '9';
-			     ++cmd_buf_pos)
-			{
-				token_value.decimal.dec_part = (token_value.decimal.dec_part * 10) +
-				                               (cmd_buf[cmd_buf_pos] - '0');
+				
+				for (num_dec_digits = 0;
+				     cmd_buf_pos < CMD_BUF_SIZE &&
+				     num_dec_digits < 2 &&
+				     cmd_buf[cmd_buf_pos] >= '0' &&
+				     cmd_buf[cmd_buf_pos] <= '9';
+				   ++cmd_buf_pos, ++num_dec_digits)
+				{
+					token_value.decimal.dec_part = (token_value.decimal.dec_part * 10) +
+					                               (cmd_buf[cmd_buf_pos] - '0');
+				}
 			}
 		}
 		// String literals
