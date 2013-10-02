@@ -117,13 +117,8 @@ void next_cmd(void)
 	bool_t full;
 	int copied;
 	
-	do {
-		copied = hostcom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
-	} while (!(copied && full));
-	// FIXME: if the command is not fully read, the data will be discarded from
-	// the buffer and lost forever and ever!
-	
-	cmd_buf[copied - 1] = '\0';
+	while (!hostcom_cmd_available());
+	copied = hostcom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
 }
 
 /**
