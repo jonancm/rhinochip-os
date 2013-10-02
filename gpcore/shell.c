@@ -327,6 +327,7 @@ void next_token(void)
 		{
 			int str_length;
 			token_type = TOKEN_STR;
+			++cmd_buf_pos; // consume the opening quote
 			for (str_length = 0;
 			     cmd_buf_pos < CMD_BUF_SIZE &&
 			     cmd_buf[cmd_buf_pos] != '"' &&
@@ -337,6 +338,7 @@ void next_token(void)
 				token_value.string.charv[str_length] = cmd_buf[cmd_buf_pos];
 			}
 			token_value.string.length = str_length;
+			++cmd_buf_pos;
 		}
 		// Line feed (end of command mark)
 		else if (cmd_buf[cmd_buf_pos] == *CMDEND)
