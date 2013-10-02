@@ -156,23 +156,29 @@ int instr(void)
 {
 	int retval = 0;
 	
-	cmd();
-	if (token_type == TOKEN_CMDEND) {}
-	else if (token_type == TOKEN_COMMA)
+	retval = cmd();
+	if (retval > -1) // if there has been no error parsing the command
 	{
-		next_token(); // Consume the comma and read the next token
-		param(&param1);
 		if (token_type == TOKEN_CMDEND) {}
 		else if (token_type == TOKEN_COMMA)
 		{
 			next_token(); // Consume the comma and read the next token
-			param(&param2);
+			retval = param(&param1);
+			if (retval > -1) // if there has been no error parsing the first parameter
+			{
+				if (token_type == TOKEN_CMDEND) {}
+				else if (token_type == TOKEN_COMMA)
+				{
+					next_token(); // Consume the comma and read the next token
+					retval = param(&param2);
+				}
+				else
+					retval = -1; // syntax error
+			}
 		}
 		else
 			retval = -1; // syntax error
 	}
-	else
-		retval = -1; // syntax error
 	
 	return retval;
 }
@@ -182,7 +188,7 @@ int instr(void)
  */
 int prog(void)
 {
-	int retval = 0;
+	int retval = -1;
 	return retval;
 }
 
@@ -205,12 +211,11 @@ int cmd(void)
 		else
 		{
 			// Syntax error
+			retval = -1;
 		}
 	}
 	else
-	{
-		// Syntax error?
-	}
+		retval = -1; // no command found
 	
 	return retval;
 }
