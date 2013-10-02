@@ -81,7 +81,7 @@ param_t param2;
 
 void parse_cmd(void);
 void next_cmd(void);
-void next_token(void);
+int next_token(void);
 int cmd(void);
 int instr(void);
 int prog(void);
@@ -251,8 +251,10 @@ int param(param_t *param_info)
  * Lexical parser: parses the characters from the input buffer to extract the
  * longest token that it can.
  */
-void next_token(void)
+int next_token(void)
 {
+	int retval = 0;
+	
 	if (cmd_buf_pos < CMD_BUF_SIZE)
 	{
 		// Uppercase letters
@@ -331,6 +333,7 @@ void next_token(void)
 			for (str_length = 0;
 			     cmd_buf_pos < CMD_BUF_SIZE &&
 			     cmd_buf[cmd_buf_pos] != '"' &&
+			     cmd_buf[cmd_buf_pos] != *CMDEND &&
 			     str_length < MAX_STR_LENGTH;
 			   ++cmd_buf_pos, ++str_length)
 			{
@@ -338,6 +341,12 @@ void next_token(void)
 				token_value.string.charv[str_length] = cmd_buf[cmd_buf_pos];
 			}
 			token_value.string.length = str_length;
+			
+			// Error: the string is too long or hasn't been terminated with a
+			// trailing quotation mark
+			if (cmd_buf_pos >= CMD_BUF_SIZE || cmd_buf[cmd_buf_pos] == *CMDEND)
+				retval = -1;
+			
 			++cmd_buf_pos;
 		}
 		// Line feed (end of command mark)
@@ -350,8 +359,11 @@ void next_token(void)
 		else
 		{
 			// error
+			retval = -1;
 		}
 	}
+	
+	return retval;
 }
 
 void interpret_cmd(void)
