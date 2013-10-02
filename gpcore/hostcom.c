@@ -119,3 +119,8 @@ int hostcom_send(const char * const data, const int size)
 	}
 	return sent;
 }
+
+bool_t hostcom_cmd_available(void)
+{
+	return first_cmdend > -1;
+}

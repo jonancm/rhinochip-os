@@ -47,4 +47,10 @@ int hostcom_read_cmd(byte_t buf[], int size, bool_t *full);
 
 int hostcom_send(const char * const data, const int size);
 
+/**
+ * Return true if a full command is available (i.e. a command end mark has been
+ * received).
+ */
+bool_t hostcom_cmd_available(void);
+
 #endif
