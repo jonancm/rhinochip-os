@@ -221,28 +221,21 @@ int param(param_t *param_info)
 {
 	int retval = 0;
 	
-	if (token_type == TOKEN_INT)
+	if (token_type != TOKEN_INT &&
+	    token_type != TOKEN_DEC &&
+	    token_type != TOKEN_LETTER &&
+	    token_type != TOKEN_STR)
 	{
-	}
-	else if (token_type == TOKEN_DEC)
-	{
-	}
-	else if (token_type == TOKEN_LETTER)
-	{
-	}
-	else if (token_type == TOKEN_STR)
-	{
+		// error
+		retval = -1;
 	}
 	else
 	{
-		// error
-		return -1;
+		param_info->present = true;
+		param_info->type = token_type;
+		param_info->value = token_value;
+		next_token();
 	}
-	
-	param_info->present = true;
-	param_info->type = token_type;
-	param_info->value = token_value;
-	next_token();
 	
 	return retval;
 }
