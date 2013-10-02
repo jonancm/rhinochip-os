@@ -9,9 +9,9 @@
  * Type definition for a linear buffer.
  */
 typedef struct {
-	byte_t    data[BUFFER_SIZE];
-	int       size;
-	int       used;
+	char    data[BUFFER_SIZE];
+	int     size;
+	int     used;
 } buffer_t;
 
 /**

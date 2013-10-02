@@ -67,7 +67,7 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 	IFS1bits.U2RXIF = 0;
 }
 
-int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
+int hostcom_read_cmd(char buf[], int size, bool_t *full)
 {
 	int copied;
 	int i, j;

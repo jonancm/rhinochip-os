@@ -50,7 +50,7 @@ typedef union {
  * Buffer where received commands are stored for the parser to read them.
  */
 #define CMD_BUF_SIZE    128
-byte_t cmd_buf[CMD_BUF_SIZE];
+char cmd_buf[CMD_BUF_SIZE];
 
 /**
  * Position in the command buffer where the lexical analyzer is parsing.
@@ -66,7 +66,7 @@ token_value_t    token_value;
  */
 bool_t interactive;
 
-byte_t cmd_name[2];
+char cmd_name[2];
 typedef struct {
 	bool_t           present; // whether the parameter has been specified or not
 	token_type_t     type;    // type of the parameter
