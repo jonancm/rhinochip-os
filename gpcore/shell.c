@@ -120,6 +120,7 @@ void next_cmd(void)
 	
 	while (!hostcom_cmd_available());
 	copied = hostcom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
+	cmd_buf_pos = 0;
 }
 
 /**
