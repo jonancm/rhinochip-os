@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "hostcom.h"
 #include "../types.h"
+#include "../hostcmdset.h"
 
 /**
  * Enumeration of all accepted token types
@@ -10,7 +11,7 @@ typedef enum {
 	TOKEN_INT, // integer number
 	TOKEN_DEC, // decimal number (fixed point number with two decimal positions)
 	TOKEN_STR, // string
-	TOKEN_LF, // line feed (command end mark)
+	TOKEN_CMDEND, // command end mark
 	TOKEN_COMMA // parameter separator
 } token_type_t;
 
@@ -156,12 +157,12 @@ int instr(void)
 	int retval = 0;
 	
 	cmd();
-	if (token_type == TOKEN_LF) {}
+	if (token_type == TOKEN_CMDEND) {}
 	else if (token_type == TOKEN_COMMA)
 	{
 		next_token(); // Consume the comma and read the next token
 		param(&param1);
-		if (token_type == TOKEN_LF) {}
+		if (token_type == TOKEN_CMDEND) {}
 		else if (token_type == TOKEN_COMMA)
 		{
 			next_token(); // Consume the comma and read the next token
@@ -327,9 +328,9 @@ void next_token(void)
 			token_value.string.length = str_length;
 		}
 		// Line feed (end of command mark)
-		else if (cmd_buf[cmd_buf_pos] == '\n')
+		else if (cmd_buf[cmd_buf_pos] == *CMDEND)
 		{
-			token_type = TOKEN_LF;
+			token_type = TOKEN_CMDEND;
 			++cmd_buf_pos;
 		}
 		// Other characters: error
