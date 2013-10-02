@@ -256,6 +256,8 @@ void next_token(void)
 			
 			// Store token value
 			token_value.letter = cmd_buf[cmd_buf_pos];
+			
+			++cmd_buf_pos;
 		}
 		// Lowercase letters
 		else if (cmd_buf[cmd_buf_pos] >= 'a' && cmd_buf[cmd_buf_pos] <= 'z')
@@ -264,11 +266,14 @@ void next_token(void)
 			
 			// Store the token value and convert letter to upper case
 			token_value.letter = cmd_buf[cmd_buf_pos] - ('a' - 'A');
+			
+			++cmd_buf_pos;
 		}
 		// Command (parameter separator)
 		else if (cmd_buf[cmd_buf_pos] == ',')
 		{
 			token_type = TOKEN_COMMA;
+			++cmd_buf_pos;
 		}
 		// Numbers: -?[0-9]+(.[0-9]+)
 		else if (cmd_buf[cmd_buf_pos] == '-' || (cmd_buf[cmd_buf_pos] >= '0' && cmd_buf[cmd_buf_pos] <= '9'))
