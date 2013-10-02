@@ -246,7 +246,7 @@ int param(param_t *param_info)
  */
 void next_token(void)
 {
-	for (; cmd_buf_pos < CMD_BUF_SIZE; ++cmd_buf_pos)
+	if (cmd_buf_pos < CMD_BUF_SIZE)
 	{
 		// Uppercase letters
 		if (cmd_buf[cmd_buf_pos] >= 'A' && cmd_buf[cmd_buf_pos] <= 'Z')
@@ -330,11 +330,12 @@ void next_token(void)
 		else if (cmd_buf[cmd_buf_pos] == '\n')
 		{
 			token_type = TOKEN_LF;
+			++cmd_buf_pos;
 		}
 		// Other characters: error
 		else
 		{
-			break;
+			// error
 		}
 	}
 }
