@@ -2,6 +2,7 @@
 #include "hostcom.h"
 #include "../types.h"
 #include "../hostcmdset.h"
+#include "controller_status.h"
 
 // debug
 #include "../macros.h"
@@ -898,378 +899,3673 @@ void interpret_cmd(void)
  *                    HOST COMMAND FUNCTION IMPLEMENTATION                    *
  ******************************************************************************/
 
+#include <stdio.h> // snprintf
+#include <string.h> // strlen
+
+/**
+ * Read Motor Status.
+ * 
+ * Returns which motors are executing a trapezoidal move.
+ * 
+ * The trapezoidal move status of each motor is contained in a single byte within the controller.
+ * Each bit within the status byte corresponds to one motor. Bit 0 corresponds to motor port A.
+ * If the bit is set (1), the corresponding motor is still executing a trapezoidal move. If the bit
+ * is cleared (0), the corresponding motor is either stationary or in a mode other than trapezoidal.
+ */
 void hostcmd_sa(void)
 {
+	char buf[64];
+	char motor_status = 0;
+	snprintf(buf, 64, "%u", motor_status);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Read System Configuration.
+ * 
+ * Returns the system configuration byte representing eight system mode selects.
+ * 
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255. The value
+ * returned must be decoded to determine the state of the various system conditions.
+ * 
+ * Bit 7:
+ * 
+ *     1 = system is in host mode
+ *     0 = system is in pendant mode
+ * 
+ * Bit 6:
+ * 
+ *     1 = the pendant is enabled
+ *     0 = the pendant is disabled
+ * 
+ * Bit 5:
+ * 
+ *     1 = generic controller mode
+ *     0 = robot controller mode
+ * 
+ * Bit 4:
+ * 
+ *     1 = SCARA mode
+ *     0 = XR-3 mode
+ * 
+ * Bit 3:
+ * 
+ *     1 = the gripper is disabled
+ *     0 = the gripper is enabled
+ * 
+ * Bit 2:
+ * 
+ *     1 = XYZ mode
+ *     0 = joint mode
+ * 
+ * Bit 1: always 0
+ * 
+ * Bit 0: allways 0
+ */
 void hostcmd_sc(void)
 {
+	char buf[64];
+	char system_cfg = 0;
+	snprintf(buf, 64, "%u", system_cfg);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Stop/Start Delay Timer.
+ * 
+ * Controls a general purpose timer in the controller.
+ */
 void hostcmd_sd(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 3000)
+			{
+				// set timer
+			}
+			else
+			{
+				// error
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Read Host Error Stack.
+ * 
+ * Returns the last value pushed onto the error stack.
+ * 
+ * A first-in-last-out register, able to hold 24 pieces of information, is maintained in the controller
+ * for holding error codes. If a system error should occur, the code representing the error is pushed
+ * onto the stack.
+ * 
+ * Bit 6 of the system status byte reflects the status of the error stack. If the bit is set (1), an
+ * error exists and the error stack should be read to determine the source of the error. The bit remains
+ * set until the error stack is empty. SE returns zero if the error stack is empty.
+ */
 void hostcmd_se(void)
 {
+	char buf[64];
+	char error_code = 0;
+	snprintf(buf, 64, "%u", error_code);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Read Motor Mode.
+ * 
+ * Returns the specified motor's mode.
+ */
 void hostcmd_sm(void)
 {
+	char buf[64];
+	char motor_mode = 0;
+
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Read Teach Pendant Erro Byte.
+ * 
+ * Returns the code of the last error recognized by the teach pendant.
+ * 
+ * Bit 0 of the system status byte reflects the status of the pendant error byte. If the bit is set (1),
+ * an error exists and the pendant error byte should be read to determine the source of the error. SP returns
+ * zero if no pendant error exists.
+ */
 void hostcmd_sp(void)
 {
+	char buf[64];
+	char pendant_error = 0;
+	snprintf(buf, 64, "%u", pendant_error);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Reset Motor Current Limit Circuitry.
+ * 
+ * Reset all motor amplifier current limit circuits.
+ */
 void hostcmd_sr(void)
 {
+
 }
 
+/**
+ * Read system status.
+ * 
+ * Returns the system status byte representing eight system conditions.
+ * 
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255. The value returned
+ * must be decoded to determine the state of the various system conditions.
+ * 
+ * Bit 7: 1 = At least one motor is performing a trapezoidal move.
+ * Bit 6: 1 = A system error as occurred.
+ * Bit 5: 1 = The general purpose delay timer is active.
+ * Bit 4: 1 = At least one wait on input or wait on switch is still pending.
+ * Bit 3: 1 = No teach pendant is connected.
+ * Bit 2: 1 = The teach pendant ENTER key has been pressed.
+ * Bit 1: 1 = The teach pendant ESCAPE key has been pressed.
+ * Bit 0: 1 = A teach pendant error has occurred.
+ */
 void hostcmd_ss(void)
 {
+	char buf[64];
+	char system_status = 0;
+	snprintf(buf, 64, "%u", system_status);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Execute Diagnostics.
+ * 
+ * Execute RAM test and teach pendant diagnostics.
+ * 
+ * If the RAM test fails, an error code is pushed onto the error stack. If the teach pendant is not
+ * connected or if the teach pendant returns an error, and error code will be pushed onto the error
+ * stack.
+ */
 void hostcmd_st(void)
 {
+
 }
 
+/**
+ * Read Usage Time.
+ * 
+ * Returns the amount of time the controller has been on since leaving the factory.
+ * 
+ * The value returned is in the range of 0 to 2147483647 in units of minutes. The usage timer is
+ * updated once per minute. Therefore, turning on the controller for less than one minute will
+ * have no effect on the usage time stored.
+ */
 void hostcmd_su(void)
 {
+	char buf[64];
+	int usage_time = 0;
+	snprintf(buf, 64, "%u", usage_time);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Read Version and I.D. Number.
+ * 
+ * Returns the version of the controller and its (unique) serial or identification number.
+ * 
+ * The controller returns a string containing a copyright notice, the version of firmware
+ * being used and the serial number.
+ */
 void hostcmd_sv(void)
 {
+	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX."
+	hostcom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
 }
 
+/**
+ * Execute Diagnostics and Return Results.
+ * 
+ * Execute RAM and teach pendant diagnostics and return the results.
+ * 
+ * If the RAM test fails, an error code is pushed onto the error stack. If the teach pendant is not
+ * connected or if the teach pendant returns an error, and error code will be pushed onto the error
+ * stack.
+ */
 void hostcmd_sx(void)
 {
+	#define TEACH_PENDANT_ONLINE "Teach Pendant:  Online.\n"
+	#define TEACH_PENDANT_OFFLINE "Teach Pendant:  Offline/Error.\n"
+	#define RAM_TEST_PASSED "Ram Test:  Passed.  Last Addr= %xH.  Bytes OK = %d.\n"
+	#define RAM_TEST_FAILED "Ram Test:  FAILED.  Last Addr= %xH.  Bytes OK = %d.\n"
+	hostcom_send(TEACH_PENDANT_ONLINE, STRLEN(TEACH_PENDANT_ONLINE));
+	hostcom_send(RAM_TEST_PASSED, STRLEN(RAM_TEST_PASSED));
 }
 
+/**
+ * Read the Delay Timer Value.
+ * 
+ * Returns the current value in the general purpose timer.
+ * 
+ * The value returned can range from 0 to 3000 in units of 1/10 second.
+ */
 void hostcmd_sz(void)
 {
+	char buf[64];
+	int timer_value = 0;
+	snprintf(buf, 64, "%u", timer_value);
+	hostcom_send(buf, strlen(buf));
 }
 
+/**
+ * Set Coordinate Position.
+ * 
+ * Converts encoder position to xyz position and vice versa.
+ * 
+ * A value of d = 0 causes the absolute destination registers to be set to the values
+ * corresponding to the current xyz position. Normally, this is already the case. A value
+ * of d = 1 causes the xyz destination registers to be set to the values corresponding to
+ * the current encoder position.
+ */
 void hostcmd_cc(void)
 {
+	if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+	{
+		// error
+	}
+	else
+	{
+		if (hard_home_executed())
+		{
+			if (controller_in_robot_mode())
+			{
+				if (param1.present)
+				{
+					if (param1.type == TOKEN_INT)
+					{
+						int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+						switch (intparam1)
+						{
+							case 0:
+								break;
+							case 1:
+								break;
+							default:
+								// error
+								break;
+						}
+					}
+					else
+					{
+						// error
+					}
+				}
+				else
+				{
+					// error
+				}
+			}
+			else
+			{
+				// error
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
 }
 
+/**
+ * Enable/Disable Gripper Mode.
+ * 
+ * Enable or disable the XR-3 or SCARA gripper.
+ * 
+ * A value of d = 0 disables the gripper and d = 1 enables the gripper.
+ */
 void hostcmd_cg(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			switch (intparam1)
+			{
+				case 0:
+					break;
+				case 1:
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Set Motor Mode.
+ * 
+ * Set the specified motor's mode to idle, trapezoidal, velocity or open loop.
+ * 
+ * The following table shows the valid modes and the corresponding values for d:
+ * 
+ * 0) Idle mode.
+ * 1) Trapezoidal mode.
+ * 2) Velocity mode.
+ * 3) Open Loop mode.
+ */
 void hostcmd_cm(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if (param2.present)
+			{
+				if (param2.type == TOKEN_INT)
+				{
+					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+					if (0 <= intparam2 && intparam2 <= 3)
+					{
+						int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+						switch (intparam1)
+						{
+							case 'A':
+								break;
+							case 'B':
+								break;
+							case 'C':
+								break;
+							case 'D':
+								break;
+							case 'E':
+								break;
+							case 'F':
+								break;
+							case 'G':
+								break;
+							case 'H':
+								break;
+							default:
+								// error
+								break;
+						}
+
+						if (hard_home_in_progress())
+						{
+							// error
+						}
+						else
+						{
+							// proceed
+						}
+					}
+					else
+					{
+						// error
+					}
+				}
+				else
+				{
+					// error
+				}
+			}
+			else
+			{
+				// error
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Set Robot Type.
+ * 
+ * Set the controller to control an XR-3, a SCARA or no robot.
+ * 
+ * The following table shows the valid robots and the corresponding values for d:
+ * 
+ * 0) XR-3 controller.
+ * 1) SCARA controller.
+ * 2) GENERIC controller.
+ */
 void hostcmd_cr(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			switch (intparam1)
+			{
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				default:
+					// error
+					break;
+			}
+
+			if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+			{
+				// error
+			}
+			else
+			{
+				// proceed
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Read System Acceleration.
+ * 
+ * Returns the system acceleration. The value returned is in the range of 0 to 100 and represents
+ * the percentage of maximum system acceleration.
+ */
 void hostcmd_ar(void)
 {
 }
 
+/**
+ * Read Motor PWM Level and Direction.
+ * 
+ * Returns the specified motor's PWM level and its direction. The value returned ranges from -100
+ * to 100 whose absolute magnitude represents the percentage of maximum motor power and whose sign
+ * represents the direction the motor is turning in.
+ */
 void hostcmd_dr(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Gripper Status.
+ * 
+ * Returns the status (open or closed) of the gripper. If the returned value is 1, the gripper is closed.
+ * If the returned value is 0, the gripper is open. If the gripper is disabled, the returned value will be 0.
+ */
 void hostcmd_gs(void)
 {
 }
 
+/**
+ * Read Soft Home Position.
+ * 
+ * Returns the specified motor's soft home position.
+ * 
+ * The value returned ranges from -32767 to 32767 in encoder counts and represents the position the specified
+ * motor would move to if an HG (go to soft home) were issued.
+ * 
+ * The soft home position is defined as 0 after power up or after executing a hard home. It is also defined as
+ * the current motor position when an HS (set soft home) is issued.
+ */
 void hostcmd_hr(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Actual Position.
+ * 
+ * Returns the current or actual position of the specified motor. The value returned ranges from -32767
+ * to 32767 in encoder counts.
+ */
 void hostcmd_pa(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Destination Position.
+ * 
+ * Returns the desired position of the specified motor. The value returned ranges from -32767 to
+ * 32767 in encoder counts and represents the position the specified motor would move  to when
+ * an MC (move coordinated), MI (move independent) or an MS (move single motor) command is issued.
+ */
 void hostcmd_pw(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read XYZ Destination Position.
+ * 
+ * Returns the desired xyz position of the specified axis.
+ * 
+ * The value returned represents the position in millimeters or degrees the robot would move to
+ * when an MX (move xyz) command is issued. The X, Y and Z axes are in units of millimeters and
+ * the A and T axes are in units of degrees. The value returned is fixed at two decimal places
+ * (two digits after the decimal point).
+ */
 void hostcmd_pz(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'X':
+					break;
+				case 'Y':
+					break;
+				case 'Z':
+					break;
+				case 'A':
+					break;
+				case 'T':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Limit Switches.
+ * 
+ * Returns the limit switch byte representing the state of each of the eight limit switches.
+ *
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255. The
+ * value returned must be decoded to determine the state of the various conditions.
+ *
+ * Bit 7:
+ * 
+ *     1 = Limit switch of motor H is open or inactive.
+ *     0 = Limit switch of motor H is closed or active.
+ * 
+ * Bit 6:
+ * 
+ *     1 = Limit switch of motor G is open or inactive.
+ *     0 = Limit switch of motor G is closed or active.
+ * 
+ * Bit 5:
+ * 
+ *     1 = Limit switch of motor F is open or inactive.
+ *     0 = Limit switch of motor F is closed or active.
+ * 
+ * Bit 4:
+ * 
+ *     1 = Limit switch of motor E is open or inactive.
+ *     0 = Limit switch of motor E is closed or active.
+ * 
+ * Bit 3:
+ * 
+ *     1 = Limit switch of motor D is open or inactive.
+ *     0 = Limit switch of motor D is closed or active.
+ * 
+ * Bit 2:
+ * 
+ *     1 = Limit switch of motor C is open or inactive.
+ *     0 = Limit switch of motor C is closed or active.
+ * 
+ * Bit 1:
+ * 
+ *     1 = Limit switch of motor B is open or inactive.
+ *     0 = Limit switch of motor B is closed or active.
+ * 
+ * Bit 0:
+ * 
+ *     1 = Limit switch of motor A is open or inactive.
+ *     0 = Limit switch of motor A is closed or active.
+ */
 void hostcmd_rl(void)
 {
 }
 
+/**
+ * Read XYZ Rotation Angle.
+ * 
+ * Returns the angle of rotation of the user's coordinate system with respect to the
+ * robot coordinate system.
+ * 
+ * The value returned is a floating point number in units of degrees.
+ */
 void hostcmd_ua(void)
 {
 }
 
+/**
+ * Read YXZ Home Position.
+ * 
+ * Returns the linear distance between the robot coordinate system origin and the
+ * center of the tool tip (gripper).
+ * 
+ * The value returned is a floating point number in units of millimeters for the X,
+ * Y and Z axes and units of degrees for the A and T axes.
+ * 
+ * The A axis does not exist on the SCARA robot.
+ */
 void hostcmd_uh(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'X':
+					break;
+				case 'Y':
+					break;
+				case 'Z':
+					break;
+				case 'A':
+					break;
+				case 'T':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read XYZ Offset.
+ * 
+ * Returns the linear or angular displacement between the user coordinate system
+ * and the robot coordinate system.
+ * 
+ * The value returned is a floating point number in units of millimeters for the X,
+ * Y and Z axes and units of degrees for the A and T axes.
+ * 
+ * The A axis does not exist on the SCARA robot.
+ */
 void hostcmd_uo(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'X':
+					break;
+				case 'Y':
+					break;
+				case 'Z':
+					break;
+				case 'A':
+					break;
+				case 'T':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Tool Length.
+ * 
+ * Returns the distance from the hand flex axis to the toolt tip (gripper end).
+ * 
+ * The value returned is a floating point number in units of millimeters.
+ */
 void hostcmd_ut(void)
 {
 }
 
+/**
+ * Read Height of Elbow Rotation Axis.
+ * 
+ * Returns the height of the elbow rotation axis from the reference surface.
+ * 
+ * The value returned is a floating point number in units of millimeters.
+ * 
+ * This parameter has no meaning if the current robot type is SCARA.
+ */
 void hostcmd_uy(void)
 {
 }
 
+/**
+ * Read Motor Actual Velocity.
+ * 
+ * Returns the actual motor velocity of the specified motor.
+ * 
+ * The value returned ranges from -100 to 100 whose absolute magnitude represents the percentage
+ * of maximum motor velocity and whose sign represents the direction the motor is turning in.
+ */
 void hostcmd_va(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read Motor Desired Velocity.
+ * 
+ * Returns the desired velocity of the specified motor.
+ * 
+ * The value returned ranges from -100 to 100 whose absolute magnitude represents the percentage
+ * of maximum motor velocity and whose sign represents the direction the motor is turning in. For
+ * trapezoidal mode motors, the direction has no meaning, being a function of the desired position.
+ * 
+ * Whenever the gripper is enabled or commanded to open or close, a factory set velocity will be used
+ * for the gripper. The motor velocity read will have no meaning.
+ * 
+ * While under teach pendant mode, the motor velocity returned may not be what was programmed depending
+ * on the mode the pendant is in or the function being executed. Once the system returns to play mode
+ * and no function is being executed, the motor velocity will return to its original value.
+ */
 void hostcmd_vr(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+	}
 }
 
+/**
+ * Read System Velocity.
+ * 
+ * Returns the system velocity. The value returned ranges from 0 to 100 and represents the percentage
+ * of maximum system velocity.
+ */
 void hostcmd_vx(void)
 {
 }
 
+/**
+ * Read Auxiliary Port Level and Direction.
+ * 
+ * Returns the specified auxiliary port's PWM level and its direction.
+ * 
+ * The value returned ranges from -100 to 100 whose absolute magnitude represents the percentage
+ * of maximum motor velocity and whose sign represents the direction the motor is turning in.
+ */
 void hostcmd_xr(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			switch (intparam1)
+			{
+				case 0:
+					break;
+				case 1:
+					break;
+				default:
+					// error
+					break;
+			}
+		}
+		else
+		{
+			// error
+		}
+	}
+	else
+	{
+		// error
+	}
 }
 
+/**
+ * Clear Actual Position.
+ * 
+ * Set the actual position of the specified motor to 0.
+ * 
+ * If the specified motor is in trapezoidal mode, it must not be currently executing a trapezoidal
+ * move. This can be checked by issuing the SA command.
+ * 
+ * This command is normally used during startup to initialize a motor when a home on switch is not
+ * available. Especially useful under generic controller mode when limit switches are not being used.
+ */
 void hostcmd_ac(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'H')
+			{
+				char motor = 1 << (param1.value.letter - 'A');
+				// If motor is in trapezoidal mode and executing a trapezoidal move,
+				// the actual position of the motor cannot be cleared.
+				if (motor_executing_trapezoidal_move(motor))
+				{
+					// error: motor cannot be executing trapezoidal move
+				}
+				// If the motor is not in trapezoidal mode or is not executing a trapezoidal move,
+				// the actual position can be cleared safely.
+				else
+				{
+					// proceed
+				}
+			}
+			else
+			{
+				// error: parameter 1 out of range
+			}
+		}
+	}
 }
 
+/**
+ * Set System Acceleration.
+ * 
+ * Set system acceleration as a percentage of system maximum acceleration.
+ * 
+ * System acceleration is a global parameter that affects all motors. If system acceleration is 0,
+ * motors in trapezopidal mode will not be able to move and motors in velocity mode will be stopped.
+ * 
+ * Motors in trapezoidal mode must not be currently executing a trapezoidal move. This can be checked
+ * by issuing the SS command.
+ * 
+ * Motors in velocity mode will immediately begin using the new acceleration.
+ */
 void hostcmd_as(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100)
+			{
+				if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+				{
+					// error: motors in trapezoidal mode must not be executing a trapezoidal move
+				}
+				else
+				{
+					// proceed
+				}
+			}
+			else
+			{
+				// error: value of paramter 1 out of range
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Set PWM Level and Direction.
+ * 
+ * Sets an open loop mode motor's pwm level and direction.
+ * 
+ * The specified motor must be in open loop mode. This can be checked by using an SM command.
+ * PWM level is a percentage of the absolute value of maximum motor power. A minus sign indicates
+ * negative voltage or direction.
+ * 
+ * The command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ds(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param2.present)
+			{
+				if (param1.type == TOKEN_LETTER)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (-100 <= intparam2 && intparam2 <= 100)
+						{
+							switch (param1.value.letter)
+							{
+								case 'A':
+									break;
+								case 'B':
+									break;
+								case 'C':
+									break;
+								case 'D':
+									break;
+								case 'E':
+									break;
+								case 'F':
+									break;
+								case 'G':
+									break;
+								case 'H':
+									break;
+								default:
+									// error: parameter 1 out of range
+									break;
+							}
+						}
+						else
+						{
+							// error: parameter 2 out of range
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be an integer number
+					}
+				}
+				else
+				{
+					// error: parameter 1 must be a letter
+				}
+			}
+			else
+			{
+				// error: parameter 2 must be specified
+			}
+		}
+		else
+		{
+			// error: paramter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Close Gripper.
+ * 
+ * The system must be in XR-3 or SCARA mode with the gripper enabled. The gripper
+ * must not be currently executing a move. This can be checked by issuing the SA
+ * command.
+ * 
+ * When the grippper is commanded to close, the motor moves to a position beyond
+ * which the gripper can travel. This means that, when the gripper closes on an
+ * object, full motor power is applied. Stall detection on closing is disabled.
+ * Stall will be detected if the gripper is commanded to open and cannot. Velocity
+ * is at a factory set value and cannot be modified.
+ * 
+ * The gripper is controlled by motor port A. Consequently, motor port A's absolute
+ * destination and velocity registers are modified.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_gc(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (controller_mode() == XR3 || controller_mode() == SCARA)
+		{
+			if (gripper_is_enabled())
+			{
+				// proceed
+			}
+			else
+			{
+				// error: the gripper must be enabled
+			}
+		}
+		else
+		{
+			// error: controller must be in robot mode (either XR-3 or SCARA)
+		}
+	}
 }
 
+/**
+ * Open Gripper.
+ * 
+ * The system must be in XR-3 or SCARA mode with the gripper enabled. The gripper
+ * must not be currently executing a move. This can be checked by issuing the SA
+ * command.
+ * 
+ * When the grippper is commanded to close, the motor moves to a position beyond
+ * which the gripper can travel. This means that, when the gripper closes on an
+ * object, full motor power is applied. Stall detection on closing is disabled.
+ * Stall will be detected if the gripper is commanded to open and cannot. Velocity
+ * is at a factory set value and cannot be modified.
+ * 
+ * The gripper is controlled by motor port A. Consequently, motor port A's absolute
+ * destination and velocity registers are modified.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_go(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (controller_mode() == XR3 || controller_mode() == SCARA)
+		{
+			if (gripper_is_enabled())
+			{
+				// proceed
+			}
+			else
+			{
+				// error: the gripper must be enabled
+			}
+		}
+		else
+		{
+			// error: controller must be in robot mode (either XR-3 or SCARA)
+		}
+	}
 }
 
+/**
+ * Go To the Hard Home Position.
+ * 
+ * Moves all motors that are in trapezoidal mode to their 0 encoder position.
+ * 
+ * A hard home must have been previously executed.
+ * 
+ * If the controller is under XR-3 mode, motors B through F will move in a coordinated
+ * fashion. The busy status of motors B through F should be checked with the SA command.
+ * 
+ * If the controller is under SCARA mode, motors B through E will move in a coordinated
+ * fashion. The busy status of motors B through E should be checked with the SA command.
+ * 
+ * If the controller is under GENERIC mode, all motors under trapezoidal mode move
+ * according to their set motor velocities. The busy status of all motors in trapezoidal
+ * mode should be checked with the SA or SS command.
+ * 
+ * Motor destination registers of affected motors become 0.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ha(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (controller_mode() == XR3)
+		{
+			//
+		}
+		else if (controller_mode() == SCARA)
+		{
+			//
+		}
+		else if (controller_mode() == GENERIC)
+		{
+			//
+		}
+	}
 }
 
+/**
+ * Go To the Soft Home Position.
+ * 
+ * Moves all motors that are in trapezoidal mode to their soft home position.
+ * 
+ * If the controller is under XR-3 mode, motors B through F will move in a coordinated
+ * fashion. The busy status of motors B through F should be checked with the SA command.
+ * 
+ * If the controller is under SCARA mode, motors B through E will move in a coordinated
+ * fashion. The busy status of motors B through E should be checked with the SA command.
+ * 
+ * If the controller is under GENERIC mode, all motors under trapezoidal mode move
+ * according to their set motor velocities. The busy status of all motors in trapezoidal
+ * mode should be checked with the SA or SS command.
+ * 
+ * The gripper motor is not affected if enabled.
+ * 
+ * Motor destination registers of affected motors are set to their soft home position.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_hg(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (controller_mode() == XR3)
+		{
+			//
+		}
+		else if (controller_mode() == SCARA)
+		{
+			//
+		}
+		else if (controller_mode() == GENERIC)
+		{
+			//
+		}
+	}
 }
 
+/**
+ * Execute a Hard Home.
+ * 
+ * Moves motors that are in trapezoidal mode to their hard limit switch positions.
+ * 
+ * If any motor is in trapezoidal mode, it must not be currently executing a trapezoidal
+ * move. This can be checked by issuing an SS command.
+ * 
+ * If the controller is under XR-3 mode, motors B through F will move to their hard limit
+ * switch position and their actual destination positions will be set to 0. The gripper,
+ * if enabled, will close and, after all motors have found their 0 position, will open.
+ * 
+ * If the controller is under SCARA mode, motors B through E will move to their hard limit
+ * switch position and their actual destination positions will be set to 0. The gripper,
+ * if enabled, will close and, after all motors have found their 0 position, will open.
+ * 
+ * If an error occurs, the hard home execution will be terminated and the gripper will open.
+ * 
+ * If the controller is under GENERIC mode, all motors under trapezoidal mode will have
+ * their actual and destination positions set to 0 but no movement will take place.
+ * 
+ * The hard limit switch position is found by taking the motor position at both ends of
+ * switch closure and calculating the center of the switch. The switch is always approached
+ * from the same direction for purposes of counting the encoder states as the switch is
+ * traveled across.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_hh(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+		{
+			// error: no motor can be executing a trapezoidal move
+		}
+		else
+		{
+			// proceed
+		}
+	}
 }
 
+/**
+ * Hard Home on Limit Switch.
+ * 
+ * Moves a motor that is in trapezoidal mode to its hard limit switch position.
+ * 
+ * The optional parameter d specifies an initial direction to look for a switch closure.
+ * If, when d is specified, the switch is not found or the motor stalls, the routine fails.
+ * When d is not specified, the motor will change direction after a first failure and try
+ * again. The routine fails if the switch is again not found or a stall occurs a second time.
+ * The parameter d is provided for those systems where the limit switch is at an end of travel
+ * and HL without d would cause the motor to initially travel in the wrong direction.
+ * 
+ * If the specified motor is in trapezoidal mode, it must not be currently executing a trapezoidal
+ * move. This can be checked by issuing the SA command.
+ * 
+ * The specified motor's actual and destination registers are set to 0.
+ * 
+ * This command is normally used to hard home those motors with limit switches that the HH command
+ * does not handle. For example, motors G and H when the controller is under XR-3 mode or motors A
+ * through H when the controller is under generic mode. This command is invalid for motor A if it is
+ * enabled as the gripper port.
+ * 
+ * The hard limit switch position is found by taking the motor position at both ends of
+ * switch closure and calculating the center of the switch. The switch is always approached
+ * from the same direction for purposes of counting the encoder states as the switch is
+ * traveled across.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_hl(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				int intparam2 = -1;
+				bool_t param2_error = false;
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (intparam2 != 0 && intparam2 != 1)
+							param2_error = true;
+					}
+				}
+				
+				if (param2_error)
+				{
+					// error: parameter 2 out of range
+				}
+				else
+				{
+					switch (param1.value.letter)
+					{
+						case 'A':
+							break;
+						case 'B':
+							break;
+						case 'C':
+							break;
+						case 'D':
+							break;
+						case 'E':
+							break;
+						case 'F':
+							break;
+						case 'G':
+							break;
+						case 'H':
+							break;
+						default:
+							// error: parameter 1 out of range
+							break;
+					}
+				}
+			}
+		}
+	}
 }
 
+/**
+ * Set Soft Home.
+ * 
+ * Store the current motor position of all motors into their respective soft home
+ * position register.
+ * 
+ * After power up, all joint coordinate soft home registers are set to 0. XYZ
+ * coordinate soft home registers are unknown.
+ * 
+ * After a successful hard home, all affected motors have their joint coordinate
+ * soft home registers set to 0 and the XYZ coordinate soft home registers are set
+ * according to the robot selected.
+ * 
+ * Although valid at all times, motors in trapezoidal mode should not be currently
+ * executing a trapezoidal move. This can be checked by issuing the SA command.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_hs(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		// proceed
+	}
 }
 
+/**
+ * Stop All Motors and Aux Ports.
+ * 
+ * Stops all motors regardless of motor or controller mode. Turns off all
+ * auxiliary ports.
+ * 
+ * Auxiliary port PWM level registers are set to 0. No other registers are
+ * affected.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ma(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		// proceed
+	}
 }
 
+/**
+ * Start Coordinated Move.
+ * 
+ * Valid motors in trapezoidal mode start and end movement at the same time.
+ * 
+ * Only motors under trapezoidal mode with a destination position different from
+ * their current position are affected. Affected motors must have a non-zero motor
+ * velocity. Motors whose relative destination registers are non-zero will make a
+ * relative movement while all other motors will make an absolute movement. The
+ * relative destination register becomes zero when the move command is issued.
+ * 
+ * If the controller is under XR-3 mode, only motors B-F are affected. Motors B
+ * through F must not be executing a trapezoidal move and can be checked using the
+ * SA command.
+ * 
+ * If the controller is under SCARA mode, only motors B-E are affected. Motors B
+ * through E must not be executing a trapezoidal move and can be checked using the
+ * SA command.
+ * 
+ * If the controller is under XR-3 mode, all motors are affected. No motor may be
+ * executing a trapezoidal move. This can be checked by using either the SA or SS
+ * command.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_mc(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		// proceed
+	}
 }
 
+/**
+ * Start All Motors, Immediate Mode.
+ * 
+ * Motors in trapezoidal mode move to their destination positions under their
+ * respective motor velocities.
+ * 
+ * Only motors under trapezoidal mode with a destination position different from
+ * their current position are affected. Affected motors must have a non-zero motor
+ * velocity. Motors whose relative destination registers are non-zero will make a
+ * relative movement while all other motors will make an absolute movement. The
+ * relative destination register becomes zero when the move command is issued.
+ * 
+ * Motors begin movement at the same time but may or may not stop at the same time,
+ * depending on the distance each motor must move and the motor's set velocity.
+ * 
+ * If the controller is under XR-3 mode, only motors B-F are affected. Motors B
+ * through F must not be executing a trapezoidal move and can be checked using the
+ * SA command.
+ * 
+ * If the controller is under SCARA mode, only motors B-E are affected. Motors B
+ * through E must not be executing a trapezoidal move and can be checked using the
+ * SA command.
+ * 
+ * If the controller is under XR-3 mode, all motors are affected. No motor may be
+ * executing a trapezoidal move. This can be checked by using either the SA or SS
+ * command.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_mi(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		// proceed
+	}
 }
 
+/**
+ * Stop Single Motor.
+ * 
+ * Stops the specified motor regardless of motor or controller mode.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_mm(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				switch (param1.value.letter)
+				{
+					case 'A':
+						break;
+					case 'B':
+						break;
+					case 'C':
+						break;
+					case 'D':
+						break;
+					case 'E':
+						break;
+					case 'F':
+						break;
+					case 'G':
+						break;
+					case 'H':
+						break;
+					default:
+						// error: parameter 1 out of range
+						break;
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a letter
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Start Single Motor.
+ * 
+ * Moves the specified motor to its destination position under its set motor
+ * velocity.
+ * 
+ * The motor must be in trapezoidal mode with a non-zero velocity. If the
+ * relative destination register is non-zero, a relative move will be made.
+ * If the relative destination register is zero and the destination register
+ * is the same as the current position, then no movement will take place.
+ * 
+ * The specified motor must not be currently executing a trapezoidal move.
+ * This can be checked by issuing an SA command.
+ * 
+ * This command is invalid for motor port A if it is enabled as the gripper.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ms(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				switch (param1.value.letter)
+				{
+					case 'A':
+						if (gripper_is_enabled())
+						{
+							// error: port A is enabled as the gripper
+						}
+						else
+						{
+							// proceed
+						}
+						break;
+					case 'B':
+						break;
+					case 'C':
+						break;
+					case 'D':
+						break;
+					case 'E':
+						break;
+					case 'F':
+						break;
+					case 'G':
+						break;
+					case 'H':
+						break;
+					default:
+						// error: parameter 1 out of range
+						break;
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a letter
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Start an XYZ Move.
+ * 
+ * Move to the predefined XYZ position in a coordinated fashion.
+ * 
+ * The controller must be configured for the XR-3 or SCARA robot types.
+ * 
+ * If the XR-3 is used, motors B through F must be configured for trapezoidal
+ * mode and have a non-zero desired motor velocity.
+ * 
+ * If the SCARA is used, motors B through E must be configured for trapezoidal
+ * mode and have a non-zero desired motor velocity.
+ * 
+ * A hard home must have been previously executed.
+ * 
+ * If the controller is under XR-3 mode, motors B through F must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * If the controller is under SCARA mode, motors B through E must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * If, on issuance of the MX command, the desired position is in bounds, the robot
+ * will move to the new position in a coordinated fashion. Any axis whose relative
+ * xyz destination position is non-zero will make a relative movement and the relative
+ * destination register will become zero.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_mx(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (hard_home_executed())
+		{
+			if (controller_mode() == XR3)
+			{
+				if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
+				{
+					// error: no motor can be executing a trapezoidal move
+				}
+				else
+				{
+					// proceed
+				}
+			}
+			else if (controller_mode() == SCARA)
+			{
+				if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
+				{
+					// error: no motor can be executing a trapezoidal move
+				}
+				else
+				{
+					// proceed
+				}
+			}
+		}
+		else
+		{
+			// error: a hard home must have been previously executed
+		}
+	}
 }
 
+/**
+ * Set Destination Position, Absolute.
+ * 
+ * Sets the desired position a motor in trapezoidal mode will move to in encoder counts.
+ * 
+ * If the specified motor is in trapezoidal mode, it must not be currently executing a
+ * trapezoidal move. This can be checked by issuing the SA command.
+ * 
+ * If the relative destination register is non-zero, then on issuance of a move command
+ * the destination register will be overwritten.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_pd(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				if ('A' <= param1.value.letter && param1.value.letter <= 'H')
+				{
+					char motor = 1 << (param1.value.letter - 'A');
+					if (motor_executing_trapezoidal_move(motor))
+					{
+						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
+					}
+					else
+					{
+						if (param2.present)
+						{
+							if (param2.type == TOKEN_INT)
+							{
+								int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+								if (-32767 <= intparam2 && intparam2 <= 32767)
+								{
+									// proceed
+								}
+								else
+								{
+									// error: parameter 2 out of range
+								}
+							}
+							else
+							{
+								// error: parameter 2 must be an integer number
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be specified
+						}
+					}
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+		}
+	}
 }
 
+/**
+ * Set Destination Position, Relative.
+ * 
+ * Sets the relative movement a motor in trapezoidal mode will travel. Motor desired
+ * position becomes the old desired position plus the relative movement.
+ * 
+ * If the specified motor is in trapezoidal mode, it must not be currently executing a
+ * trapezoidal move. This can be checked by issuing the SA command.
+ * 
+ * After issuance of amove command, the relative destination register will become zero.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_pr(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				if ('A' <= param1.value.letter && param1.value.letter <= 'H')
+				{
+					char motor = 1 << (param1.value.letter - 'A');
+					if (motor_executing_trapezoidal_move(motor))
+					{
+						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
+					}
+					else
+					{
+						if (param2.present)
+						{
+							if (param2.type == TOKEN_INT)
+							{
+								int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+								if (-32767 <= intparam2 && intparam2 <= 32767)
+								{
+									// proceed
+								}
+								else
+								{
+									// error: parameter 2 out of range
+								}
+							}
+							else
+							{
+								// error: parameter 2 must be an integer number
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be specified
+						}
+					}
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+		}
+	}
 }
 
+/**
+ * Set XYZ Destination, Absolute.
+ * 
+ * Sets the desired position an X, Y or Z axis will move to in millimeters or the
+ * angle the A or T axis will move to in degrees.
+ * 
+ * If the controller is under XR-3 mode, motors B through F must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * If the controller is under SCARA mode, motors B through E must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * If the relative destination register is non-zero, then on issuance of a move
+ * command the destination register will be overwritten.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_px(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		bool_t error = false;
+		if (controller_mode() == XR3)
+		{
+			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
+			{
+				error = true;
+			}
+		}
+		else if (controller_mode() == SCARA)
+		{
+			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
+			{
+				error = true;
+			}
+		}
+		
+		if (!error)
+		{
+			if (param1.present)
+			{
+				if (param1.type == TOKEN_LETTER)
+				{
+					if (param2.present)
+					{
+						if (param2.type == TOKEN_DEC)
+						{
+							float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
+							if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
+							{
+								switch (param1.value.letter)
+								{
+									case 'A':
+										break;
+									case 'B':
+										break;
+									case 'C':
+										break;
+									case 'D':
+										break;
+									case 'E':
+										break;
+									case 'F':
+										break;
+									case 'G':
+										break;
+									case 'H':
+										break;
+									default:
+										// error: parameter 1 out of range
+										break;
+								}
+							}
+							else
+							{
+								// error: parameter 2 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be a decimal number
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be specified
+					}
+				}
+				else
+				{
+					// error parameter 1 must be a letter
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be specified
+			}
+		}
+	}
 }
 
+/**
+ * Set XYZ Destination, Relative.
+ * 
+ * Sets the desired position an X, Y or Z axis will move to in millimeters or the
+ * angle the A or T axis will move to in degrees.
+ * 
+ * If the controller is under XR-3 mode, motors B through F must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * If the controller is under SCARA mode, motors B through E must not be executing
+ * a trapezoidal move and can be checked using the SA command.
+ * 
+ * After issuance of a move command, the relative destination register will become
+ * zero.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_py(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		bool_t error = false;
+		if (controller_mode() == XR3)
+		{
+			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
+			{
+				error = true;
+			}
+		}
+		else if (controller_mode() == SCARA)
+		{
+			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
+			{
+				error = true;
+			}
+		}
+		
+		if (!error)
+		{
+			if (param1.present)
+			{
+				if (param1.type == TOKEN_LETTER)
+				{
+					if (param2.present)
+					{
+						if (param2.type == TOKEN_DEC)
+						{
+							float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
+							if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
+							{
+								switch (param1.value.letter)
+								{
+									case 'A':
+										break;
+									case 'B':
+										break;
+									case 'C':
+										break;
+									case 'D':
+										break;
+									case 'E':
+										break;
+									case 'F':
+										break;
+									case 'G':
+										break;
+									case 'H':
+										break;
+									default:
+										// error: parameter 1 out of range
+										break;
+								}
+							}
+							else
+							{
+								// error: parameter 2 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be a decimal number
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be specified
+					}
+				}
+				else
+				{
+					// error parameter 1 must be a letter
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be specified
+			}
+		}
+	}
 }
 
+/**
+ * Set System Velocity.
+ * 
+ * Set system velocity as a percentage of system maximum velocity.
+ * 
+ * System velocity is a global parameter that affects all motors. If system velocity
+ * is 0, all motors will be stopped.
+ * 
+ * Motors in trapezoidal mode must not be currently executing a trapezoidal move. This
+ * can be checked by issuing the SS command. The gripper cannot be in the process of
+ * closing or opening.
+ * 
+ * Motors in velocity mode will immediately begin tracking their new velocities.
+ * 
+ * This command cannot be used while in teach pendant mode.
+ */
 void hostcmd_vg(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (0 <= intparam1 && intparam1 <= 100)
+				{
+					// proceed
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set Motor Velocity.
+ * 
+ * Set motor velocity as a percentage of system velocity.
+ * 
+ * If the specified motor is in trapezoidal mode, it must not be currently executing
+ * a trapezoidal move. This can be checked by issuing the SA command. The sign or
+ * direction of velocity has no meaning under trapezoidal mode.
+ * 
+ * If the specified motor is in velocity mode, the motor will immediately begin tracking
+ * the new velocity. A minus sign indicates negative movement.
+ * 
+ * If the specified motor is in idle or open loop mode, the motor desired velocity will be
+ * set but no motion will take place.
+ * 
+ * If system velocity is 0, no motor movement will take place.
+ * 
+ * Whenever the gripper is enabled or commanded to open or close, a factory set velocity
+ * will be used for the gripper. The programmed motor velocity will have no meaning.
+ * 
+ * This command cannot be used while in teach pendant mode.
+ */
 void hostcmd_vs(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (-100 <= intparam2 && intparam2 <= 100)
+						{
+							switch (param1.value.letter)
+							{
+								case 'A':
+									break;
+								case 'B':
+									break;
+								case 'C':
+									break;
+								case 'D':
+									break;
+								case 'E':
+									break;
+								case 'F':
+									break;
+								case 'G':
+									break;
+								case 'H':
+									break;
+								default:
+									// error: parameter 1 out of range
+									break;
+							}
+						}
+						else
+						{
+							// error: parameter 2 out of range
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be an integer number
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be specified
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a letter
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set XYZ Rotation Angle.
+ * 
+ * Sets the angle of rotation of the user's coordinate system with respect to the
+ * robot coordinate system.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xa(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_DEC)
+			{
+				float floatparam1 = param1.value.decimal.int_part + param1.value.decimal.dec_part / 100.0;
+				if (-1000.00 <= floatparam1 && floatparam1 <= 1000.00)
+				{
+					// proceed
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a decimal number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set XYZ Home Position.
+ * 
+ * Sets the linear distance between the robot coordinate system origin and the center
+ * of the tool tip (gripper).
+ * 
+ * X, Y and Z are in units of millimeters, and A and T are in units of degrees.
+ * 
+ * The A axis does not exist on the SCARA robot.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xh(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_DEC)
+					{
+						float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
+						if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
+						{
+							switch (param1.value.letter)
+							{
+								case 'A':
+									break;
+								case 'B':
+									break;
+								case 'C':
+									break;
+								case 'D':
+									break;
+								case 'E':
+									break;
+								case 'F':
+									break;
+								case 'G':
+									break;
+								case 'H':
+									break;
+								default:
+									// error: parameter 1 out of range
+									break;
+							}
+						}
+						else
+						{
+							// error: parameter 2 out of range
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be a decimal number
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be specified
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a letter
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set the XYZ Offset.
+ * 
+ * Sets the linear or angular displacement between the user coordinate system and
+ * the robot coordinate system.
+ * 
+ * X, Y and Z are in units of millimeters, and A and T are in units of degrees.
+ * 
+ * The A axis does not exist on the SCARA robot.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xo(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_LETTER)
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_DEC)
+					{
+						float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
+						if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
+						{
+							switch (param1.value.letter)
+							{
+								case 'A':
+									break;
+								case 'B':
+									break;
+								case 'C':
+									break;
+								case 'D':
+									break;
+								case 'E':
+									break;
+								case 'F':
+									break;
+								case 'G':
+									break;
+								case 'H':
+									break;
+								default:
+									// error: parameter 1 out of range
+									break;
+							}
+						}
+						else
+						{
+							// error: parameter 2 out of range
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be a decimal number
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be specified
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a letter
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set Aux Port Leverl and Direction.
+ * 
+ * Sets an auxiliary port's PWM level and direction.
+ * 
+ * PWM level is a percentage of the absolute value of maximum motor power. A minus
+ * sign indicates negative voltage or direction.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xs(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (-100 <= intparam2 && intparam2 <= 100)
+						{
+							int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+							if (intparam1 == 1)
+							{
+								// proceed
+							}
+							else if (intparam1 == 2)
+							{
+								// proceed
+							}
+							else
+							{
+								// error: parameter 1 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 out of range
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be an integer number
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be specified
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set Tool Length.
+ * 
+ * Sets the distance from the hand flex axis to the tool tip (gripper end).
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xt(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_DEC)
+			{
+				float floatparam1 = param1.value.decimal.int_part + param1.value.decimal.dec_part / 100.0;
+				if (-1000.00 <= floatparam1 && floatparam1 <= 1000.00)
+				{
+					// proceed
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a decimal number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set Height of Elbow Rotation Axis.
+ * 
+ * Sets the height of the elbow rotation axis from the reference surface.
+ * 
+ * This parameter has no meaning if the current robot type is SCARA.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_xy(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_DEC)
+			{
+				float floatparam1 = param1.value.decimal.int_part + param1.value.decimal.dec_part / 100.0;
+				if (-1000.00 <= floatparam1 && floatparam1 <= 1000.00)
+				{
+					// proceed
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be a decimal number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Receive Teach Pendant File from Host.
+ */
 void hostcmd_fr(void)
 {
 }
 
+/**
+ * Transmit Teach Pendant File to Host.
+ */
 void hostcmd_ft(void)
 {
 }
 
+/**
+ * Execute Teach Pendant Program.
+ * 
+ * Begin execution of a teach pendant program.
+ * 
+ * The controller must be under teach pendant control and in play mode. Issuing an
+ * FX command is the same as pressing the RUN key on the pendant. The pendant will
+ * display any appropriate error messages such as NO PROGRAM or NO_HARD, which means
+ * a hard home is required. The host computer cannot halt or suspend the program.
+ * Issuing a second FX while a program is executing will result in an error, since
+ * the pendant is no longer in play mode.
+ */
 void hostcmd_fx(void)
 {
 }
 
+/**
+ * Execute Teach Pendant Program.
+ * 
+ * Terminate execution of a teach pendant program.
+ * 
+ * The controller must be under teach pendant control and in play mode. Issuing a
+ * TA command is the same as pressing the ABORT key on the pendant.
+ */
 void hostcmd_ta(void)
 {
 }
 
+/**
+ * Clear Teach Pendant Display.
+ * 
+ * Clears the teach pendant display and sets the cursos to the home position.
+ * The cursor is set to the top row, leftmost character.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_tc(void)
 {
 }
 
+/**
+ * Print to Teach Pendant Display.
+ * 
+ * Prints a message to the pendant display at the current cursor position.
+ * 
+ * The message must be less than or equal to 16 characters. If a space, tab
+ * or punctuation mark is in the message, the message must be delimited by
+ * double quote marks.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_td(void)
 {
 }
 
+/**
+ * Enable/Disable Teach Pendant to Move Motors.
+ * 
+ * Under host computer control, allow or disallow the pendant to move motors.
+ * 
+ * This command allows a host computer application to let the pendant take control
+ * over moving the motors. After the host computer detects an ENTER or ESCAPE key,
+ * the host can read the various motor positions and store them as a point for later
+ * replay.
+ * 
+ * A value of d = 0 disables the pendant, while a value of d = 1 allows the pendant to
+ * take temporary control.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_te(void)
 {
 }
 
+/**
+ * Give Control to Host.
+ * 
+ * Toggles system control between the host computer and the teach pendant.
+ * 
+ * For the host computer to take full control over the controller, the teach pendant
+ * must be in the PLAY mode. There is no effect if the controller is already under host
+ * control or if no teach pendant is connected.
+ */
 void hostcmd_th(void)
 {
 }
 
+/**
+ * Give Control to Teach Pendant.
+ * 
+ * Toggles system control between the host computer and the teach pendant.
+ * 
+ * A teach pendant must be attached in order for the host computer to give control away.
+ * There is no effect if the controller is already under teach pendant control.
+ */
 void hostcmd_tx(void)
 {
 }
 
+/**
+ * Return to Host the Next Key Code.
+ * 
+ * Returns the next key pressed on the pendant.
+ * 
+ * Waits until a key is pressed and returns the associated key code.
+ */
 void hostcmd_tk(void)
 {
 }
 
+/**
+ * Return to Host the Last Key Code.
+ * 
+ * Returns the last key pressed on the pendant.
+ * 
+ * Returns the code of the last key pressed.
+ */
 void hostcmd_tl(void)
 {
 }
 
+/**
+ * Reset the Teach Pendant.
+ * 
+ * Resets the teach pendant and clears the display.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_tr(void)
 {
 }
 
+/**
+ * Set Teach Pendant Display Cursor.
+ * 
+ * Sets the cursor position on the pendant's LCD display.
+ * 
+ * This command is used prior to issuing a TD (print message) command in order to
+ * place the message at the desired location within the display.
+ * 
+ * A teach pendant must be connected to the controller.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ts(void)
 {
 }
 
+/**
+ * Execute Teach Pendant Diagnostics and Return Results.
+ * 
+ * Causes the teach pendant to test itself and returns the results.
+ * 
+ * The controller responds with 0 (zero) if the teach pendant is functioning properly
+ * and E or a number if the teach pendant detects and error.
+ * 
+ * If a number is returned, it will represent the location of a struck or held key.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_tt(void)
 {
 }
 
+/**
+ * Set Proportional Gain.
+ * 
+ * Set the proportional gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_ka(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if (param2.present)
+			{
+				if (param2.type == TOKEN_INT)
+				{
+					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+					if (0 <= intparam2 && intparam2 <= 255)
+					{
+						switch (param1.value.letter)
+						{
+							case 'A':
+								break;
+							case 'B':
+								break;
+							case 'C':
+								break;
+							case 'D':
+								break;
+							case 'E':
+								break;
+							case 'F':
+								break;
+							case 'G':
+								break;
+							case 'H':
+								break;
+							default:
+								// error: parameter 1 out of range
+								break;
+						}
+					}
+					else
+					{
+						// error: parameter 2 out of range
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be an integer number
+				}
+			}
+			else
+			{
+				// error: parameter 2 must be specified
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Set Differential Gain.
+ * 
+ * Set the differential gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_kb(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if (param2.present)
+			{
+				if (param2.type == TOKEN_INT)
+				{
+					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+					if (0 <= intparam2 && intparam2 <= 255)
+					{
+						switch (param1.value.letter)
+						{
+							case 'A':
+								break;
+							case 'B':
+								break;
+							case 'C':
+								break;
+							case 'D':
+								break;
+							case 'E':
+								break;
+							case 'F':
+								break;
+							case 'G':
+								break;
+							case 'H':
+								break;
+							default:
+								// error: parameter 1 out of range
+								break;
+						}
+					}
+					else
+					{
+						// error: parameter 2 out of range
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be an integer number
+				}
+			}
+			else
+			{
+				// error: parameter 2 must be specified
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Set Integral Gain.
+ * 
+ * Set the integral gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_kc(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if (param2.present)
+			{
+				if (param2.type == TOKEN_INT)
+				{
+					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+					if (0 <= intparam2 && intparam2 <= 255)
+					{
+						switch (param1.value.letter)
+						{
+							case 'A':
+								break;
+							case 'B':
+								break;
+							case 'C':
+								break;
+							case 'D':
+								break;
+							case 'E':
+								break;
+							case 'F':
+								break;
+							case 'G':
+								break;
+							case 'H':
+								break;
+							default:
+								// error: parameter 1 out of range
+								break;
+						}
+					}
+					else
+					{
+						// error: parameter 2 out of range
+					}
+				}
+				else
+				{
+					// error: parameter 2 must be an integer number
+				}
+			}
+			else
+			{
+				// error: parameter 2 must be specified
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Read Proportional Gain.
+ * 
+ * Return the proportional gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * The value returned is in the range of 0 to 255.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_ra(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error: parameter 1 out of range
+					break;
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Read Differential Gain.
+ * 
+ * Return the differential gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * The value returned is in the range of 0 to 255.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_rb(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error: parameter 1 out of range
+					break;
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Read Integral Gain.
+ * 
+ * Return the integral gain multiplier for the specified motor for the current robot
+ * type.
+ * 
+ * The value returned is in the range of 0 to 255.
+ * 
+ * If robot type is changed, the gains will be reset.
+ * 
+ * This command can be used while udner teach pendant mode.
+ */
 void hostcmd_rc(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			switch (param1.value.letter)
+			{
+				case 'A':
+					break;
+				case 'B':
+					break;
+				case 'C':
+					break;
+				case 'D':
+					break;
+				case 'E':
+					break;
+				case 'F':
+					break;
+				case 'G':
+					break;
+				case 'H':
+					break;
+				default:
+					// error: parameter 1 out of range
+					break;
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be a letter
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Restore User Gains from EEPROM.
+ * 
+ * Resets the gains previously stored by the user from EEPROM for all motors for the current
+ * robot type.
+ * 
+ * The desired robot type should be set before issuing the KR command.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_kr(void)
 {
 }
 
+/**
+ * Store User Gains from EEPROM.
+ * 
+ * Stores the gains for all motors for the current robot type to EEPROM.
+ * 
+ * If the gains have been modified, KS should be issued before changing the robot types or
+ * shutting the system down.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_ks(void)
 {
 }
 
+/**
+ * Restore Factory Gains.
+ * 
+ * Resets the gains stored by the factory for all motors for the current robot type.
+ * 
+ * The desired robot type should be set before issuing a KX command.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_kx(void)
 {
 }
 
+/**
+ * Read Input or Switch Bit
+ * 
+ * Returns the state of the specified input or switch bit.
+ * 
+ * A bit specifier of 1 to 8 addresses input bits 1 to 8, while a bit specifier of 9 to 16
+ * addresses switch bits 1 to 8, respectively.
+ * 
+ * A returned value of 1 indicates the input is on or the switch is closed.
+ * A returned value of 0 indicates the input is off or the switch is open.
+ * 
+ * An input is considered on if current is flowing through the input port.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_ib(void)
 {
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (1 <= intparam1 && intparam1 <= 16)
+			{
+				// proceed
+			}
+			else
+			{
+				// error: parameter 1 out of range
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter 1 must be specified
+	}
 }
 
+/**
+ * Read Input Port.
+ * 
+ * Returns the state of all eight input bits.
+ * 
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255.
+ * The value returned must be decoded to determine the state of each input.
+ * 
+ * A bit value of 1 indicates the corresponding input is on.
+ * A bit value of 0 indicates the corresponding input is off.
+ * 
+ * An input is considered on if current is flowing through the input port.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_ip(void)
 {
 }
 
+/**
+ * Read Switch Port.
+ * 
+ * Returns the state of all eight switch input bits.
+ * 
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255.
+ * The value returned must be decoded to determine the state of each input.
+ * 
+ * A bit value of 1 indicates the corresponding input is on.
+ * A bit value of 0 indicates the corresponding input is off.
+ * 
+ * An input is considered on if current is flowing through the input port.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_ix(void)
 {
 }
 
+/**
+ * Set Output Bit.
+ * 
+ * Turn on or off an output port.
+ * 
+ * If s = 1, the specified output is turned on.
+ * If s = 0, the specified output is turned off.
+ * 
+ * Turning on an output allows current to flow through the port.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ob(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (1 <= intparam1 && intparam1 <= 8)
+				{
+					if (param2.present)
+					{
+						if (param2.type == TOKEN_INT)
+						{
+							int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+							if (intparam2 == 0 || intparam2 == 1)
+							{
+								// proceed
+							}
+							else
+							{
+								// error: parameter 2 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be an integer number
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be specified
+					}
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Set Output Port.
+ * 
+ * Set the output port to the hexadecimal representation of the value sent.
+ * 
+ * The value to be sent is the decimal representation of the byte to be written.
+ * Output port number 1 is the least significant bit.
+ * 
+ * Turning on an output allows current to flow through the output.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_op(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (0 <= intparam1 && intparam1 <= 255)
+				{
+					// proceed
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Read Output Port.
+ * 
+ * Returns the state of all eight output bits.
+ * 
+ * The value returned is the decimal representation of the byte and ranges from 0 to 255.
+ * The value returned must be decoded to determine the state of each output.
+ * 
+ * Output port number 1 is the least significant bit.
+ * 
+ * A bit value of 1 indicates the corresponding output is on.
+ * A bit value of 0 indicates the corresponding output is off.
+ * 
+ * The returned value represents the last state the outputs were set to and not the actual state
+ * of the output.
+ * 
+ * If an output is on, it allows current to flow.
+ * 
+ * This command can be used while under teach pendant mode.
+ */
 void hostcmd_or(void)
 {
 }
 
+/**
+ * Toggle Output Bit.
+ * 
+ * Toggle the specified output port to the specified state.
+ * 
+ * If the specified output is the complement of the desired state, the output will equal the desired
+ * statue for 1/60 second then return to the original state. If the specified output is already in the
+ * desired state, the output will be complemented.
+ * 
+ * Turing on an output allows current to flow through the output.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_ot(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (1 <= intparam1 && intparam1 <= 8)
+				{
+					if (param2.present)
+					{
+						if (param2.type == TOKEN_INT)
+						{
+							int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+							if (intparam2 == 0 || intparam2 == 1)
+							{
+								// proceed
+							}
+							else
+							{
+								// error: parameter 2 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be an integer number
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be specified
+					}
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
 
+/**
+ * Abort all Waits.
+ * 
+ * Removes all pending wait on inputs and wait on switches.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_wa(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		// proceed
+	}
 }
 
+/**
+ * Wait On Input or Switch.
+ * 
+ * Detect when the specified input or switch matches the specified state.
+ * 
+ * A bit specifier of 1 to 8 addresses input bits 1 to 8, while a bit specifier of 9 to 16
+ * addresses switch bits 1 to 8, respectively.
+ * 
+ * The host must poll the system status byte (bit 4) to determine when all wait on inputs
+ * have matched. This is different from the teach pendant system, which waits until the
+ * state is matched.
+ * 
+ * In the controller, each input bit has a corresponding wait flag. When a WI command is
+ * received, the flag corresponding to the specified input bit is set if the specified
+ * state does not match the actual state of the input. The flag is cleared if the actual
+ * state of the specified input bit matches the specified state. The input is continually
+ * polled until a match occurs or the WA (abort all waits) command is issued.
+ * 
+ * The system status byte (bit 4) is set if any wait on inputs are still pending and cleared
+ * if there are no wait on inputs pending.
+ * 
+ * This command cannot be used while under teach pendant mode.
+ */
 void hostcmd_wi(void)
 {
+	if (controller_is_in_teach_pendant_mode())
+	{
+		// error: command cannot be used while under teach pendant mode
+	}
+	else
+	{
+		if (param1.present)
+		{
+			if (param1.type == TOKEN_INT)
+			{
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (1 <= intparam1 && intparam1 <= 16)
+				{
+					if (param2.present)
+					{
+						if (param2.type == TOKEN_INT)
+						{
+							int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+							if (intparam2 == 0 || intparam2 == 1)
+							{
+								// proceed
+							}
+							else
+							{
+								// error: parameter 2 out of range
+							}
+						}
+						else
+						{
+							// error: parameter 2 must be an integer number
+						}
+					}
+					else
+					{
+						// error: parameter 2 must be specified
+					}
+				}
+				else
+				{
+					// error: parameter 1 out of range
+				}
+			}
+			else
+			{
+				// error: parameter 1 must be an integer number
+			}
+		}
+		else
+		{
+			// error: parameter 1 must be specified
+		}
+	}
 }
