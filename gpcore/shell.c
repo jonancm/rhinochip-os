@@ -3,6 +3,11 @@
 #include "../types.h"
 #include "../hostcmdset.h"
 
+// debug
+#include "../macros.h"
+#define CMD_RECVD "Command received: "
+#define ERROR "Error\n"
+
 /**
  * Enumeration of all accepted token types
  */
@@ -237,9 +242,14 @@ void parse_cmd(void)
 		if (retval < 0) // it's not a program
 		{
 			// Syntax error (it's not an instruction nor a program)
+			hostcom_send(ERROR, STRLEN(ERROR));
+		}
+		else
+		{
+			// save program to EEPROM
 		}
 	}
-	else
+	else // it's an instruction
 	{
 		interpret_cmd();
 	}
@@ -870,10 +880,14 @@ void interpret_cmd(void)
 				case 'Y':
 					hostcmd_xy(); break;
 				default:
+					// error: unknown command
+					hostcom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
 		default:
+			// error: unknown command
+			hostcom_send("Error\n", STRLEN("Error\n"));
 			break;
 	}
 }
