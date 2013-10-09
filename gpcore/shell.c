@@ -3,6 +3,7 @@
 #include "../types.h"
 #include "../hostcmdset.h"
 #include "controller_status.h"
+#include "self_test.h"
 
 // debug
 #include "../macros.h"
@@ -915,8 +916,7 @@ void interpret_cmd(void)
 void hostcmd_sa(void)
 {
 	char buf[64];
-	char motor_status = 0;
-	snprintf(buf, 64, "%u", motor_status);
+	snprintf(buf, 64, "%u\n", controller.motor_status);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -965,8 +965,7 @@ void hostcmd_sa(void)
 void hostcmd_sc(void)
 {
 	char buf[64];
-	char system_cfg = 0;
-	snprintf(buf, 64, "%u", system_cfg);
+	snprintf(buf, 64, "%u\n", controller.system_config);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -1018,8 +1017,8 @@ void hostcmd_sd(void)
 void hostcmd_se(void)
 {
 	char buf[64];
-	char error_code = 0;
-	snprintf(buf, 64, "%u", error_code);
+	unsigned char error_code = 0;
+	snprintf(buf, 64, "%u\n", error_code);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -1032,6 +1031,7 @@ void hostcmd_sm(void)
 {
 	char buf[64];
 	char motor_mode = 0;
+	bool_t error = false;
 
 	if (param1.present)
 	{
@@ -1040,24 +1040,38 @@ void hostcmd_sm(void)
 			switch (param1.value.letter)
 			{
 				case 'A':
+					motor_mode = controller.motor_mode.motor_a;
 					break;
 				case 'B':
+					motor_mode = controller.motor_mode.motor_b;
 					break;
 				case 'C':
+					motor_mode = controller.motor_mode.motor_c;
 					break;
 				case 'D':
+					motor_mode = controller.motor_mode.motor_d;
 					break;
 				case 'E':
+					motor_mode = controller.motor_mode.motor_e;
 					break;
 				case 'F':
+					motor_mode = controller.motor_mode.motor_f;
 					break;
 				case 'G':
+					motor_mode = controller.motor_mode.motor_g;
 					break;
 				case 'H':
+					motor_mode = controller.motor_mode.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				snprintf(buf, 64, "%u\n", motor_mode);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 		else
@@ -1072,7 +1086,7 @@ void hostcmd_sm(void)
 }
 
 /**
- * Read Teach Pendant Erro Byte.
+ * Read Teach Pendant Error Byte.
  * 
  * Returns the code of the last error recognized by the teach pendant.
  * 
@@ -1118,8 +1132,7 @@ void hostcmd_sr(void)
 void hostcmd_ss(void)
 {
 	char buf[64];
-	char system_status = 0;
-	snprintf(buf, 64, "%u", system_status);
+	snprintf(buf, 64, "%u\n", controller.system_status);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -1149,8 +1162,7 @@ void hostcmd_st(void)
 void hostcmd_su(void)
 {
 	char buf[64];
-	int usage_time = 0;
-	snprintf(buf, 64, "%u", usage_time);
+	snprintf(buf, 64, "%lu\n", controller.usage_time);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -1164,7 +1176,7 @@ void hostcmd_su(void)
  */
 void hostcmd_sv(void)
 {
-	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX."
+	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX.\n"
 	hostcom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
 }
 
@@ -1181,10 +1193,26 @@ void hostcmd_sx(void)
 {
 	#define TEACH_PENDANT_ONLINE "Teach Pendant:  Online.\n"
 	#define TEACH_PENDANT_OFFLINE "Teach Pendant:  Offline/Error.\n"
-	#define RAM_TEST_PASSED "Ram Test:  Passed.  Last Addr= %xH.  Bytes OK = %d.\n"
-	#define RAM_TEST_FAILED "Ram Test:  FAILED.  Last Addr= %xH.  Bytes OK = %d.\n"
-	hostcom_send(TEACH_PENDANT_ONLINE, STRLEN(TEACH_PENDANT_ONLINE));
-	hostcom_send(RAM_TEST_PASSED, STRLEN(RAM_TEST_PASSED));
+	#define RAM_TEST_PASSED "Ram Test:  Passed.  Last Addr= %xH.  Bytes OK = %u.\n"
+	#define RAM_TEST_FAILED "Ram Test:  FAILED.  Last Addr= %xH.  Bytes OK = %u.\n"
+	
+	bool_t test_passed = false;
+	unsigned int last_addr, bytes_ok;
+	char buf[64];
+	
+	test_passed = test_teach_pendant();
+	if (test_passed)
+		snprintf(buf, 64, TEACH_PENDANT_ONLINE);
+	else
+		snprintf(buf, 64, TEACH_PENDANT_OFFLINE);
+	hostcom_send(buf, strlen(buf));
+	
+	test_passed = test_ram(&last_addr, &bytes_ok);
+	if (test_passed)
+		snprintf(buf, 64, RAM_TEST_PASSED, last_addr, bytes_ok);
+	else
+		snprintf(buf, 64, RAM_TEST_FAILED, last_addr, bytes_ok);
+	hostcom_send(buf, strlen(buf));
 }
 
 /**
@@ -1197,8 +1225,7 @@ void hostcmd_sx(void)
 void hostcmd_sz(void)
 {
 	char buf[64];
-	int timer_value = 0;
-	snprintf(buf, 64, "%u", timer_value);
+	snprintf(buf, 64, "%d\n", controller.delay_timer);
 	hostcom_send(buf, strlen(buf));
 }
 
@@ -1279,8 +1306,12 @@ void hostcmd_cg(void)
 			switch (intparam1)
 			{
 				case 0:
+					// Set bit 3: disable gripper
+					controller.system_config |= BIT_3;
 					break;
 				case 1:
+					// Clear bit 3: enable gripper
+					controller.system_config &= ~BIT_3;
 					break;
 				default:
 					// error
@@ -1323,62 +1354,75 @@ void hostcmd_cm(void)
 					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 					if (0 <= intparam2 && intparam2 <= 3)
 					{
+						motor_mode_t *motor_mode_reg;
+						bool_t error = false;
 						int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 						switch (intparam1)
 						{
 							case 'A':
+								motor_mode_reg = &controller.motor_mode.motor_a;
 								break;
 							case 'B':
+								motor_mode_reg = &controller.motor_mode.motor_b;
 								break;
 							case 'C':
+								motor_mode_reg = &controller.motor_mode.motor_c;
 								break;
 							case 'D':
+								motor_mode_reg = &controller.motor_mode.motor_d;
 								break;
 							case 'E':
+								motor_mode_reg = &controller.motor_mode.motor_e;
 								break;
 							case 'F':
+								motor_mode_reg = &controller.motor_mode.motor_f;
 								break;
 							case 'G':
+								motor_mode_reg = &controller.motor_mode.motor_g;
 								break;
 							case 'H':
+								motor_mode_reg = &controller.motor_mode.motor_h;
 								break;
 							default:
-								// error
-								break;
+								// error : parameter 1 out of range
+								error = true;
 						}
-
-						if (hard_home_in_progress())
+						
+						if (!error)
 						{
-							// error
-						}
-						else
-						{
-							// proceed
+							if (hard_home_in_progress())
+							{
+								// error: hard home in progress
+							}
+							else
+							{
+								*motor_mode_reg = intparam2;
+							}
 						}
 					}
 					else
 					{
-						// error
+						// error: parameter 2 out of range
 					}
 				}
 				else
 				{
-					// error
+					// error: parameter 2 must be an integer number
 				}
 			}
 			else
 			{
-				// error
+				// error: parameter 2 must be specified
 			}
 		}
 		else
 		{
-			// error
+			// error: parameter 1 must be an integer number
 		}
 	}
 	else
 	{
-		// error
+		// error: parameter 1 must be specified
 	}
 }
 
@@ -1399,37 +1443,45 @@ void hostcmd_cr(void)
 	{
 		if (param1.type == TOKEN_INT)
 		{
-			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			switch (intparam1)
-			{
-				case 0:
-					break;
-				case 1:
-					break;
-				case 2:
-					break;
-				default:
-					// error
-					break;
-			}
-
 			if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 			{
-				// error
+				// error: some motor is still executing a trapezoidal move
 			}
 			else
 			{
-				// proceed
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				switch (intparam1)
+				{
+					case 0:
+						// Clear bit 5: set controller mode to robot mode
+						controller.system_config &= ~BIT_5;
+						// Set bit 5: set robot type to SCARA
+						controller.system_config |= BIT_4;
+						break;
+					case 1:
+						// Clear bit 5: set controller mode to robot mode
+						controller.system_config &= ~BIT_5;
+						// Clear bit 5: set robot type to XR-3
+						controller.system_config &= ~BIT_4;
+						break;
+					case 2:
+						// Set bit 5: set controller mode to generic mode
+						controller.system_config |= BIT_5;
+						break;
+					default:
+						// error: parameter 1 out of range
+						break;
+				}
 			}
 		}
 		else
 		{
-			// error
+			// error: parameter 1 must be an integer number
 		}
 	}
 	else
 	{
-		// error
+		// error: parameter 1 must be specified
 	}
 }
 
@@ -1441,6 +1493,9 @@ void hostcmd_cr(void)
  */
 void hostcmd_ar(void)
 {
+	char buf[64];
+	snprintf(buf, 64, "%u\n", controller.system_acceleration);
+	hostcom_send(buf, strlen(buf));
 }
 
 /**
@@ -1456,27 +1511,54 @@ void hostcmd_dr(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			char      pwm_level;
+			bool_t    direction;
+			bool_t    error;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					pwm_level = controller.pwm_level.motor_a;
+					direction = controller.pwm_direction & MOTOR_A;
 					break;
 				case 'B':
+					pwm_level = controller.pwm_level.motor_b;
+					direction = controller.pwm_direction & MOTOR_B;
 					break;
 				case 'C':
+					pwm_level = controller.pwm_level.motor_c;
+					direction = controller.pwm_direction & MOTOR_C;
 					break;
 				case 'D':
+					pwm_level = controller.pwm_level.motor_d;
+					direction = controller.pwm_direction & MOTOR_D;
 					break;
 				case 'E':
+					pwm_level = controller.pwm_level.motor_e;
+					direction = controller.pwm_direction & MOTOR_E;
 					break;
 				case 'F':
+					pwm_level = controller.pwm_level.motor_f;
+					direction = controller.pwm_direction & MOTOR_F;
 					break;
 				case 'G':
+					pwm_level = controller.pwm_level.motor_g;
+					direction = controller.pwm_direction & MOTOR_G;
 					break;
 				case 'H':
+					pwm_level = controller.pwm_level.motor_h;
+					direction = controller.pwm_direction & MOTOR_H;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%d\n", (direction ? -pwm_level : pwm_level));
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1490,6 +1572,9 @@ void hostcmd_dr(void)
  */
 void hostcmd_gs(void)
 {
+	char buf[64];
+	snprintf(buf, 64, "%u\n", controller.gripper_status);
+	hostcom_send(buf, strlen(buf));
 }
 
 /**
@@ -1509,27 +1594,45 @@ void hostcmd_hr(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			int       soft_home_pos;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					soft_home_pos = controller.soft_home_position.motor_a;
 					break;
 				case 'B':
+					soft_home_pos = controller.soft_home_position.motor_b;
 					break;
 				case 'C':
+					soft_home_pos = controller.soft_home_position.motor_c;
 					break;
 				case 'D':
+					soft_home_pos = controller.soft_home_position.motor_d;
 					break;
 				case 'E':
+					soft_home_pos = controller.soft_home_position.motor_e;
 					break;
 				case 'F':
+					soft_home_pos = controller.soft_home_position.motor_f;
 					break;
 				case 'G':
+					soft_home_pos = controller.soft_home_position.motor_g;
 					break;
 				case 'H':
+					soft_home_pos = controller.soft_home_position.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%d\n", soft_home_pos);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1547,27 +1650,45 @@ void hostcmd_pa(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			int       cur_pos;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					cur_pos = controller.current_position.motor_a;
 					break;
 				case 'B':
+					cur_pos = controller.current_position.motor_b;
 					break;
 				case 'C':
+					cur_pos = controller.current_position.motor_c;
 					break;
 				case 'D':
+					cur_pos = controller.current_position.motor_d;
 					break;
 				case 'E':
+					cur_pos = controller.current_position.motor_e;
 					break;
 				case 'F':
+					cur_pos = controller.current_position.motor_f;
 					break;
 				case 'G':
+					cur_pos = controller.current_position.motor_g;
 					break;
 				case 'H':
+					cur_pos = controller.current_position.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%d\n", cur_pos);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1586,27 +1707,61 @@ void hostcmd_pw(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			int       dest_pos;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					dest_pos = controller.absolute_destination.motor_a;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_a;
 					break;
 				case 'B':
+					dest_pos = controller.absolute_destination.motor_b;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_b;
 					break;
 				case 'C':
+					dest_pos = controller.absolute_destination.motor_c;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_c;
 					break;
 				case 'D':
+					dest_pos = controller.absolute_destination.motor_d;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_d;
 					break;
 				case 'E':
+					dest_pos = controller.absolute_destination.motor_e;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_e;
 					break;
 				case 'F':
+					dest_pos = controller.absolute_destination.motor_f;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_f;
 					break;
 				case 'G':
+					dest_pos = controller.absolute_destination.motor_g;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_g;
 					break;
 				case 'H':
+					dest_pos = controller.absolute_destination.motor_h;
+					if (!dest_pos)
+						dest_pos = controller.relative_destination.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%d\n", dest_pos);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1628,21 +1783,36 @@ void hostcmd_pz(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			float     dest_val;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'X':
+					dest_val = controller.xyz_destination.x;
 					break;
 				case 'Y':
+					dest_val = controller.xyz_destination.y;
 					break;
 				case 'Z':
+					dest_val = controller.xyz_destination.z;
 					break;
 				case 'A':
+					dest_val = controller.xyz_destination.a;
 					break;
 				case 'T':
+					dest_val = controller.xyz_destination.t;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%.2f\n", dest_val);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1698,6 +1868,9 @@ void hostcmd_pz(void)
  */
 void hostcmd_rl(void)
 {
+	char buf[64];
+	snprintf(buf, 64, "%u\n", controller.limit_switches);
+	hostcom_send(buf, strlen(buf));
 }
 
 /**
@@ -1713,7 +1886,7 @@ void hostcmd_ua(void)
 }
 
 /**
- * Read YXZ Home Position.
+ * Read XYZ Home Position.
  * 
  * Returns the linear distance between the robot coordinate system origin and the
  * center of the tool tip (gripper).
@@ -1824,27 +1997,45 @@ void hostcmd_va(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			char      velocity;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					velocity = controller.motor_actual_velocity.motor_a;
 					break;
 				case 'B':
+					velocity = controller.motor_actual_velocity.motor_b;
 					break;
 				case 'C':
+					velocity = controller.motor_actual_velocity.motor_c;
 					break;
 				case 'D':
+					velocity = controller.motor_actual_velocity.motor_d;
 					break;
 				case 'E':
+					velocity = controller.motor_actual_velocity.motor_e;
 					break;
 				case 'F':
+					velocity = controller.motor_actual_velocity.motor_f;
 					break;
 				case 'G':
+					velocity = controller.motor_actual_velocity.motor_g;
 					break;
 				case 'H':
+					velocity = controller.motor_actual_velocity.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%u\n", velocity);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1872,27 +2063,45 @@ void hostcmd_vr(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
+			char      velocity;
+			bool_t    error = false;
+			
 			switch (param1.value.letter)
 			{
 				case 'A':
+					velocity = controller.motor_desired_velocity.motor_a;
 					break;
 				case 'B':
+					velocity = controller.motor_desired_velocity.motor_b;
 					break;
 				case 'C':
+					velocity = controller.motor_desired_velocity.motor_c;
 					break;
 				case 'D':
+					velocity = controller.motor_desired_velocity.motor_d;
 					break;
 				case 'E':
+					velocity = controller.motor_desired_velocity.motor_e;
 					break;
 				case 'F':
+					velocity = controller.motor_desired_velocity.motor_f;
 					break;
 				case 'G':
+					velocity = controller.motor_desired_velocity.motor_g;
 					break;
 				case 'H':
+					velocity = controller.motor_desired_velocity.motor_h;
 					break;
 				default:
 					// error
-					break;
+					error = true;
+			}
+			
+			if (!error)
+			{
+				char buf[64];
+				snprintf(buf, 64, "%u\n", velocity);
+				hostcom_send(buf, strlen(buf));
 			}
 		}
 	}
@@ -1906,6 +2115,9 @@ void hostcmd_vr(void)
  */
 void hostcmd_vx(void)
 {
+	char buf[64];
+	snprintf(buf, 64, "%u\n", controller.system_velocity);
+	hostcom_send(buf, strlen(buf));
 }
 
 /**
@@ -1962,12 +2174,46 @@ void hostcmd_ac(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			if ('A' <= param1.value.letter && param1.value.letter <= 'H')
+			int      *cur_pos;
+			bool_t    error = false;
+			
+			switch (param1.value.letter)
 			{
-				char motor = 1 << (param1.value.letter - 'A');
+				case 'A':
+					cur_pos = &controller.current_position.motor_a;
+					break;
+				case 'B':
+					cur_pos = &controller.current_position.motor_b;
+					break;
+				case 'C':
+					cur_pos = &controller.current_position.motor_c;
+					break;
+				case 'D':
+					cur_pos = &controller.current_position.motor_d;
+					break;
+				case 'E':
+					cur_pos = &controller.current_position.motor_e;
+					break;
+				case 'F':
+					cur_pos = &controller.current_position.motor_f;
+					break;
+				case 'G':
+					cur_pos = &controller.current_position.motor_g;
+					break;
+				case 'H':
+					cur_pos = &controller.current_position.motor_h;
+					break;
+				default:
+					// error: parameter 1 out of range
+					error = true;
+			}
+			
+			if (!error)
+			{
+				unsigned char motor = 1 << (param1.value.letter - 'A');
 				// If motor is in trapezoidal mode and executing a trapezoidal move,
 				// the actual position of the motor cannot be cleared.
-				if (motor_executing_trapezoidal_move(motor))
+				if (any_motor_executing_trapezoidal_move(motor))
 				{
 					// error: motor cannot be executing trapezoidal move
 				}
@@ -1975,12 +2221,8 @@ void hostcmd_ac(void)
 				// the actual position can be cleared safely.
 				else
 				{
-					// proceed
+					*cur_pos = 0;
 				}
-			}
-			else
-			{
-				// error: parameter 1 out of range
 			}
 		}
 	}
@@ -2014,7 +2256,7 @@ void hostcmd_as(void)
 				}
 				else
 				{
-					// proceed
+					controller.system_acceleration = intparam1;
 				}
 			}
 			else
@@ -2063,27 +2305,48 @@ void hostcmd_ds(void)
 						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 						if (-100 <= intparam2 && intparam2 <= 100)
 						{
+							char     *pwm_level;
+							bool_t    error = false;
+							
 							switch (param1.value.letter)
 							{
 								case 'A':
+									pwm_level = &controller.pwm_level.motor_a;
 									break;
 								case 'B':
+									pwm_level = &controller.pwm_level.motor_b;
 									break;
 								case 'C':
+									pwm_level = &controller.pwm_level.motor_c;
 									break;
 								case 'D':
+									pwm_level = &controller.pwm_level.motor_d;
 									break;
 								case 'E':
+									pwm_level = &controller.pwm_level.motor_e;
 									break;
 								case 'F':
+									pwm_level = &controller.pwm_level.motor_f;
 									break;
 								case 'G':
+									pwm_level = &controller.pwm_level.motor_g;
 									break;
 								case 'H':
+									pwm_level = &controller.pwm_level.motor_h;
 									break;
 								default:
 									// error: parameter 1 out of range
 									break;
+							}
+							
+							if (!error)
+							{
+								unsigned char motor = 1 << (param1.value.letter - 'A');
+								pwm_level = param2.value.integer.abs_value;
+								if (param2.value.integer.sign > 0)
+									controller.pwm_direction |= motor; // set direction bit for the given motor
+								else
+									controller.pwm_direction &= ~motor; // clear direction bit for the given motor
 							}
 						}
 						else
@@ -2143,7 +2406,10 @@ void hostcmd_gc(void)
 		{
 			if (gripper_is_enabled())
 			{
-				// proceed
+				// TODO: close gripper
+				
+				// Switch gripper status to closed
+				controller.gripper_status = GRIPPER_CLOSED;
 			}
 			else
 			{
@@ -2187,7 +2453,10 @@ void hostcmd_go(void)
 		{
 			if (gripper_is_enabled())
 			{
-				// proceed
+				// TODO: open gripper
+				
+				// Switch gripper status to open
+				controller.gripper_status = GRIPPER_OPEN;
 			}
 			else
 			{
@@ -2449,7 +2718,14 @@ void hostcmd_hs(void)
 	}
 	else
 	{
-		// proceed
+		controller.soft_home_position.motor_a = controller.current_position.motor_a;
+		controller.soft_home_position.motor_b = controller.current_position.motor_b;
+		controller.soft_home_position.motor_c = controller.current_position.motor_c;
+		controller.soft_home_position.motor_d = controller.current_position.motor_d;
+		controller.soft_home_position.motor_e = controller.current_position.motor_e;
+		controller.soft_home_position.motor_f = controller.current_position.motor_f;
+		controller.soft_home_position.motor_g = controller.current_position.motor_g;
+		controller.soft_home_position.motor_h = controller.current_position.motor_h;
 	}
 }
 
@@ -2777,7 +3053,7 @@ void hostcmd_pd(void)
 				if ('A' <= param1.value.letter && param1.value.letter <= 'H')
 				{
 					char motor = 1 << (param1.value.letter - 'A');
-					if (motor_executing_trapezoidal_move(motor))
+					if (any_motor_executing_trapezoidal_move(motor))
 					{
 						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
 					}
@@ -2845,7 +3121,7 @@ void hostcmd_pr(void)
 				if ('A' <= param1.value.letter && param1.value.letter <= 'H')
 				{
 					char motor = 1 << (param1.value.letter - 'A');
-					if (motor_executing_trapezoidal_move(motor))
+					if (any_motor_executing_trapezoidal_move(motor))
 					{
 						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
 					}
@@ -2913,14 +3189,14 @@ void hostcmd_px(void)
 		bool_t error = false;
 		if (controller_mode() == XR3)
 		{
-			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
+			if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
 			{
 				error = true;
 			}
 		}
 		else if (controller_mode() == SCARA)
 		{
-			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
+			if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
 			{
 				error = true;
 			}
@@ -3018,14 +3294,14 @@ void hostcmd_py(void)
 		bool_t error = false;
 		if (controller_mode() == XR3)
 		{
-			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
+			if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
 			{
 				error = true;
 			}
 		}
 		else if (controller_mode() == SCARA)
 		{
-			if (motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
+			if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
 			{
 				error = true;
 			}
