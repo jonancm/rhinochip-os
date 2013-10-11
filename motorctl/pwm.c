@@ -17,6 +17,10 @@ void pwm_setup(void)
 	PWMCON1bits.PEN2L = 1; // PWM2L pin is enabled for PWM output
 	PWMCON1bits.PEN3L = 1; // PWM3L pin is enabled for PWM output
 	
+	// Set prescale of 1:16
+	
+	PTCONbits.PTCKPS = 2;
+	
 	// Set up RE output ports (PWM ports) to be used as digital outputs,
 	// in order to be able to write to the LATE register
 	
@@ -33,6 +37,10 @@ void pwm_setup(void)
 	
 	// PTCONbits.PTMOD = 0;
 	
+	// Set PWM period
+	
+	PTPER = PWMPER;
+	
 	// Enable the PWM module
 	
 	PTCONbits.PTEN = 1;
@@ -40,5 +48,5 @@ void pwm_setup(void)
 
 void pwm_generate_pdc1(int duty)
 {
-	PDC1 = (duty / 100.0) * 65535;
+	PDC1 = (duty / 100.0) * 2 * PTPER;
 }	
