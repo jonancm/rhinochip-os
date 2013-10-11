@@ -22,16 +22,12 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
 int main(void)
 {
-	// Set up port pin RB1 to drive the LED D4
-	LATBbits.LATB1 = 0;     // Clear Latch bit for RB1 port pin
-	TRISBbits.TRISB1 = 0;   // Set the RB1 pin direction to be an output
 	
 	pwm_setup();
 	pwm_set_pdc1(75);
 	
 	while (1)
 	{
-		LATBbits.LATB1 = ~LATBbits.LATB1;
 		Delay5ms(100);
 	}
 	
