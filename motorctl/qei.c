@@ -29,10 +29,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 		case 0b00:
 			switch (curr_encoder_state[MOTOR_A])
 			{
-				// Current QEA = 0, QEB = 0
-				case 0b00:
-					// no movement
-					break;
 				// Current QEA = 0, QEB = 1
 				case 0b01:
 					// increasing/clockwise
@@ -40,10 +36,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 1, QEB = 0
 				case 0b10:
 					// decreasing/anti-clockwise
-					break;
-				// Current QEA = 1, QEB = 1
-				case 0b11:
-					// illegal
 					break;
 			}
 			break;
@@ -54,14 +46,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 0, QEB = 0
 				case 0b00:
 					// decreasing/anti-clockwise
-					break;
-				// Current QEA = 0, QEB = 1
-				case 0b01:
-					// no movement
-					break;
-				// Current QEA = 1, QEB = 0
-				case 0b10:
-					// illegal
 					break;
 				// Current QEA = 1, QEB = 1
 				case 0b11:
@@ -77,14 +61,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				case 0b00:
 					// increasing/clockwise
 					break;
-				// Current QEA = 0, QEB = 1
-				case 0b01:
-					// illegal
-					break;
-				// Current QEA = 1, QEB = 0
-				case 0b10:
-					// no movement
-					break;
 				// Current QEA = 1, QEB = 1
 				case 0b11:
 					// decreasing/anti-clockwise
@@ -95,10 +71,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 		case 0b11:
 			switch (curr_encoder_state[MOTOR_A])
 			{
-				// Current QEA = 0, QEB = 0
-				case 0b00:
-					// illegal
-					break;
 				// Current QEA = 0, QEB = 1
 				case 0b01:
 					// decreasing/anti-clockwise
@@ -106,10 +78,6 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 1, QEB = 0
 				case 0b10:
 					// increasing/clockwise
-					break;
-				// Current QEA = 1, QEB = 1
-				case 0b11:
-					// no movement
 					break;
 			}
 			break;
