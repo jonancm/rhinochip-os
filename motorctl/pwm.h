@@ -16,6 +16,6 @@
 #define PWM3H    LATEbits.LATE5
 
 void pwm_setup(void);
-void pwm_generate_pdc1(int duty);
+void pwm_set_pdc1(int duty);
 
 #endif

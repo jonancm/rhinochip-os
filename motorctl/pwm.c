@@ -46,7 +46,7 @@ void pwm_setup(void)
 	PTCONbits.PTEN = 1;
 }
 
-void pwm_generate_pdc1(int duty)
+void pwm_set_pdc1(int duty)
 {
 	PDC1 = (duty / 100.0) * 2 * PTPER;
 }	
