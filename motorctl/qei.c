@@ -22,9 +22,9 @@ void qei_setup(void)
 	
 	// Set up pins to be used as input ports
 	
-	TRISB = 1;             // RB0..RB8
-	TRISCbits.TRISC15 = 1; // RC15
-	TRISD |= 0b110;        // RD2, RD3
+	TRISD |= 0b1100;   // RD2, RD3 are inputs (2 inputs)
+	TRISE  = 0x3FF;    // All RE0..RE5 are inputs (6 inputs)
+	TRISF |= 0b110011; // RF0, RF1, RF4, RF5 are inputs (4 inputs)
 	
 	// Initialize previous encoder state for all motors
 	
