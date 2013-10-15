@@ -5,18 +5,18 @@
 
 #include "../types.h"
 
-#define QEA_MA    LATBbits.LATB0
-#define QEB_MA    LATBbits.LATB1
-#define QEA_MB    LATBbits.LATB2
-#define QEB_MB    LATBbits.LATB3
-#define QEA_MC    LATBbits.LATB4
-#define QEB_MC    LATBbits.LATB5
-#define QEA_MD    LATBbits.LATB6
-#define QEB_MD    LATBbits.LATB7
-#define QEA_ME    LATBbits.LATB8
-#define QEB_ME    LATCbits.LATC15
-#define QEA_MF    LATDbits.LATD2
-#define QEB_MF    LATDbits.LATD3
+#define QEA_MA    PORTDbits.RD2
+#define QEB_MA    PORTDbits.RD3
+#define QEA_MB    PORTEbits.RE0
+#define QEB_MB    PORTEbits.RE1
+#define QEA_MC    PORTEbits.RE2
+#define QEB_MC    PORTEbits.RE3
+#define QEA_MD    PORTEbits.RE4
+#define QEB_MD    PORTEbits.RE5
+#define QEA_ME    PORTFbits.RF0
+#define QEB_ME    PORTFbits.RF1
+#define QEA_MF    PORTFbits.RF4
+#define QEB_MF    PORTFbits.RF5
 
 #define NUM_MOTORS    6
 
