@@ -14,11 +14,11 @@ char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
 
 void qei_setup(void)
 {
-	// Clear output ports
+	// Clear input ports
 	
-	LATB = 0;            // RB0..RB8
-	LATCbits.LATC15 = 0; // RC15
-	LATD &= ~0b110;      // RD2, RD3
+	LATD = 0;
+	LATE = 0;
+	LATF = 0;
 	
 	// Set up pins to be used as input ports
 	
