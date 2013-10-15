@@ -45,6 +45,9 @@ void qei_setup(void)
 
 void __attribute__((__interrupt__)) _T2Interrupt(void)
 {
+	// Disable timer 2 interrupts
+	IEC0bits.T2IE = 0;
+	
 	// Update step count register for motor A
 	prev_encoder_state[MOTOR_A] = curr_encoder_state[MOTOR_A];
 	curr_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
@@ -136,4 +139,7 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 	
 	// Clear interrupt flag
 	IFS0bits.T2IF = 0;
+	
+	// Re-enable timer 2 interrupts
+	IEC0bits.T2IE = 1;
 }
