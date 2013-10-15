@@ -5,7 +5,7 @@
 
 #define TPWM            0.020                             /* PWM period: 20 ms */
 #define FPWM            (1 / TPWM)
-#define PWMPRESCALER    16                                /* PWM prescaler 1:16 */
+#define PWMPRESCALER    8                                 /* PWM prescaler 1:8 */
 #define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for PTPER */
 
 #define PWM1    LATBbits.LATB0

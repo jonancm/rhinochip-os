@@ -44,48 +44,36 @@ struct {
 
 void pwm_setup(void)
 {
-	// Set up PWM pin pairs to be in independent output mode
+	// Set up digital I/O pins for digital output
 	
-	PWMCON1bits.PMOD1 = 1; // PWM pin pair 1 is in independent output mode
-	PWMCON1bits.PMOD2 = 1; // PWM pin pair 1 is in independent output mode
-	PWMCON1bits.PMOD3 = 1; // PWM pin pair 1 is in independent output mode
+	TRISB = 0; // All RB0..RB8 are outputs (9 outputs)
+	TRISC = 0; // All RC13..RC15 are outputs (3 outputs)
 	
-	// Enable PWM pins for PWM output
+	// Initialize PWM registers
 	
-	PWMCON1bits.PEN1H = 1; // PWM1H pin is enabled for PWM output
-	PWMCON1bits.PEN2H = 1; // PWM2H pin is enabled for PWM output
-	PWMCON1bits.PEN3H = 1; // PWM3H pin is enabled for PWM output
-	PWMCON1bits.PEN1L = 1; // PWM1L pin is enabled for PWM output
-	PWMCON1bits.PEN2L = 1; // PWM2L pin is enabled for PWM output
-	PWMCON1bits.PEN3L = 1; // PWM3L pin is enabled for PWM output
+	*((char*)&pwmenable) = 0;
+	pwmenable.channel1 = 1;
 	
-	// Set prescale of 1:16
+	pwmcount.channel1 = 0;
+	pwmcount.channel2 = 0;
+	pwmcount.channel3 = 0;
+	pwmcount.channel4 = 0;
+	pwmcount.channel5 = 0;
+	pwmcount.channel6 = 0;
 	
-	PTCONbits.PTCKPS = 2;
+	pwmduty.channel1 = 0;
+	pwmduty.channel2 = 0;
+	pwmduty.channel3 = 0;
+	pwmduty.channel4 = 0;
+	pwmduty.channel5 = 0;
+	pwmduty.channel6 = 0;
 	
-	// Set up RE output ports (PWM ports) to be used as digital outputs,
-	// in order to be able to write to the LATE register
+	// Set up Timer 1 to implement a custom multi-channel QEI
 	
-	/*
-	TRISEbits.TRISE0 = 0; // Set RE0 (PWM1L) as a digital output
-	TRISEbits.TRISE1 = 0; // Set RE1 (PWM1H) as a digital output
-	TRISEbits.TRISE2 = 0; // Set RE2 (PWM2L) as a digital output
-	TRISEbits.TRISE3 = 0; // Set RE3 (PWM2H) as a digital output
-	TRISEbits.TRISE4 = 0; // Set RE4 (PWM3L) as a digital output
-	TRISEbits.TRISE5 = 0; // Set RE5 (PWM3H) as a digital output
-	*/
-	
-	// Set PWM module in free running mode
-	
-	// PTCONbits.PTMOD = 0;
-	
-	// Set PWM period
-	
-	PTPER = PWMPER;
-	
-	// Enable the PWM module
-	
-	PTCONbits.PTEN = 1;
+	IFS0bits.T1IF = 0; // Clear the timer 1 interrupt flag
+	IEC0bits.T1IE = 1; // Enable timer 1 interrupts
+	T1CONbits.TCKPS = 0b10; // Set a 1:8 prescale value
+	T1CONbits.TON = 1; // Start the timer
 }
 
 void pwm_set_pdc1(int duty)
