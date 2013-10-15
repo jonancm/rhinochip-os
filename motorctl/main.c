@@ -19,9 +19,13 @@ _FGS(CODE_PROT_OFF);            //Disable Code Protection
 
 #include "../delay.h"
 #include "pwm.h"
+#include "qei.h"
+
 
 int main(void)
 {
+	
+	qei_setup();
 	
 	pwm_setup();
 	pwm_set_pdc1(75);
