@@ -78,5 +78,5 @@ void pwm_setup(void)
 
 void pwm_set_pdc1(int duty)
 {
-	PDC1 = (duty / 100.0) * 2 * PTPER;
-}	
+	pwmduty.channel1 = (duty / 100.0) * PWMPER;
+}
