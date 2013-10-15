@@ -1,5 +1,47 @@
 #include "pwm.h"
 
+/**
+ * PWM channel enable.
+ */
+struct {
+	unsigned channel1 : 1;
+	unsigned channel2 : 1;
+	unsigned channel3 : 1;
+	unsigned channel4 : 1;
+	unsigned channel5 : 1;
+	unsigned channel6 : 1;
+	unsigned          : 2; // padding to complete the byte
+} pwmenable;
+
+/**
+ * PWM period.
+ */
+unsigned int pwmperiod = 0;
+
+/**
+ * PWM count register.
+ */
+struct {
+	unsigned int channel1;
+	unsigned int channel2;
+	unsigned int channel3;
+	unsigned int channel4;
+	unsigned int channel5;
+	unsigned int channel6;
+} pwmcount;
+
+/**
+ * PWM duty cycle register.
+ */
+struct {
+	unsigned int channel1;
+	unsigned int channel2;
+	unsigned int channel3;
+	unsigned int channel4;
+	unsigned int channel5;
+	unsigned int channel6;
+} pwmduty;
+
 void pwm_setup(void)
 {
 	// Set up PWM pin pairs to be in independent output mode
