@@ -1,5 +1,17 @@
 #include "qei.h"
 
+/**
+ * Buffer to store the previous encoder state for each of the six motors, i.e.,
+ * the values of QEA and QEB represented as a 2-bit number (b00, b01, b10, b11).
+ */
+char prev_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
+
+/**
+ * Buffer to store the current encoder state for each of the six motors, i.e.,
+ * the values of QEA and QEB represented as a 2-bit number (b00, b01, b10, b11).
+ */
+char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
+
 void qei_setup(void)
 {
 	// Clear output ports
@@ -14,6 +26,15 @@ void qei_setup(void)
 	TRISCbits.TRISC15 = 1; // RC15
 	TRISD |= 0b110;        // RD2, RD3
 	
+	// Initialize previous encoder state for all motors
+	
+	prev_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
+	prev_encoder_state[MOTOR_B] = (QEA_MB << 1) | QEB_MB;
+	prev_encoder_state[MOTOR_C] = (QEA_MC << 1) | QEB_MC;
+	prev_encoder_state[MOTOR_D] = (QEA_MD << 1) | QEB_MD;
+	prev_encoder_state[MOTOR_E] = (QEA_ME << 1) | QEB_ME;
+	prev_encoder_state[MOTOR_F] = (QEA_MF << 1) | QEB_MF;
+	
 	// Set up Timer 2 to implement a custom multi-channel QEI
 	
 	IFS0bits.T2IF = 0; // Clear the timer 2 interrupt flag
@@ -25,7 +46,8 @@ void qei_setup(void)
 void __attribute__((__interrupt__)) _T2Interrupt(void)
 {
 	// Update step count register for motor A
-	curr_encoder_state[MOTOR_A] = QEA_MA << 1 | QEB_MA;
+	prev_encoder_state[MOTOR_A] = curr_encoder_state[MOTOR_A];
+	curr_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
 	switch (prev_encoder_state[MOTOR_A])
 	{
 		// Previous QEA = 0, QEB = 0

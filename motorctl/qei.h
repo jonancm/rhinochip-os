@@ -25,11 +25,6 @@
 #define MOTOR_E    4
 #define MOTOR_F    5
 
-/**
- * Buffer to store the previous encoder state for each of the six motors, i.e.,
- * the values of QEA and QEB represented as a 2-bit number (b00, b01, b10, b11).
- */
-static char prev_encoder_state[NUM_MOTORS];
 
 /**
  * Buffer to store the current encoder state for each of the six motors, i.e.,
