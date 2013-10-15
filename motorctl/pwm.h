@@ -8,12 +8,12 @@
 #define PWMPRESCALER    16                                /* PWM prescaler 1:16 */
 #define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for PTPER */
 
-#define PWM1L    LATEbits.LATE0
-#define PWM1H    LATEbits.LATE1
-#define PWM2L    LATEbits.LATE2
-#define PWM2H    LATEbits.LATE3
-#define PWM3L    LATEbits.LATE4
-#define PWM3H    LATEbits.LATE5
+#define PWM1    LATBbits.LATB0
+#define PWM2    LATBbits.LATB1
+#define PWM3    LATBbits.LATB2
+#define PWM4    LATBbits.LATB3
+#define PWM5    LATBbits.LATB4
+#define PWM6    LATBbits.LATB5
 
 void pwm_setup(void);
 void pwm_set_pdc1(int duty);
