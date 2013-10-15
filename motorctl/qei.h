@@ -3,6 +3,8 @@
 
 #include <p30fxxxx.h>
 
+#include "../types.h"
+
 #define QEA_MA    LATBbits.LATB0
 #define QEB_MA    LATBbits.LATB1
 #define QEA_MB    LATBbits.LATB2
@@ -25,18 +27,29 @@
 #define MOTOR_E    4
 #define MOTOR_F    5
 
-
-/**
- * Buffer to store the current encoder state for each of the six motors, i.e.,
- * the values of QEA and QEB represented as a 2-bit number (b00, b01, b10, b11).
- */
-static char curr_encoder_state[NUM_MOTORS];
+#define MOTOR_A_MAX_RANGE     300
+#define MOTOR_A_MIN_RANGE    -300
+#define MOTOR_B_MAX_RANGE     300
+#define MOTOR_B_MIN_RANGE    -300
+#define MOTOR_C_MAX_RANGE     300
+#define MOTOR_C_MIN_RANGE    -300
+#define MOTOR_D_MAX_RANGE     300
+#define MOTOR_D_MIN_RANGE    -300
+#define MOTOR_E_MAX_RANGE     300
+#define MOTOR_E_MIN_RANGE    -300
+#define MOTOR_F_MAX_RANGE     300
+#define MOTOR_F_MIN_RANGE    -300
 
 /**
  * 16-bit count registers to count motor steps. Being 16-bit wide, they can
  * store a value between -32768 an 32767.
  */
-static int motor_steps[NUM_MOTORS];
+static int motor_steps[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
+
+/**
+ * Flag that indicates whether a motor is stalled.
+ */
+static bool_t motor_stalled[NUM_MOTORS] = {false, false, false, false, false, false};
 
 /**
  * Set up the Quadrature Encoder Interface.

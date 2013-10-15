@@ -57,10 +57,14 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 0, QEB = 1
 				case 0b01:
 					// increasing/clockwise
+					if (++motor_steps[MOTOR_A] >= MOTOR_A_MAX_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 				// Current QEA = 1, QEB = 0
 				case 0b10:
 					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_A] <= MOTOR_A_MIN_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 			}
 			break;
@@ -71,10 +75,14 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 0, QEB = 0
 				case 0b00:
 					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_A] <= MOTOR_A_MIN_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 				// Current QEA = 1, QEB = 1
 				case 0b11:
 					// increasing/clockwise
+					if (++motor_steps[MOTOR_A] >= MOTOR_A_MAX_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 			}
 			break;
@@ -85,10 +93,14 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 0, QEB = 0
 				case 0b00:
 					// increasing/clockwise
+					if (++motor_steps[MOTOR_A] >= MOTOR_A_MAX_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 				// Current QEA = 1, QEB = 1
 				case 0b11:
 					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_A] <= MOTOR_A_MIN_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 			}
 			break;
@@ -99,10 +111,14 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 				// Current QEA = 0, QEB = 1
 				case 0b01:
 					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_A] <= MOTOR_A_MIN_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 				// Current QEA = 1, QEB = 0
 				case 0b10:
 					// increasing/clockwise
+					if (++motor_steps[MOTOR_A] >= MOTOR_A_MAX_RANGE)
+						motor_stalled[MOTOR_A] = true;
 					break;
 			}
 			break;
