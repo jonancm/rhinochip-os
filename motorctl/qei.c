@@ -16,7 +16,10 @@ void qei_setup(void)
 	
 	// Set up Timer 2 to implement a custom multi-channel QEI
 	
-	T2CONbits;
+	IFS0bits.T2IF = 0; // Clear the timer 2 interrupt flag
+	IEC0bits.T2IE = 1; // Enable timer 2 interrupts
+	T2CONbits.TCKPS = 0b10; // Set a 1:64 prescale value
+	T2CONbits.TON = 1; // Start the timer
 }
 
 void __attribute__((__interrupt__)) _T2Interrupt(void)
