@@ -80,3 +80,32 @@ void pwm_set_pdc1(int duty)
 {
 	pwmduty.channel1 = (duty / 100.0) * PWMPER;
 }
+
+void __attribute__((__interrupt__)) _T1Interrupt(void)
+{
+	IEC0bits.T1IE = 0;
+	
+	if (pwmenable.channel1)
+	{
+		if (pwmcount.channel1 < pwmduty.channel1)
+		{
+			PWM1 = 1;
+			++pwmcount.channel1;
+		}
+		else if (pwmcount.channel1 < PWMPER)
+		{
+			PWM1 = 0;
+			++pwmcount.channel1;
+		}
+		else
+		{
+			PWM1 = 1;
+			pwmcount.channel1 = 0;
+		}
+	}
+	
+	// Clear interrupt flag
+	IFS0bits.T1IF = 0;
+	
+	IEC0bits.T1IE = 1;
+}

@@ -24,5 +24,6 @@
 
 void pwm_setup(void);
 void pwm_set_pdc1(int duty);
+void __attribute__((__interrupt__)) _T1Interrupt(void);
 
 #endif
