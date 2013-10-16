@@ -4,9 +4,11 @@
 #include "clock.h"
 
 #define TPWM            0.020                             /* PWM period: 20 ms */
-#define FPWM            (1 / TPWM)
-#define PWMPRESCALER    8                                 /* PWM prescaler 1:8 */
-#define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for PTPER */
+#define FPWM            (1 / TPWM)                        /* PWM frequency: 50 Hz */
+#define PWMPRESCALER    1                                 /* Timer 1 prescale value 1:1 */
+#define PWMRESOL        100                               /* PWM resolution (no. of counts of Timer 1) */
+#define T1PERIOD        (TPWM / ((float) PWMRESOL))       /* Period of Timer 1 */
+#define PR1VAL          ((T1PERIOD * Fcy) / PWMPRESCALER) /* Value for the PR1 register */
 
 #define PWM1    LATBbits.LATB0
 #define PWM2    LATBbits.LATB1

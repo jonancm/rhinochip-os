@@ -44,13 +44,17 @@ struct {
 
 void pwm_setup(void)
 {
-	// Set up digital I/O pins for digital output
+	/**********************************************
+	 * Set up digital I/O pins for digital output *
+	 **********************************************/
 	
 	TRISB = 0;            // All RB0..RB8 are outputs (9 outputs)
 	TRISC = 0;            // All RC13, RC14 are outputs (2 outputs)
 	TRISEbits.TRISE8 = 0; // RE8 is output (1 output)
 	
-	// Initialize PWM registers
+	/****************************
+	 * Initialize PWM registers *
+	 ****************************/
 	
 	*((char*)&pwmenable) = 0;
 	pwmenable.channel1 = 1;
@@ -69,21 +73,45 @@ void pwm_setup(void)
 	pwmduty.channel5 = 0;
 	pwmduty.channel6 = 0;
 	
-	// Set up Timer 1 to implement a custom multi-channel QEI
+	/**********************************************************
+	 * Set up Timer 1 to implement a custom multi-channel QEI *
+	 **********************************************************/
 	
-	IFS0bits.T1IF = 0; // Clear the timer 1 interrupt flag
-	IEC0bits.T1IE = 1; // Enable timer 1 interrupts
-	T1CONbits.TCKPS = 0b10; // Set a 1:8 prescale value
-	T1CONbits.TON = 1; // Start the timer
+	// Clear the timer 1 interrupt flag
+	
+	IFS0bits.T1IF = 0;
+	
+	// Enable timer 1 interrupts
+	
+	IEC0bits.T1IE = 1;
+	
+	// Set timer 1 prescaler (0=1:1, 1=1:8, 2=1:64, 3=1:256)
+	
+	T1CONbits.TCKPS = 0;
+	
+	// Set timer 1 interrupt priority to 1 (default: 2)
+	
+	IPC0bits.T1IP = 1;
+	
+	// PR1 = (Timer period * fcy) / prescaler =
+	//     = (PWM period / 100 * fcy) / prescaler =
+	//     = (20 ms / 100 * 30 MHz) / 1 = 6000
+	
+	PR1 = 6000;
+	
+	// Start the timer
+	
+	T1CONbits.TON = 1;
 }
 
 void pwm_set_pdc1(int duty)
 {
-	pwmduty.channel1 = (duty / 100.0) * PWMPER;
+	pwmduty.channel1 = duty;
 }
 
 void __attribute__((__interrupt__)) _T1Interrupt(void)
 {
+	// Disable Timer 1 interrupts while executing ISR
 	IEC0bits.T1IE = 0;
 	
 	if (pwmenable.channel1)
@@ -93,7 +121,7 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 			PWM1 = 1;
 			++pwmcount.channel1;
 		}
-		else if (pwmcount.channel1 < PWMPER)
+		else if (pwmcount.channel1 < PWMRESOL)
 		{
 			PWM1 = 0;
 			++pwmcount.channel1;
@@ -108,5 +136,6 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 	// Clear interrupt flag
 	IFS0bits.T1IF = 0;
 	
+	// Re-enable Timer 1 interrupts
 	IEC0bits.T1IE = 1;
 }
