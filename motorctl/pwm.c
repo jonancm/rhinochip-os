@@ -46,8 +46,9 @@ void pwm_setup(void)
 {
 	// Set up digital I/O pins for digital output
 	
-	TRISB = 0; // All RB0..RB8 are outputs (9 outputs)
-	TRISC = 0; // All RC13..RC15 are outputs (3 outputs)
+	TRISB = 0;            // All RB0..RB8 are outputs (9 outputs)
+	TRISC = 0;            // All RC13, RC14 are outputs (2 outputs)
+	TRISEbits.TRISE8 = 0; // RE8 is output (1 output)
 	
 	// Initialize PWM registers
 	
