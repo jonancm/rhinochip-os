@@ -29,11 +29,7 @@ int main(void)
 	pwm_setup();
 	pwm_set_pdc1(75);
 	
-	while (1)
-	{
-		LATBbits.LATB1 = ~LATBbits.LATB1;
-		Delay5ms(100);
-	}
+	while (1);
 	
 	return 0;
 }
