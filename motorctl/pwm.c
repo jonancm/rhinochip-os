@@ -1,6 +1,5 @@
 #include "pwm.h"
 
-
 /**
  * PWM period.
  */

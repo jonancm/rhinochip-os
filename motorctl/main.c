@@ -10,7 +10,6 @@ _FBORPOR(MCLR_DIS);              // Disable reset pin
 
 int main(void)
 {
-	
 	pwm_setup();
 	
 	pwm_set_duty1(75);
