@@ -47,6 +47,14 @@ void pwm_setup(void)
 	PWMCON1bits.PEN2H = 0;
 	PWMCON1bits.PEN3H = 0;
 	
+	// Set prescale of 1:64
+	
+	PTCONbits.PTCKPS = 3;
+	
+	// Set PWM period
+	
+	PTPER = PWMPER;
+	
 	// Enable the hardware PWM module
 	
 	PTCONbits.PTEN = 1;
@@ -91,11 +99,9 @@ void pwm_setup(void)
 	
 	IPC0bits.T1IP = 1;
 	
-	// PR1 = (Timer period * fcy) / prescaler =
-	//     = (PWM period / 100 * fcy) / prescaler =
-	//     = (20 ms / 100 * 30 MHz) / 1 = 6000
+	// Set Timer 1 period
 	
-	PR1 = 6000;
+	PR1 = PR1VAL;
 	
 	// Start the timer
 	

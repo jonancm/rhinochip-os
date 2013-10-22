@@ -5,10 +5,12 @@
 
 #define TPWM            0.020                             /* PWM period: 20 ms */
 #define FPWM            (1 / TPWM)                        /* PWM frequency: 50 Hz */
-#define PWMPRESCALER    1                                 /* Timer 1 prescale value 1:1 */
+#define T1PRESCALER     1                                 /* Timer 1 prescale value 1:1 */
 #define PWMRESOL        100                               /* PWM resolution (no. of counts of Timer 1) */
-#define T1PERIOD        (TPWM / ((float) PWMRESOL))       /* Period of Timer 1 */
-#define PR1VAL          ((T1PERIOD * Fcy) / PWMPRESCALER) /* Value for the PR1 register */
+#define T1PERIOD        (TPWM / PWMRESOL)                 /* Period of Timer 1 */
+#define PR1VAL          ((T1PERIOD * FCY) / T1PRESCALER)  /* Value for the PR1 register */
+#define PWMPRESCALER    64                                /* PWM prescaler 1:64 */
+#define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for the PTPER register */
 
 #define PWM1    LATEbits.LATE0
 #define PWM2    LATEbits.LATE2
