@@ -27,9 +27,9 @@
 #define DIR6    LATEbits.LATE8
 
 void pwm_setup(void);
-void pwm_set_duty1(int duty);
-void pwm_set_duty2(int duty);
-void pwm_set_duty3(int duty);
+inline void pwm_set_duty1(int duty);
+inline void pwm_set_duty2(int duty);
+inline void pwm_set_duty3(int duty);
 inline void pwm_set_duty4(int duty);
 inline void pwm_set_duty5(int duty);
 inline void pwm_set_duty6(int duty);
