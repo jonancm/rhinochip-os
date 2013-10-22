@@ -99,32 +99,32 @@ void pwm_setup(void)
 	T1CONbits.TON = 1;
 }
 
-void pwm_set_pdc1(int duty)
+void pwm_set_duty1(int duty)
 {
 	PDC1 = (duty / 100.0) * 2 * PTPER;
 }
 
-void pwm_set_pdc2(int duty)
+void pwm_set_duty2(int duty)
 {
 	PDC2 = (duty / 100.0) * 2 * PTPER;
 }
 
-void pwm_set_pdc3(int duty)
+void pwm_set_duty3(int duty)
 {
 	PDC3 = (duty / 100.0) * 2 * PTPER;
 }
 
-inline void pwm_set_pdc4(int duty)
+inline void pwm_set_duty4(int duty)
 {
 	pwmduty.channel4 = duty;
 }
 
-inline void pwm_set_pdc5(int duty)
+inline void pwm_set_duty5(int duty)
 {
 	pwmduty.channel5 = duty;
 }
 
-inline void pwm_set_pdc6(int duty)
+inline void pwm_set_duty6(int duty)
 {
 	pwmduty.channel6 = duty;
 }
