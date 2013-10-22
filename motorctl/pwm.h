@@ -24,6 +24,16 @@
 #define DIR5    LATCbits.LATC14
 #define DIR6    LATEbits.LATE8
 
+/**
+ * PWM channel enable.
+ */
+static struct {
+	unsigned channel4 : 1;
+	unsigned channel5 : 1;
+	unsigned channel6 : 1;
+	unsigned          : 5; // padding to complete the byte
+} pwmenable;
+
 void pwm_setup(void);
 void pwm_set_pdc4(int duty);
 void pwm_set_pdc5(int duty);

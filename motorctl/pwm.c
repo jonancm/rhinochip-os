@@ -1,14 +1,5 @@
 #include "pwm.h"
 
-/**
- * PWM channel enable.
- */
-struct {
-	unsigned channel4 : 1;
-	unsigned channel5 : 1;
-	unsigned channel6 : 1;
-	unsigned          : 5; // padding to complete the byte
-} pwmenable;
 
 /**
  * PWM period.
