@@ -26,17 +26,39 @@ struct {
 
 void pwm_setup(void)
 {
+	/******************************
+	 * Set up hardware PWM module *
+	 ******************************/
+	
+	// Set PWM output pins for independent output mode
+	
+	PWMCON1bits.PMOD1 = 1;
+	PWMCON1bits.PMOD2 = 1;
+	PWMCON1bits.PMOD3 = 1;
+	
+	// Enable RE0, RE2 and RE4 for hardware PWM
+	
+	PWMCON1bits.PEN1L = 1;
+	PWMCON1bits.PEN2L = 1;
+	PWMCON1bits.PEN3L = 1;
+	
+	// Set RE1, RE3 and RE5 to be used as general purpose I/O pins
+	
+	PWMCON1bits.PEN1H = 0;
+	PWMCON1bits.PEN2H = 0;
+	PWMCON1bits.PEN3H = 0;
+	
 	/**********************************************
 	 * Set up digital I/O pins for digital output *
 	 **********************************************/
 	
-	TRISB = 0;            // All RB0..RB8 are outputs (9 outputs)
-	TRISC = 0;            // All RC13, RC14 are outputs (2 outputs)
-	TRISEbits.TRISE8 = 0; // RE8 is output (1 output)
+	TRISB = 0;       // All RB0..RB8 are outputs (9 outputs)
+	TRISC = 0;       // All RC13, RC14 are outputs (2 outputs)
+	TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs
 	
-	/****************************
-	 * Initialize PWM registers *
-	 ****************************/
+	/*************************************
+	 * Initialize software PWM registers *
+	 *************************************/
 	
 	*((char*)&pwmenable) = 0;
 	
