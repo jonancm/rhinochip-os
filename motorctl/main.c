@@ -12,6 +12,11 @@ int main(void)
 {
 	
 	pwm_setup();
+	
+	pwmenable.channel4 = 1;
+	pwmenable.channel5 = 0;
+	pwmenable.channel6 = 0;
+	
 	pwm_set_pdc4(75);
 	pwm_set_pdc5(75);
 	pwm_set_pdc6(75);
