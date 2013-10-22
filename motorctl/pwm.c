@@ -49,4 +49,14 @@ void pwm_setup(void)
 void pwm_set_pdc1(int duty)
 {
 	PDC1 = (duty / 100.0) * 2 * PTPER;
-}	
+}
+
+void pwm_set_pdc2(int duty)
+{
+	PDC2 = (duty / 100.0) * 2 * PTPER;
+}
+
+void pwm_set_pdc3(int duty)
+{
+	PDC3 = (duty / 100.0) * 2 * PTPER;
+}
