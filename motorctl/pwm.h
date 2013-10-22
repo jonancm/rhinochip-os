@@ -3,7 +3,7 @@
 
 #include "clock.h"
 
-#define TPWM            0.020                             /* PWM period: 20 ms */
+#define TPWM            0.018                             /* PWM period: 18 ms */
 #define FPWM            (1 / TPWM)                        /* PWM frequency: 50 Hz */
 #define T1PRESCALER     1                                 /* Timer 1 prescale value 1:1 */
 #define PWMRESOL        100                               /* PWM resolution (no. of counts of Timer 1) */
