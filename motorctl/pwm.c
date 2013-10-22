@@ -60,8 +60,6 @@ void pwm_setup(void)
 	 * Initialize software PWM registers *
 	 *************************************/
 	
-	*((char*)&pwmenable) = 0;
-	
 	pwmcount.channel4 = 0;
 	pwmcount.channel5 = 0;
 	pwmcount.channel6 = 0;
@@ -122,7 +120,7 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 	IEC0bits.T1IE = 0;
 	
 	// Generate PWM signal on PWM channel 4
-	if (pwmenable.channel4)
+	if (pwmduty.channel4)
 	{
 		if (pwmcount.channel4 < pwmduty.channel4)
 		{
@@ -142,7 +140,7 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 	}
 	
 	// Generate PWM signal on PWM channel 5
-	if (pwmenable.channel5)
+	if (pwmduty.channel5)
 	{
 		if (pwmcount.channel5 < pwmduty.channel5)
 		{
@@ -162,7 +160,7 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 	}
 	
 	// Generate PWM signal on PWM channel 6
-	if (pwmenable.channel6)
+	if (pwmduty.channel6)
 	{
 		if (pwmcount.channel6 < pwmduty.channel6)
 		{
