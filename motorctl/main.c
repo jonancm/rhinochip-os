@@ -1,39 +1,23 @@
 #include <p30fxxxx.h>
 
-//_FWDT(WDT_OFF); // Turn off watchdog timer
-
-//Macros for Configuration Fuse Registers:
-//Invoke macros to set up  device configuration fuse registers.
-//The fuses will select the oscillator source, power-up timers, watch-dog
-//timers, BOR characteristics etc. The macros are defined within the device
-//header files. The configuration fuse registers reside in Flash memory.
-_FOSC(CSW_FSCM_OFF & XT_PLL8);  //Run this project using an external crystal
-                                //routed via the PLL in 8x multiplier mode
-                                //For the 7.3728 MHz crystal we will derive a
-                                //throughput of 7.3728e+6*8/4 = 14.74 MIPS(Fcy)
-                                //,~67nanoseconds instruction cycle time(Tcy).
-_FWDT(WDT_OFF);                 //Turn off the Watch-Dog Timer.
-_FBORPOR(MCLR_EN & PWRT_OFF);   //Enable MCLR reset pin and turn off the
-                                //power-up timers.
-_FGS(CODE_PROT_OFF);            //Disable Code Protection
+// Configuration settings
+_FOSC(CSW_FSCM_OFF & FRC_PLL16); // Fosc=16x7.5MHz, Fcy=30MHz
+_FWDT(WDT_OFF);                  // Watchdog timer off
+_FBORPOR(MCLR_DIS);              // Disable reset pin
 
 #include "../delay.h"
 #include "pwm.h"
 
 int main(void)
 {
-	// Set up port pin RB1 to drive the LED D4
-	LATBbits.LATB1 = 0;     // Clear Latch bit for RB1 port pin
-	TRISBbits.TRISB1 = 0;   // Set the RB1 pin direction to be an output
 	
 	pwm_setup();
-	pwm_set_pdc1(75);
 	
-	while (1)
-	{
-		LATBbits.LATB1 = ~LATBbits.LATB1;
-		Delay5ms(100);
-	}
+	pwm_set_pdc4(75);
+	pwm_set_pdc5(75);
+	pwm_set_pdc6(75);
+	
+	while (1);
 	
 	return 0;
 }

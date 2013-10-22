@@ -1,49 +1,102 @@
 #include "pwm.h"
 
+
+/**
+ * PWM period.
+ */
+unsigned int pwmperiod = 0;
+
+/**
+ * PWM count register.
+ */
+struct {
+	unsigned int channel4;
+	unsigned int channel5;
+	unsigned int channel6;
+} pwmcount;
+
+/**
+ * PWM duty cycle register.
+ */
+struct {
+	unsigned int channel4;
+	unsigned int channel5;
+	unsigned int channel6;
+} pwmduty;
+
 void pwm_setup(void)
 {
-	// Set up PWM pin pairs to be in independent output mode
+	/******************************
+	 * Set up hardware PWM module *
+	 ******************************/
 	
-	PWMCON1bits.PMOD1 = 1; // PWM pin pair 1 is in independent output mode
-	PWMCON1bits.PMOD2 = 1; // PWM pin pair 1 is in independent output mode
-	PWMCON1bits.PMOD3 = 1; // PWM pin pair 1 is in independent output mode
+	// Set PWM output pins for independent output mode
 	
-	// Enable PWM pins for PWM output
+	PWMCON1bits.PMOD1 = 1;
+	PWMCON1bits.PMOD2 = 1;
+	PWMCON1bits.PMOD3 = 1;
 	
-	PWMCON1bits.PEN1H = 1; // PWM1H pin is enabled for PWM output
-	PWMCON1bits.PEN2H = 1; // PWM2H pin is enabled for PWM output
-	PWMCON1bits.PEN3H = 1; // PWM3H pin is enabled for PWM output
-	PWMCON1bits.PEN1L = 1; // PWM1L pin is enabled for PWM output
-	PWMCON1bits.PEN2L = 1; // PWM2L pin is enabled for PWM output
-	PWMCON1bits.PEN3L = 1; // PWM3L pin is enabled for PWM output
+	// Enable RE0, RE2 and RE4 for hardware PWM
 	
-	// Set prescale of 1:16
+	PWMCON1bits.PEN1L = 1;
+	PWMCON1bits.PEN2L = 1;
+	PWMCON1bits.PEN3L = 1;
 	
-	PTCONbits.PTCKPS = 2;
+	// Set RE1, RE3 and RE5 to be used as general purpose I/O pins
 	
-	// Set up RE output ports (PWM ports) to be used as digital outputs,
-	// in order to be able to write to the LATE register
+	PWMCON1bits.PEN1H = 0;
+	PWMCON1bits.PEN2H = 0;
+	PWMCON1bits.PEN3H = 0;
 	
-	/*
-	TRISEbits.TRISE0 = 0; // Set RE0 (PWM1L) as a digital output
-	TRISEbits.TRISE1 = 0; // Set RE1 (PWM1H) as a digital output
-	TRISEbits.TRISE2 = 0; // Set RE2 (PWM2L) as a digital output
-	TRISEbits.TRISE3 = 0; // Set RE3 (PWM2H) as a digital output
-	TRISEbits.TRISE4 = 0; // Set RE4 (PWM3L) as a digital output
-	TRISEbits.TRISE5 = 0; // Set RE5 (PWM3H) as a digital output
-	*/
+	/**********************************************
+	 * Set up digital I/O pins for digital output *
+	 **********************************************/
 	
-	// Set PWM module in free running mode
+	TRISB = 0;       // All RB0..RB8 are outputs (9 outputs)
+	TRISC = 0;       // All RC13, RC14 are outputs (2 outputs)
+	TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs
 	
-	// PTCONbits.PTMOD = 0;
+	/*************************************
+	 * Initialize software PWM registers *
+	 *************************************/
 	
-	// Set PWM period
+	pwmcount.channel4 = 0;
+	pwmcount.channel5 = 0;
+	pwmcount.channel6 = 0;
 	
-	PTPER = PWMPER;
+	pwmduty.channel4 = 0;
+	pwmduty.channel5 = 0;
+	pwmduty.channel6 = 0;
 	
-	// Enable the PWM module
+	/**********************************************************
+	 * Set up Timer 1 to implement a custom multi-channel QEI *
+	 **********************************************************/
 	
-	PTCONbits.PTEN = 1;
+	// Clear the timer 1 interrupt flag
+	
+	IFS0bits.T1IF = 0;
+	
+	// Enable timer 1 interrupts
+	
+	IEC0bits.T1IE = 1;
+	
+	// Set timer 1 prescaler (0=1:1, 1=1:8, 2=1:64, 3=1:256)
+	
+	T1CONbits.TCKPS = 0;
+	
+	// Set timer 1 interrupt priority to 1 (default: 2)
+	
+	IPC0bits.T1IP = 1;
+	
+	// PR1 = (Timer period * fcy) / prescaler =
+	//     = (PWM period / 100 * fcy) / prescaler =
+	//     = (20 ms / 100 * 30 MHz) / 1 = 6000
+	
+	PR1 = 6000;
+	
+	// Start the timer
+	
+	T1CONbits.TON = 1;
 }
 
 void pwm_set_pdc1(int duty)
@@ -59,4 +112,91 @@ void pwm_set_pdc2(int duty)
 void pwm_set_pdc3(int duty)
 {
 	PDC3 = (duty / 100.0) * 2 * PTPER;
+}
+
+inline void pwm_set_pdc4(int duty)
+{
+	pwmduty.channel4 = duty;
+}
+
+inline void pwm_set_pdc5(int duty)
+{
+	pwmduty.channel5 = duty;
+}
+
+inline void pwm_set_pdc6(int duty)
+{
+	pwmduty.channel6 = duty;
+}
+
+void __attribute__((__interrupt__)) _T1Interrupt(void)
+{
+	// Disable Timer 1 interrupts while executing ISR
+	IEC0bits.T1IE = 0;
+	
+	// Generate PWM signal on PWM channel 4
+	if (pwmduty.channel4)
+	{
+		if (pwmcount.channel4 < pwmduty.channel4)
+		{
+			PWM4 = 1;
+			++pwmcount.channel4;
+		}
+		else if (pwmcount.channel4 < PWMRESOL)
+		{
+			PWM4 = 0;
+			++pwmcount.channel4;
+		}
+		else
+		{
+			PWM4 = 1;
+			pwmcount.channel4 = 0;
+		}
+	}
+	
+	// Generate PWM signal on PWM channel 5
+	if (pwmduty.channel5)
+	{
+		if (pwmcount.channel5 < pwmduty.channel5)
+		{
+			PWM5 = 1;
+			++pwmcount.channel5;
+		}
+		else if (pwmcount.channel5 < PWMRESOL)
+		{
+			PWM5 = 0;
+			++pwmcount.channel5;
+		}
+		else
+		{
+			PWM5 = 1;
+			pwmcount.channel5 = 0;
+		}
+	}
+	
+	// Generate PWM signal on PWM channel 6
+	if (pwmduty.channel6)
+	{
+		if (pwmcount.channel6 < pwmduty.channel6)
+		{
+			PWM6 = 1;
+			++pwmcount.channel6;
+		}
+		else if (pwmcount.channel6 < PWMRESOL)
+		{
+			PWM6 = 0;
+			++pwmcount.channel6;
+		}
+		else
+		{
+			PWM6 = 1;
+			pwmcount.channel6 = 0;
+		}
+	}
+	
+	// Clear interrupt flag
+	IFS0bits.T1IF = 0;
+	
+	// Re-enable Timer 1 interrupts
+	IEC0bits.T1IE = 1;
 }
