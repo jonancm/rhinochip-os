@@ -48,6 +48,10 @@ void pwm_setup(void)
 	PWMCON1bits.PEN2H = 0;
 	PWMCON1bits.PEN3H = 0;
 	
+	// Enable the hardware PWM module
+	
+	PTCONbits.PTEN = 1;
+	
 	/**********************************************
 	 * Set up digital I/O pins for digital output *
 	 **********************************************/
