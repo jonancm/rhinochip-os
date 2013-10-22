@@ -15,7 +15,9 @@ int main(void)
 	TRISBbits.TRISB1 = 0;   // Set the RB1 pin direction to be an output
 	
 	pwm_setup();
-	pwm_set_pdc1(75);
+	pwm_set_pdc4(75);
+	pwm_set_pdc5(75);
+	pwm_set_pdc6(75);
 	
 	while (1);
 	

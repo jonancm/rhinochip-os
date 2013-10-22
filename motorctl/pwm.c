@@ -4,13 +4,10 @@
  * PWM channel enable.
  */
 struct {
-	unsigned channel1 : 1;
-	unsigned channel2 : 1;
-	unsigned channel3 : 1;
 	unsigned channel4 : 1;
 	unsigned channel5 : 1;
 	unsigned channel6 : 1;
-	unsigned          : 2; // padding to complete the byte
+	unsigned          : 5; // padding to complete the byte
 } pwmenable;
 
 /**
@@ -22,9 +19,6 @@ unsigned int pwmperiod = 0;
  * PWM count register.
  */
 struct {
-	unsigned int channel1;
-	unsigned int channel2;
-	unsigned int channel3;
 	unsigned int channel4;
 	unsigned int channel5;
 	unsigned int channel6;
@@ -34,9 +28,6 @@ struct {
  * PWM duty cycle register.
  */
 struct {
-	unsigned int channel1;
-	unsigned int channel2;
-	unsigned int channel3;
 	unsigned int channel4;
 	unsigned int channel5;
 	unsigned int channel6;
@@ -57,18 +48,11 @@ void pwm_setup(void)
 	 ****************************/
 	
 	*((char*)&pwmenable) = 0;
-	pwmenable.channel1 = 1;
 	
-	pwmcount.channel1 = 0;
-	pwmcount.channel2 = 0;
-	pwmcount.channel3 = 0;
 	pwmcount.channel4 = 0;
 	pwmcount.channel5 = 0;
 	pwmcount.channel6 = 0;
 	
-	pwmduty.channel1 = 0;
-	pwmduty.channel2 = 0;
-	pwmduty.channel3 = 0;
 	pwmduty.channel4 = 0;
 	pwmduty.channel5 = 0;
 	pwmduty.channel6 = 0;
@@ -104,9 +88,19 @@ void pwm_setup(void)
 	T1CONbits.TON = 1;
 }
 
-void pwm_set_pdc1(int duty)
+void pwm_set_pdc4(int duty)
 {
-	pwmduty.channel1 = duty;
+	pwmduty.channel4 = duty;
+}
+
+void pwm_set_pdc5(int duty)
+{
+	pwmduty.channel5 = duty;
+}
+
+void pwm_set_pdc6(int duty)
+{
+	pwmduty.channel6 = duty;
 }
 
 void __attribute__((__interrupt__)) _T1Interrupt(void)
@@ -114,22 +108,63 @@ void __attribute__((__interrupt__)) _T1Interrupt(void)
 	// Disable Timer 1 interrupts while executing ISR
 	IEC0bits.T1IE = 0;
 	
-	if (pwmenable.channel1)
+	// Generate PWM signal on PWM channel 4
+	if (pwmenable.channel4)
 	{
-		if (pwmcount.channel1 < pwmduty.channel1)
+		if (pwmcount.channel4 < pwmduty.channel4)
 		{
-			PWM1 = 1;
-			++pwmcount.channel1;
+			PWM4 = 1;
+			++pwmcount.channel4;
 		}
-		else if (pwmcount.channel1 < PWMRESOL)
+		else if (pwmcount.channel4 < PWMRESOL)
 		{
-			PWM1 = 0;
-			++pwmcount.channel1;
+			PWM4 = 0;
+			++pwmcount.channel4;
 		}
 		else
 		{
-			PWM1 = 1;
-			pwmcount.channel1 = 0;
+			PWM4 = 1;
+			pwmcount.channel4 = 0;
+		}
+	}
+	
+	// Generate PWM signal on PWM channel 5
+	if (pwmenable.channel5)
+	{
+		if (pwmcount.channel5 < pwmduty.channel5)
+		{
+			PWM5 = 1;
+			++pwmcount.channel5;
+		}
+		else if (pwmcount.channel5 < PWMRESOL)
+		{
+			PWM5 = 0;
+			++pwmcount.channel5;
+		}
+		else
+		{
+			PWM5 = 1;
+			pwmcount.channel5 = 0;
+		}
+	}
+	
+	// Generate PWM signal on PWM channel 6
+	if (pwmenable.channel6)
+	{
+		if (pwmcount.channel6 < pwmduty.channel6)
+		{
+			PWM6 = 1;
+			++pwmcount.channel6;
+		}
+		else if (pwmcount.channel6 < PWMRESOL)
+		{
+			PWM6 = 0;
+			++pwmcount.channel6;
+		}
+		else
+		{
+			PWM6 = 1;
+			pwmcount.channel6 = 0;
 		}
 	}
 	

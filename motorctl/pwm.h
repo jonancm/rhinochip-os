@@ -10,12 +10,12 @@
 #define T1PERIOD        (TPWM / ((float) PWMRESOL))       /* Period of Timer 1 */
 #define PR1VAL          ((T1PERIOD * Fcy) / PWMPRESCALER) /* Value for the PR1 register */
 
-#define PWM1    LATBbits.LATB0
-#define PWM2    LATBbits.LATB1
-#define PWM3    LATBbits.LATB2
-#define PWM4    LATBbits.LATB3
-#define PWM5    LATBbits.LATB4
-#define PWM6    LATBbits.LATB5
+#define PWM1    LATEbits.LATE0
+#define PWM2    LATEbits.LATE2
+#define PWM3    LATEbits.LATE4
+#define PWM4    LATEbits.LATE1
+#define PWM5    LATEbits.LATE3
+#define PWM6    LATEbits.LATE5
 
 #define DIR1    LATBbits.LATB6
 #define DIR2    LATBbits.LATB7
@@ -25,7 +25,9 @@
 #define DIR6    LATEbits.LATE8
 
 void pwm_setup(void);
-void pwm_set_pdc1(int duty);
+void pwm_set_pdc4(int duty);
+void pwm_set_pdc5(int duty);
+void pwm_set_pdc6(int duty);
 void __attribute__((__interrupt__)) _T1Interrupt(void);
 
 #endif
