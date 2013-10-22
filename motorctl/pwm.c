@@ -79,17 +79,17 @@ void pwm_setup(void)
 	T1CONbits.TON = 1;
 }
 
-void pwm_set_pdc4(int duty)
+inline void pwm_set_pdc4(int duty)
 {
 	pwmduty.channel4 = duty;
 }
 
-void pwm_set_pdc5(int duty)
+inline void pwm_set_pdc5(int duty)
 {
 	pwmduty.channel5 = duty;
 }
 
-void pwm_set_pdc6(int duty)
+inline void pwm_set_pdc6(int duty)
 {
 	pwmduty.channel6 = duty;
 }

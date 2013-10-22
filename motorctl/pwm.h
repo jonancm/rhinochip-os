@@ -35,9 +35,9 @@ static struct {
 } pwmenable;
 
 void pwm_setup(void);
-void pwm_set_pdc4(int duty);
-void pwm_set_pdc5(int duty);
-void pwm_set_pdc6(int duty);
+inline void pwm_set_pdc4(int duty);
+inline void pwm_set_pdc5(int duty);
+inline void pwm_set_pdc6(int duty);
 void __attribute__((__interrupt__)) _T1Interrupt(void);
 
 #endif
