@@ -13,6 +13,9 @@ int main(void)
 	
 	pwm_setup();
 	
+	pwm_set_duty1(75);
+	pwm_set_duty2(75);
+	pwm_set_duty3(75);
 	pwm_set_duty4(75);
 	pwm_set_duty5(75);
 	pwm_set_duty6(75);
