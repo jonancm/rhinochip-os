@@ -4,6 +4,7 @@
 #include <p30fxxxx.h>
 
 #include "../types.h"
+#include "clock.h"
 
 #define QEA_MA    PORTDbits.RD2
 #define QEB_MA    PORTDbits.RD3
@@ -39,6 +40,10 @@
 #define MOTOR_E_MIN_RANGE    -300
 #define MOTOR_F_MAX_RANGE     300
 #define MOTOR_F_MIN_RANGE    -300
+
+#define T2PERIOD       10000                            /* Timer 2 frequency: 10 kHz */
+#define T2PRESCALER    1                                /* Timer 2 prescale value of 1:1 */
+#define T2PR1VAL       (FCY / (T2PERIOD * T2PRESCALER)) /* Value for the PR1 register of Timer 2 */
 
 /**
  * 16-bit count registers to count motor steps. Being 16-bit wide, they can
