@@ -432,6 +432,83 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 	}
 	
 	// Update step count register for motor F
+	prev_encoder_state[MOTOR_F] = curr_encoder_state[MOTOR_F];
+	curr_encoder_state[MOTOR_F] = (QEA_MF << 1) | QEB_MF;
+	switch (prev_encoder_state[MOTOR_F])
+	{
+		// Previous QEA = 0, QEB = 0
+		case 0b00:
+			switch (curr_encoder_state[MOTOR_F])
+			{
+				// Current QEA = 0, QEB = 1
+				case 0b01:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_F] >= MOTOR_F_MAX_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+				// Current QEA = 1, QEB = 0
+				case 0b10:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_F] <= MOTOR_F_MIN_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 0, QEB = 1
+		case 0b01:
+			switch (curr_encoder_state[MOTOR_F])
+			{
+				// Current QEA = 0, QEB = 0
+				case 0b00:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_F] <= MOTOR_F_MIN_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+				// Current QEA = 1, QEB = 1
+				case 0b11:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_F] >= MOTOR_F_MAX_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 1, QEB = 0
+		case 0b10:
+			switch (curr_encoder_state[MOTOR_F])
+			{
+				// Current QEA = 0, QEB = 0
+				case 0b00:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_F] >= MOTOR_F_MAX_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+				// Current QEA = 1, QEB = 1
+				case 0b11:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_F] <= MOTOR_F_MIN_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 1, QEB = 1
+		case 0b11:
+			switch (curr_encoder_state[MOTOR_F])
+			{
+				// Current QEA = 0, QEB = 1
+				case 0b01:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_F] <= MOTOR_F_MIN_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+				// Current QEA = 1, QEB = 0
+				case 0b10:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_F] >= MOTOR_F_MAX_RANGE)
+						motor_stalled[MOTOR_F] = true;
+					break;
+			}
+			break;
+	}
 	
 	// Clear interrupt flag
 	IFS0bits.T2IF = 0;
