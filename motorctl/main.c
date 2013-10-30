@@ -1,9 +1,9 @@
 #include <p30fxxxx.h>
 
 // Configuration settings
-_FOSC(CSW_FSCM_OFF & FRC_PLL16); // Fosc = 16x 8 MHz, Fcy = 32 MHz
-_FWDT(WDT_OFF);                  // Watchdog timer off
-_FBORPOR(MCLR_DIS);              // Disable reset pin
+_FOSC(CSW_FSCM_OFF & XT_PLL16); // Fosc = 16x 7.37 MHz, Fcy = 29.50 MHz
+_FWDT(WDT_OFF);                 // Turn off the watchdog timer
+_FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
 #include "../delay.h"
 #include "pwm.h"
