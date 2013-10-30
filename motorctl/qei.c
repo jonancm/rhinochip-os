@@ -274,6 +274,83 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 	}
 	
 	// Update step count register for motor D
+	prev_encoder_state[MOTOR_D] = curr_encoder_state[MOTOR_D];
+	curr_encoder_state[MOTOR_D] = (QEA_MD << 1) | QEB_MD;
+	switch (prev_encoder_state[MOTOR_D])
+	{
+		// Previous QEA = 0, QEB = 0
+		case 0b00:
+			switch (curr_encoder_state[MOTOR_D])
+			{
+				// Current QEA = 0, QEB = 1
+				case 0b01:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_D] >= MOTOR_D_MAX_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+				// Current QEA = 1, QEB = 0
+				case 0b10:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_D] <= MOTOR_D_MIN_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 0, QEB = 1
+		case 0b01:
+			switch (curr_encoder_state[MOTOR_D])
+			{
+				// Current QEA = 0, QEB = 0
+				case 0b00:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_D] <= MOTOR_D_MIN_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+				// Current QEA = 1, QEB = 1
+				case 0b11:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_D] >= MOTOR_D_MAX_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 1, QEB = 0
+		case 0b10:
+			switch (curr_encoder_state[MOTOR_D])
+			{
+				// Current QEA = 0, QEB = 0
+				case 0b00:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_D] >= MOTOR_D_MAX_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+				// Current QEA = 1, QEB = 1
+				case 0b11:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_D] <= MOTOR_D_MIN_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+			}
+			break;
+		// Previous QEA = 1, QEB = 1
+		case 0b11:
+			switch (curr_encoder_state[MOTOR_D])
+			{
+				// Current QEA = 0, QEB = 1
+				case 0b01:
+					// decreasing/anti-clockwise
+					if (--motor_steps[MOTOR_D] <= MOTOR_D_MIN_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+				// Current QEA = 1, QEB = 0
+				case 0b10:
+					// increasing/clockwise
+					if (++motor_steps[MOTOR_D] >= MOTOR_D_MAX_RANGE)
+						motor_stalled[MOTOR_D] = true;
+					break;
+			}
+			break;
+	}
 	
 	// Update step count register for motor E
 	
