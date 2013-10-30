@@ -3,12 +3,13 @@
 
 #include <p30fxxxx.h>
 
-//Defines for System Clock Timing -
-//For oscillator configuration XT x PLL8 mode,
-//Device Throughput in MIPS = Fcy = 7372800*8/4 = ~14.74 MIPS
-//Instruction Cycle time = Tcy = 1/(Fcy) = ~68 nanoseconds
-#define XTFREQ          7372800         //On-board Crystal frequency
-#define PLLMODE         8               //On-chip PLL setting
-#define FCY             XTFREQ*PLLMODE/4        //Instruction Cycle Frequency
+/*
+ * Using the on-chip Fast RC Oscillator with a nominal frequency of 8 MHz and
+ * a PLL multiplier setting of 16x, an overall instruction cycle frequency of
+ * 32 MHz can be achieved.
+ */
+#define FOSC       8000000              /* On-chip Fast RC Oscillator frequency (7.5 MHz) */
+#define PLLMODE    16                   /* On-chip PLL setting */
+#define FCY        (FOSC * PLLMODE / 4) /* Instruction cycle frequency */
 
 #endif // CLOCK_H
