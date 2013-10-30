@@ -16,24 +16,33 @@ void qei_setup(void)
 {
 	// Clear input ports
 	
+	/*
 	LATD = 0;
 	LATE = 0;
 	LATF = 0;
+	*/
 	
 	// Set up pins to be used as input ports
 	
+	/*
 	TRISD |= 0b1100;   // RD2, RD3 are inputs (2 inputs)
 	TRISE  = 0x3FF;    // All RE0..RE5 are inputs (6 inputs)
 	TRISF |= 0b110011; // RF0, RF1, RF4, RF5 are inputs (4 inputs)
+	*/
+	
+	TRISB = 0; // port b output
+	LATB = 0;
 	
 	// Initialize previous encoder state for all motors
 	
 	prev_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
+	/*
 	prev_encoder_state[MOTOR_B] = (QEA_MB << 1) | QEB_MB;
 	prev_encoder_state[MOTOR_C] = (QEA_MC << 1) | QEB_MC;
 	prev_encoder_state[MOTOR_D] = (QEA_MD << 1) | QEB_MD;
 	prev_encoder_state[MOTOR_E] = (QEA_ME << 1) | QEB_ME;
 	prev_encoder_state[MOTOR_F] = (QEA_MF << 1) | QEB_MF;
+	*/
 	
 	// Set up Timer 2 to implement a custom multi-channel QEI
 	
@@ -48,9 +57,13 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 	// Disable timer 2 interrupts
 	IEC0bits.T2IE = 0;
 	
+	/*
 	// Update step count register for motor A
 	prev_encoder_state[MOTOR_A] = curr_encoder_state[MOTOR_A];
 	curr_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
+	LATBbits.LATB0 = QEA_MA;
+	LATBbits.LATB1 = QEB_MA;
+	
 	switch (prev_encoder_state[MOTOR_A])
 	{
 		// Previous QEA = 0, QEB = 0
@@ -126,6 +139,20 @@ void __attribute__((__interrupt__)) _T2Interrupt(void)
 			}
 			break;
 	}
+	
+	// debug
+	{
+		extern int curr_state;
+		extern int prev_state;
+		extern int steps;
+		curr_state = curr_encoder_state[MOTOR_A];
+		prev_state = prev_encoder_state[MOTOR_A];
+		steps = motor_steps[MOTOR_A];
+	}
+	*/
+	
+	extern long int steps;
+	++steps;
 	
 	// Update step count register for motor B
 	
