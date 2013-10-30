@@ -14,22 +14,6 @@ char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
 
 void qei_setup(void)
 {
-	// Clear input ports
-	
-	/*
-	LATD = 0;
-	LATE = 0;
-	LATF = 0;
-	*/
-	
-	// Set up pins to be used as input ports
-	
-	/*
-	TRISD |= 0b1100;   // RD2, RD3 are inputs (2 inputs)
-	TRISE  = 0x3FF;    // All RE0..RE5 are inputs (6 inputs)
-	TRISF |= 0b110011; // RF0, RF1, RF4, RF5 are inputs (4 inputs)
-	*/
-	
 	// Initialize previous encoder state for all motors
 	
 	prev_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
