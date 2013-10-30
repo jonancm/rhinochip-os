@@ -4,11 +4,10 @@
 #include <p30fxxxx.h>
 
 /*
- * Using the on-chip Fast RC Oscillator with a nominal frequency of 8 MHz and
- * a PLL multiplier setting of 16x, an overall instruction cycle frequency of
- * 32 MHz can be achieved.
+ * Using the on-board crystal oscillator with a PLL multiplier setting of 16x,
+ * an overall instruction cycle frequency of about 29.50 MHz can be achieved.
  */
-#define FOSC       8000000              /* On-chip Fast RC Oscillator frequency (7.5 MHz) */
+#define FOSC       7372800              /* On-board crystal frequency (7.3728 MHz) */
 #define PLLMODE    16                   /* On-chip PLL setting */
 #define FCY        (FOSC * PLLMODE / 4) /* Instruction cycle frequency */
 
