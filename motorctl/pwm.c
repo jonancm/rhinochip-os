@@ -63,9 +63,9 @@ void pwm_setup(void)
 	 * Set up digital I/O pins for digital output *
 	 **********************************************/
 	
-	TRISB = 0;       // All RB0..RB8 are outputs (9 outputs)
-	TRISC = 0;       // All RC13, RC14 are outputs (2 outputs)
-	TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs
+	TRISB &= 0xFE3F; // RB6, RB7, RB8 are outputs (3 for DIR)
+	TRISC  = 0;      // RC13, RC14 are outputs (2 for DIR)
+	TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs (3 for software PWM, 1 for DIR)
 	
 	/*************************************
 	 * Initialize software PWM registers *

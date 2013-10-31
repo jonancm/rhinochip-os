@@ -6,14 +6,14 @@
 #include "../types.h"
 #include "clock.h"
 
-#define QEA_MA    PORTDbits.RD2
-#define QEB_MA    PORTDbits.RD3
-#define QEA_MB    PORTEbits.RE0
-#define QEB_MB    PORTEbits.RE1
-#define QEA_MC    PORTEbits.RE2
-#define QEB_MC    PORTEbits.RE3
-#define QEA_MD    PORTEbits.RE4
-#define QEB_MD    PORTEbits.RE5
+#define QEA_MA    PORTBbits.RB0
+#define QEB_MA    PORTBbits.RB1
+#define QEA_MB    PORTBbits.RB2
+#define QEB_MB    PORTBbits.RB3
+#define QEA_MC    PORTBbits.RB4
+#define QEB_MC    PORTBbits.RB5
+#define QEA_MD    PORTDbits.RD2
+#define QEB_MD    PORTDbits.RD3
 #define QEA_ME    PORTFbits.RF0
 #define QEB_ME    PORTFbits.RF1
 #define QEA_MF    PORTFbits.RF4

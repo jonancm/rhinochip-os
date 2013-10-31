@@ -14,6 +14,10 @@ char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
 
 void qei_setup(void)
 {
+	// Set up digital I/O pins for digital input
+	
+	ADPCFG |= 0x003F; // Disable analog input on pins RB0..RB5 and enable digital input instead
+	
 	// Initialize previous encoder state for all motors
 	
 	prev_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
