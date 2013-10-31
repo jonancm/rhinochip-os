@@ -12,19 +12,19 @@
 #define PWMPRESCALER    64                                /* PWM prescaler 1:64 */
 #define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for the PTPER register */
 
-#define PWM1    LATEbits.LATE0
-#define PWM2    LATEbits.LATE2
-#define PWM3    LATEbits.LATE4
-#define PWM4    LATEbits.LATE1
-#define PWM5    LATEbits.LATE3
-#define PWM6    LATEbits.LATE5
+#define PWM1            LATEbits.LATE0 /* 1st Hardware PWM channel */
+#define PWM2            LATEbits.LATE2 /* 2nd Hardware PWM channel */
+#define PWM3            LATEbits.LATE4 /* 3rd Hardware PWM channel */
+#define PWM4            LATEbits.LATE1 /* 1st Software PWM channel */
+#define PWM5            LATEbits.LATE3 /* 2nd Software PWM channel */
+#define PWM6            LATEbits.LATE5 /* 3rd Software PWM channel */
 
-#define DIR1    LATBbits.LATB6
-#define DIR2    LATBbits.LATB7
-#define DIR3    LATBbits.LATB8
-#define DIR4    LATCbits.LATC13
-#define DIR5    LATCbits.LATC14
-#define DIR6    LATEbits.LATE8
+#define DIR1            LATBbits.LATB6  /* Direction signal output for PWM channel #1 */
+#define DIR2            LATBbits.LATB7  /* Direction signal output for PWM channel #2 */
+#define DIR3            LATBbits.LATB8  /* Direction signal output for PWM channel #3 */
+#define DIR4            LATCbits.LATC13 /* Direction signal output for PWM channel #4 */
+#define DIR5            LATCbits.LATC14 /* Direction signal output for PWM channel #5 */
+#define DIR6            LATEbits.LATE8  /* Direction signal output for PWM channel #6 */
 
 void pwm_setup(void);
 inline void pwm_set_duty1(int duty);

@@ -31,7 +31,7 @@ void qei_setup(void)
 	
 	IFS0bits.T2IF = 0; // Clear the timer 2 interrupt flag
 	IEC0bits.T2IE = 1; // Enable timer 2 interrupts
-	PR2 = PR2VAL; // Set the timer period
+	PR2 = PR2VAL;      // Set the timer period
 	T2CONbits.TON = 1; // Start the timer
 }
 
