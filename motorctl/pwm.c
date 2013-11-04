@@ -83,19 +83,19 @@ void pwm_setup(void)
 	 * Set up Timer 1 to implement a custom multi-channel QEI *
 	 **********************************************************/
 	
-	// Clear the timer 1 interrupt flag
+	// Clear the Timer 1 interrupt flag
 	
 	IFS0bits.T1IF = 0;
 	
-	// Enable timer 1 interrupts
+	// Enable Timer 1 interrupts
 	
 	IEC0bits.T1IE = 1;
 	
-	// Set timer 1 prescaler (0=1:1, 1=1:8, 2=1:64, 3=1:256)
+	// Set Timer 1 prescaler (0=1:1, 1=1:8, 2=1:64, 3=1:256)
 	
 	T1CONbits.TCKPS = 0;
 	
-	// Set timer 1 interrupt priority to 1 (default: 2)
+	// Set Timer 1 interrupt priority to 1 (default: 2)
 	
 	IPC0bits.T1IP = 1;
 	
@@ -103,7 +103,7 @@ void pwm_setup(void)
 	
 	PR1 = PR1VAL;
 	
-	// Start the timer
+	// Start Timer 1
 	
 	T1CONbits.TON = 1;
 }
