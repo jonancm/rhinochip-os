@@ -3055,7 +3055,7 @@ void hostcmd_pd(void)
 					char motor = 1 << (param1.value.letter - 'A');
 					if (any_motor_executing_trapezoidal_move(motor))
 					{
-						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
+						// error: if the motor is in trapezoidal mode, it must not be executing a trapezoidal move
 					}
 					else
 					{
@@ -3123,7 +3123,7 @@ void hostcmd_pr(void)
 					char motor = 1 << (param1.value.letter - 'A');
 					if (any_motor_executing_trapezoidal_move(motor))
 					{
-						// error: if the the motor is in trapezoidal mode, it must not be executing a trapezoidal move
+						// error: if the motor is in trapezoidal mode, it must not be executing a trapezoidal move
 					}
 					else
 					{
