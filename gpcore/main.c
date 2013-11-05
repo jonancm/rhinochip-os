@@ -9,10 +9,12 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "../types.h"
 #include "../macros.h"
 #include "shell.h"
+#include "../mcuicom.h"
 
 int main(void)
 {
 	hostcom_setup();
+	mcuicom_setup();
 	
 	shell_run_interactive();
 	

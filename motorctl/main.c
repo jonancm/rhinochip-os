@@ -7,11 +7,13 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 
 #include "pwm.h"
 #include "qei.h"
+#include "../mcuicom.h"
 
 int main(void)
 {
 	pwm_setup();
 	qei_setup();
+	mcuicom_setup();
 	
 	pwm_set_duty1(75);
 	pwm_set_duty2(75);
