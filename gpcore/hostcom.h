@@ -24,11 +24,6 @@
 void hostcom_setup(void);
 
 /**
- * UART2 receive ISR.
- */
-void __attribute__((__interrupt__)) _U2RXInterrupt(void);
-
-/**
  * Copy the first fully received host command from the receive buffer to the
  * user's buffer. If no host command has been fully received yet, don't copy
  * anything. If a host command has been fully received, it will be copied

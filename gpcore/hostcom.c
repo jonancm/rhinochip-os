@@ -42,6 +42,9 @@ void hostcom_setup(void)
 	U2STAbits.UTXEN = 1;
 }
 
+/**
+ * UART2 receive ISR.
+ */
 void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 {
 	// While UART2 receive buffer has data and the 'hostcom_rcv_buf' has free
