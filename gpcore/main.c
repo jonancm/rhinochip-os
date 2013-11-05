@@ -10,20 +10,9 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "../macros.h"
 #include "shell.h"
 
-#define BUF_SIZE    64
-
-#define LCD_READY    "GPMCU ready"
-#define MSG_READY    "GPMCU ready\n"
-
 int main(void)
 {
 	hostcom_setup();
-	
-	// Set up port pin RB0 the LED D3
-	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
-	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
-	
-	hostcom_send(MSG_READY, STRLEN(MSG_READY));
 	
 	shell_run_interactive();
 	
