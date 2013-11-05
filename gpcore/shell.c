@@ -2342,7 +2342,7 @@ void hostcmd_ds(void)
 							if (!error)
 							{
 								unsigned char motor = 1 << (param1.value.letter - 'A');
-								pwm_level = param2.value.integer.abs_value;
+								*pwm_level = param2.value.integer.abs_value;
 								if (param2.value.integer.sign > 0)
 									controller.pwm_direction |= motor; // set direction bit for the given motor
 								else
