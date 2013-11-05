@@ -1,7 +1,7 @@
 #ifndef PWM_H
 #define PWM_H
 
-#include "clock.h"
+#include "../clock.h"
 
 #define TPWM            0.018                             /* PWM period: 18 ms */
 #define FPWM            (1 / TPWM)                        /* PWM frequency: 50 Hz */

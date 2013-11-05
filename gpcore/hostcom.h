@@ -9,7 +9,7 @@
 #ifndef HOSTCOM_H
 #define HOSTCOM_H
 
-#include "clock.h"
+#include "../clock.h"
 
 #define BAUDRATE        9600                    //Desired Baud Rate
 #define BRGVAL          ((FCY/BAUDRATE)/16)-1   //Formula for U1BRG register

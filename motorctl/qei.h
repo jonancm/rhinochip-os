@@ -3,7 +3,7 @@
 
 #include <p30fxxxx.h>
 
-#include "clock.h"
+#include "../clock.h"
 #include "motor_status.h"
 
 #define QEA_MA               PORTBbits.RB0
