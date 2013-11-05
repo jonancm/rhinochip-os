@@ -6,7 +6,6 @@ _FWDT(WDT_OFF);                 // Turn off the watchdog timer
 _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
 #include "hostcom.h"
-#include "../lcd.h"
 #include "../types.h"
 #include "../macros.h"
 #include "shell.h"
@@ -19,13 +18,11 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 int main(void)
 {
 	hostcom_setup();
-	lcd_setup();
 	
 	// Set up port pin RB0 the LED D3
 	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
 	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
 	
-	lcd_write(LCD_READY);
 	hostcom_send(MSG_READY, STRLEN(MSG_READY));
 	
 	shell_run_interactive();
