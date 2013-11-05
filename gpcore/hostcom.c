@@ -45,7 +45,7 @@ inline void hostcom_setup(void)
 /**
  * UART2 receive ISR.
  */
-void __attribute__((__interrupt__)) _U2RXInterrupt(void)
+void __attribute__((interrupt, auto_psv)) _U2RXInterrupt(void)
 {
 	// While UART2 receive buffer has data and the 'hostcom_rcv_buf' has free
 	// space...

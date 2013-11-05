@@ -35,7 +35,7 @@ inline void qei_setup(void)
 	T2CONbits.TON = 1; // Start the timer
 }
 
-void __attribute__((__interrupt__)) _T2Interrupt(void)
+void __attribute__((interrupt, auto_psv)) _T2Interrupt(void)
 {
 	// Disable timer 2 interrupts
 	IEC0bits.T2IE = 0;

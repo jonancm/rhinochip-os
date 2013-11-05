@@ -75,7 +75,7 @@ short int mcuicom_param_size(mcuicom_cmd *cmd)
 /**
  * UART1 transmit ISR.
  */
-void __attribute__((__interrupt__)) _U1TXInterrupt(void)
+void __attribute__((interrupt, auto_psv)) _U1TXInterrupt(void)
 {
 	int available_data = mcuicom_xfr_buf.used;
 	
@@ -99,7 +99,7 @@ void __attribute__((__interrupt__)) _U1TXInterrupt(void)
 /**
  * UART1 receive ISR.
  */
-void __attribute__((__interrupt__)) _U1RXInterrupt(void)
+void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 {
 	// While UART1 receive buffer has data and the 'mcuicom_rcv_buf' has free
 	// space...
