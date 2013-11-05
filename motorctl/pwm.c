@@ -23,7 +23,7 @@ struct {
 	unsigned int channel6;
 } pwmduty;
 
-void pwm_setup(void)
+inline void pwm_setup(void)
 {
 	/******************************
 	 * Set up hardware PWM module *

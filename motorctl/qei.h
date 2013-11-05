@@ -39,7 +39,7 @@
 /**
  * Set up the Quadrature Encoder Interface.
  */
-void qei_setup(void);
+inline void qei_setup(void);
 
 /**
  * Timer 2 ISR to sample the QEA and QEB lines for each motor and count motor

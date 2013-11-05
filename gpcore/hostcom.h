@@ -21,7 +21,7 @@
 /**
  * Set up the UART2 to be used to communicate with the host PC.
  */
-void hostcom_setup(void);
+inline void hostcom_setup(void);
 
 /**
  * Copy the first fully received host command from the receive buffer to the

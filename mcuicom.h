@@ -147,7 +147,7 @@ extern buffer_t mcuicom_xfr_buf;
 /**
  * Set up UART1 for intercommunication with the other MCU (motorctl program).
  */
-void mcuicom_setup(void);
+inline void mcuicom_setup(void);
 
 /**
  * Send a command to the other MCU using the UART1.

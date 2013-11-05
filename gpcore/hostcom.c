@@ -10,7 +10,7 @@ static buffer_t hostcom_rcv_buf;
 
 static int first_cmdend = -1;
 
-void hostcom_setup(void)
+inline void hostcom_setup(void)
 {
 	// Set up the receive buffer
 	buffer_init(&hostcom_rcv_buf);

@@ -8,7 +8,7 @@ buffer_t    mcuicom_rcv_buf;
 buffer_t    mcuicom_xfr_buf;
 char       *xfr_buf_ptr = mcuicom_xfr_buf.data;
 
-void mcuicom_setup(void)
+inline void mcuicom_setup(void)
 {
 	// Set up the receive buffer
 	buffer_init(&mcuicom_rcv_buf);

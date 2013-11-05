@@ -12,7 +12,7 @@ char prev_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
  */
 char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
 
-void qei_setup(void)
+inline void qei_setup(void)
 {
 	// Set up digital I/O pins for digital input
 	

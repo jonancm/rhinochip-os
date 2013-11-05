@@ -26,7 +26,7 @@
 #define DIR5            LATCbits.LATC14 /* Direction signal output for PWM channel #5 */
 #define DIR6            LATEbits.LATE8  /* Direction signal output for PWM channel #6 */
 
-void pwm_setup(void);
+inline void pwm_setup(void);
 inline void pwm_set_duty1(int duty);
 inline void pwm_set_duty2(int duty);
 inline void pwm_set_duty3(int duty);
