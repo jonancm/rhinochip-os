@@ -213,7 +213,9 @@ typedef struct {
 	hardhome_status_t hardhome_status;
 } controller_status_t;
 
-static controller_status_t    controller;
+#ifndef CONTROLLER_STATUS_C
+extern controller_status_t    controller;
+#endif
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor);
 
