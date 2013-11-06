@@ -4,6 +4,7 @@
 #include "../hostcmdset.h"
 #include "controller_status.h"
 #include "self_test.h"
+#include "../mcuicom.h"
 
 // debug
 #include "../macros.h"
@@ -3066,7 +3067,17 @@ void hostcmd_pd(void)
 								int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 								if (-32767 <= intparam2 && intparam2 <= 32767)
 								{
-									// proceed
+									mcuicom_cmd    cmd;
+									
+									// Compute the opcode of the command by adding the motor letter offset from the 'A'
+									// ASCII character to the opcode of the first command (i.e. the command for motor A).
+									// Thus, a switch structure with a lot of branch instructions is avoided, which leads
+									// to a better performance in the average case.
+									cmd.opcode = MCUICOM_SET_DST_MA + ((param1.value.letter - 'A') << 2);
+									
+									cmd.param[0] = intparam2;
+									
+									mcuicom_send(cmd);
 								}
 								else
 								{
