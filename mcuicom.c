@@ -42,7 +42,7 @@ inline void mcuicom_setup(void)
 	U1STAbits.UTXEN = 1;
 }
 
-int mcuicom_send(mcuicom_cmd cmd)
+int mcuicom_send(mcuicom_cmd *cmd)
 {
 	int buf_pos, sent, cmd_size = sizeof(cmd.opcode) + mcuicom_param_size(&cmd);
 	

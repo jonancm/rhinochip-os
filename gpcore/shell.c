@@ -3283,7 +3283,7 @@ inline void hostcmd_pd(void)
 									
 									cmd.param[0] = intparam2;
 									
-									mcuicom_send(cmd);
+									mcuicom_send(&cmd);
 								}
 								else
 								{

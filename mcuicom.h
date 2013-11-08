@@ -156,7 +156,7 @@ inline void mcuicom_setup(void);
  *
  * @returns      amount of bytes sent
  */
-int mcuicom_send(mcuicom_cmd cmd);
+int mcuicom_send(mcuicom_cmd *cmd);
 
 /**
  * Get the total size of the parameters that a given command (opcode) requires.
