@@ -32,8 +32,8 @@ inline void mcuicom_setup(void)
 	
 	// Enable UART1 receiver ISR
 	IEC0bits.U1RXIE = 1;
-	// Enable UART1 transmitter ISR
-	IEC0bits.U1TXIE = 1;
+	// Disable UART1 transmitter ISR
+	IEC0bits.U1TXIE = 0;
 	
 	// Set up UART1 receiver to interrupt when one character is received
 	U1STAbits.URXISEL = 0;
@@ -44,34 +44,12 @@ inline void mcuicom_setup(void)
 
 int mcuicom_send(mcuicom_cmd *cmd)
 {
-	int buf_pos, sent, cmd_size = sizeof(cmd.opcode) + mcuicom_param_size(&cmd);
-	
-	// Disable UART1 transmitter interrupts, to prevent CPU from interrupting
-	// and modifying the transmit buffer.
-	IEC0bits.U1TXIE = 0;
-	
-	// Write data to the buffer only if the buffer has enough free space
-	if (mcuicom_xfr_buf.size - mcuicom_xfr_buf.used >= cmd_size)
+	int sent, cmd_size = sizeof(cmd->opcode) + mcuicom_param_size(cmd);
+	for (sent = 0; sent < cmd_size; ++sent)
 	{
-		// Start appending data after the last used position of the buffer
-		for (buf_pos = mcuicom_xfr_buf.used, sent = 0; sent < cmd_size; ++sent, ++buf_pos)
-			mcuicom_xfr_buf.data[buf_pos] = cmd.data[sent];
-		
-		// If data has been written to the buffer and no transfer is in progress, start a new transfer
-		if (sent && U1STAbits.TRMT)
-		{
-			xfr_buf_ptr = &mcuicom_xfr_buf.data[mcuicom_xfr_buf.used];
-			U1TXREG = *xfr_buf_ptr;
-			++xfr_buf_ptr;
-		}
-		
-		// Update the usage count of the buffer
-		mcuicom_xfr_buf.used = buf_pos;
+		while (U1STAbits.UTXBF); // Wait while the transmit buffer is full
+		U1TXREG = cmd->data[sent];
 	}
-	
-	// Re-enable UART1 transmitter interrupts
-	IEC0bits.U1TXIE = 1;
-	
 	return sent;
 }
 
@@ -81,41 +59,6 @@ short int mcuicom_param_size(mcuicom_cmd *cmd)
 	// on how many parameters the command requires, and multiply that number by the size that
 	// each parameter spans in memory.
 	return (cmd->opcode & 2) * sizeof(cmd->param[0]);
-}
-
-/**
- * UART1 transmit ISR.
- */
-void __attribute__((interrupt, auto_psv)) _U1TXInterrupt(void)
-{
-	char *data_limit = &mcuicom_xfr_buf.data[mcuicom_xfr_buf.used];
-	
-	// Disable UART1 transmitter interrupts, to prevent CPU from interrupting
-	// and modifying the transmit buffer.
-	IEC0bits.U1TXIE = 0;
-	
-	// Write as many bytes to the UART1 transmit buffer as possible, until
-	// either the UART1 transmit buffer is full or the end of the 'mcuicom'
-	// transmit is reached.
-	while (!U1STAbits.UTXBF && xfr_buf_ptr < data_limit)
-	{
-		U1TXREG = *xfr_buf_ptr;
-		++xfr_buf_ptr;
-	}
-	
-	// If the end of the 'mcuicom' transmit buffer has been reached, reset it
-	// (i.e. mark as empty and restore pointer to the beginning)
-	if (xfr_buf_ptr == &mcuicom_xfr_buf.data[mcuicom_xfr_buf.used])
-	{
-		xfr_buf_ptr = mcuicom_xfr_buf.data;
-		mcuicom_xfr_buf.used = 0;
-	}
-	
-	// Re-enable UART1 transmitter interrupts
-	IEC0bits.U1TXIE = 1;
-	
-	// Clear the UART1 transmitter interrupt flag
-	IFS0bits.U1TXIF = 0;
 }
 
 /**
