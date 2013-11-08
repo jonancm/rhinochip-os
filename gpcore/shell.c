@@ -110,100 +110,100 @@ int letterparam(void);
 int str(void);
 void interpret_cmd(void);
 
-void hostcmd_sa(void);
-void hostcmd_sc(void);
-void hostcmd_sd(void);
-void hostcmd_se(void);
-void hostcmd_sm(void);
-void hostcmd_sp(void);
-void hostcmd_sr(void);
-void hostcmd_ss(void);
-void hostcmd_st(void);
-void hostcmd_su(void);
-void hostcmd_sv(void);
-void hostcmd_sx(void);
-void hostcmd_sz(void);
-void hostcmd_cc(void);
-void hostcmd_cg(void);
-void hostcmd_cm(void);
-void hostcmd_cr(void);
-void hostcmd_ar(void);
-void hostcmd_dr(void);
-void hostcmd_gs(void);
-void hostcmd_hr(void);
-void hostcmd_pa(void);
-void hostcmd_pw(void);
-void hostcmd_pz(void);
-void hostcmd_rl(void);
-void hostcmd_ua(void);
-void hostcmd_uh(void);
-void hostcmd_uo(void);
-void hostcmd_ut(void);
-void hostcmd_uy(void);
-void hostcmd_va(void);
-void hostcmd_vr(void);
-void hostcmd_vx(void);
-void hostcmd_xr(void);
-void hostcmd_ac(void);
-void hostcmd_as(void);
-void hostcmd_ds(void);
-void hostcmd_gc(void);
-void hostcmd_go(void);
-void hostcmd_ha(void);
-void hostcmd_hg(void);
-void hostcmd_hh(void);
-void hostcmd_hl(void);
-void hostcmd_hs(void);
-void hostcmd_ma(void);
-void hostcmd_mc(void);
-void hostcmd_mi(void);
-void hostcmd_mm(void);
-void hostcmd_ms(void);
-void hostcmd_mx(void);
-void hostcmd_pd(void);
-void hostcmd_pr(void);
-void hostcmd_px(void);
-void hostcmd_py(void);
-void hostcmd_vg(void);
-void hostcmd_vs(void);
-void hostcmd_xa(void);
-void hostcmd_xh(void);
-void hostcmd_xo(void);
-void hostcmd_xs(void);
-void hostcmd_xt(void);
-void hostcmd_xy(void);
-void hostcmd_fr(void);
-void hostcmd_ft(void);
-void hostcmd_fx(void);
-void hostcmd_ta(void);
-void hostcmd_tc(void);
-void hostcmd_td(void);
-void hostcmd_te(void);
-void hostcmd_th(void);
-void hostcmd_tx(void);
-void hostcmd_tk(void);
-void hostcmd_tl(void);
-void hostcmd_tr(void);
-void hostcmd_ts(void);
-void hostcmd_tt(void);
-void hostcmd_ka(void);
-void hostcmd_kb(void);
-void hostcmd_kc(void);
-void hostcmd_ra(void);
-void hostcmd_rb(void);
-void hostcmd_rc(void);
-void hostcmd_kr(void);
-void hostcmd_ks(void);
-void hostcmd_kx(void);
-void hostcmd_ib(void);
-void hostcmd_ip(void);
-void hostcmd_ix(void);
-void hostcmd_ob(void);
-void hostcmd_op(void);
-void hostcmd_or(void);
-void hostcmd_ot(void);
-void hostcmd_wa(void);
-void hostcmd_wi(void);
+inline void hostcmd_sa(void);
+inline void hostcmd_sc(void);
+inline void hostcmd_sd(void);
+inline void hostcmd_se(void);
+inline void hostcmd_sm(void);
+inline void hostcmd_sp(void);
+inline void hostcmd_sr(void);
+inline void hostcmd_ss(void);
+inline void hostcmd_st(void);
+inline void hostcmd_su(void);
+inline void hostcmd_sv(void);
+inline void hostcmd_sx(void);
+inline void hostcmd_sz(void);
+inline void hostcmd_cc(void);
+inline void hostcmd_cg(void);
+inline void hostcmd_cm(void);
+inline void hostcmd_cr(void);
+inline void hostcmd_ar(void);
+inline void hostcmd_dr(void);
+inline void hostcmd_gs(void);
+inline void hostcmd_hr(void);
+inline void hostcmd_pa(void);
+inline void hostcmd_pw(void);
+inline void hostcmd_pz(void);
+inline void hostcmd_rl(void);
+inline void hostcmd_ua(void);
+inline void hostcmd_uh(void);
+inline void hostcmd_uo(void);
+inline void hostcmd_ut(void);
+inline void hostcmd_uy(void);
+inline void hostcmd_va(void);
+inline void hostcmd_vr(void);
+inline void hostcmd_vx(void);
+inline void hostcmd_xr(void);
+inline void hostcmd_ac(void);
+inline void hostcmd_as(void);
+inline void hostcmd_ds(void);
+inline void hostcmd_gc(void);
+inline void hostcmd_go(void);
+inline void hostcmd_ha(void);
+inline void hostcmd_hg(void);
+inline void hostcmd_hh(void);
+inline void hostcmd_hl(void);
+inline void hostcmd_hs(void);
+inline void hostcmd_ma(void);
+inline void hostcmd_mc(void);
+inline void hostcmd_mi(void);
+inline void hostcmd_mm(void);
+inline void hostcmd_ms(void);
+inline void hostcmd_mx(void);
+inline void hostcmd_pd(void);
+inline void hostcmd_pr(void);
+inline void hostcmd_px(void);
+inline void hostcmd_py(void);
+inline void hostcmd_vg(void);
+inline void hostcmd_vs(void);
+inline void hostcmd_xa(void);
+inline void hostcmd_xh(void);
+inline void hostcmd_xo(void);
+inline void hostcmd_xs(void);
+inline void hostcmd_xt(void);
+inline void hostcmd_xy(void);
+inline void hostcmd_fr(void);
+inline void hostcmd_ft(void);
+inline void hostcmd_fx(void);
+inline void hostcmd_ta(void);
+inline void hostcmd_tc(void);
+inline void hostcmd_td(void);
+inline void hostcmd_te(void);
+inline void hostcmd_th(void);
+inline void hostcmd_tx(void);
+inline void hostcmd_tk(void);
+inline void hostcmd_tl(void);
+inline void hostcmd_tr(void);
+inline void hostcmd_ts(void);
+inline void hostcmd_tt(void);
+inline void hostcmd_ka(void);
+inline void hostcmd_kb(void);
+inline void hostcmd_kc(void);
+inline void hostcmd_ra(void);
+inline void hostcmd_rb(void);
+inline void hostcmd_rc(void);
+inline void hostcmd_kr(void);
+inline void hostcmd_ks(void);
+inline void hostcmd_kx(void);
+inline void hostcmd_ib(void);
+inline void hostcmd_ip(void);
+inline void hostcmd_ix(void);
+inline void hostcmd_ob(void);
+inline void hostcmd_op(void);
+inline void hostcmd_or(void);
+inline void hostcmd_ot(void);
+inline void hostcmd_wa(void);
+inline void hostcmd_wi(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -959,7 +959,7 @@ void interpret_cmd(void)
  * If the bit is set (1), the corresponding motor is still executing a trapezoidal move. If the bit
  * is cleared (0), the corresponding motor is either stationary or in a mode other than trapezoidal.
  */
-void hostcmd_sa(void)
+inline void hostcmd_sa(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.motor_status);
@@ -1008,7 +1008,7 @@ void hostcmd_sa(void)
  * 
  * Bit 0: allways 0
  */
-void hostcmd_sc(void)
+inline void hostcmd_sc(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_config);
@@ -1020,7 +1020,7 @@ void hostcmd_sc(void)
  * 
  * Controls a general purpose timer in the controller.
  */
-void hostcmd_sd(void)
+inline void hostcmd_sd(void)
 {
 	if (param1.present)
 	{
@@ -1063,7 +1063,7 @@ void hostcmd_sd(void)
  * error exists and the error stack should be read to determine the source of the error. The bit remains
  * set until the error stack is empty. SE returns zero if the error stack is empty.
  */
-void hostcmd_se(void)
+inline void hostcmd_se(void)
 {
 	char buf[64];
 	unsigned char error_code = 0;
@@ -1076,7 +1076,7 @@ void hostcmd_se(void)
  * 
  * Returns the specified motor's mode.
  */
-void hostcmd_sm(void)
+inline void hostcmd_sm(void)
 {
 	char buf[64];
 	char motor_mode = 0;
@@ -1146,7 +1146,7 @@ void hostcmd_sm(void)
  * an error exists and the pendant error byte should be read to determine the source of the error. SP returns
  * zero if no pendant error exists.
  */
-void hostcmd_sp(void)
+inline void hostcmd_sp(void)
 {
 	char buf[64];
 	char pendant_error = 0;
@@ -1159,7 +1159,7 @@ void hostcmd_sp(void)
  * 
  * Reset all motor amplifier current limit circuits.
  */
-void hostcmd_sr(void)
+inline void hostcmd_sr(void)
 {
 
 }
@@ -1181,7 +1181,7 @@ void hostcmd_sr(void)
  * Bit 1: 1 = The teach pendant ESCAPE key has been pressed.
  * Bit 0: 1 = A teach pendant error has occurred.
  */
-void hostcmd_ss(void)
+inline void hostcmd_ss(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_status);
@@ -1197,7 +1197,7 @@ void hostcmd_ss(void)
  * connected or if the teach pendant returns an error, and error code will be pushed onto the error
  * stack.
  */
-void hostcmd_st(void)
+inline void hostcmd_st(void)
 {
 
 }
@@ -1211,7 +1211,7 @@ void hostcmd_st(void)
  * updated once per minute. Therefore, turning on the controller for less than one minute will
  * have no effect on the usage time stored.
  */
-void hostcmd_su(void)
+inline void hostcmd_su(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%lu\n", controller.usage_time);
@@ -1226,7 +1226,7 @@ void hostcmd_su(void)
  * The controller returns a string containing a copyright notice, the version of firmware
  * being used and the serial number.
  */
-void hostcmd_sv(void)
+inline void hostcmd_sv(void)
 {
 	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX.\n"
 	hostcom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
@@ -1241,7 +1241,7 @@ void hostcmd_sv(void)
  * connected or if the teach pendant returns an error, and error code will be pushed onto the error
  * stack.
  */
-void hostcmd_sx(void)
+inline void hostcmd_sx(void)
 {
 	#define TEACH_PENDANT_ONLINE "Teach Pendant:  Online.\n"
 	#define TEACH_PENDANT_OFFLINE "Teach Pendant:  Offline/Error.\n"
@@ -1274,7 +1274,7 @@ void hostcmd_sx(void)
  * 
  * The value returned can range from 0 to 3000 in units of 1/10 second.
  */
-void hostcmd_sz(void)
+inline void hostcmd_sz(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d\n", controller.delay_timer);
@@ -1291,7 +1291,7 @@ void hostcmd_sz(void)
  * of d = 1 causes the xyz destination registers to be set to the values corresponding to
  * the current encoder position.
  */
-void hostcmd_cc(void)
+inline void hostcmd_cc(void)
 {
 	if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 	{
@@ -1353,7 +1353,7 @@ void hostcmd_cc(void)
  * 
  * A value of d = 0 disables the gripper and d = 1 enables the gripper.
  */
-void hostcmd_cg(void)
+inline void hostcmd_cg(void)
 {
 	if (param1.present)
 	{
@@ -1400,7 +1400,7 @@ void hostcmd_cg(void)
  * 2) Velocity mode.
  * 3) Open Loop mode.
  */
-void hostcmd_cm(void)
+inline void hostcmd_cm(void)
 {
 	if (param1.present)
 	{
@@ -1503,7 +1503,7 @@ void hostcmd_cm(void)
  * 1) SCARA controller.
  * 2) GENERIC controller.
  */
-void hostcmd_cr(void)
+inline void hostcmd_cr(void)
 {
 	if (param1.present)
 	{
@@ -1560,7 +1560,7 @@ void hostcmd_cr(void)
  * Returns the system acceleration. The value returned is in the range of 0 to 100 and represents
  * the percentage of maximum system acceleration.
  */
-void hostcmd_ar(void)
+inline void hostcmd_ar(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_acceleration);
@@ -1574,7 +1574,7 @@ void hostcmd_ar(void)
  * to 100 whose absolute magnitude represents the percentage of maximum motor power and whose sign
  * represents the direction the motor is turning in.
  */
-void hostcmd_dr(void)
+inline void hostcmd_dr(void)
 {
 	if (param1.present)
 	{
@@ -1648,7 +1648,7 @@ void hostcmd_dr(void)
  * Returns the status (open or closed) of the gripper. If the returned value is 1, the gripper is closed.
  * If the returned value is 0, the gripper is open. If the gripper is disabled, the returned value will be 0.
  */
-void hostcmd_gs(void)
+inline void hostcmd_gs(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.gripper_status);
@@ -1666,7 +1666,7 @@ void hostcmd_gs(void)
  * The soft home position is defined as 0 after power up or after executing a hard home. It is also defined as
  * the current motor position when an HS (set soft home) is issued.
  */
-void hostcmd_hr(void)
+inline void hostcmd_hr(void)
 {
 	if (param1.present)
 	{
@@ -1731,7 +1731,7 @@ void hostcmd_hr(void)
  * Returns the current or actual position of the specified motor. The value returned ranges from -32767
  * to 32767 in encoder counts.
  */
-void hostcmd_pa(void)
+inline void hostcmd_pa(void)
 {
 	if (param1.present)
 	{
@@ -1797,7 +1797,7 @@ void hostcmd_pa(void)
  * 32767 in encoder counts and represents the position the specified motor would move  to when
  * an MC (move coordinated), MI (move independent) or an MS (move single motor) command is issued.
  */
-void hostcmd_pw(void)
+inline void hostcmd_pw(void)
 {
 	if (param1.present)
 	{
@@ -1882,7 +1882,7 @@ void hostcmd_pw(void)
  * the A and T axes are in units of degrees. The value returned is fixed at two decimal places
  * (two digits after the decimal point).
  */
-void hostcmd_pz(void)
+inline void hostcmd_pz(void)
 {
 	if (param1.present)
 	{
@@ -1980,7 +1980,7 @@ void hostcmd_pz(void)
  *     1 = Limit switch of motor A is open or inactive.
  *     0 = Limit switch of motor A is closed or active.
  */
-void hostcmd_rl(void)
+inline void hostcmd_rl(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.limit_switches);
@@ -1995,7 +1995,7 @@ void hostcmd_rl(void)
  * 
  * The value returned is a floating point number in units of degrees.
  */
-void hostcmd_ua(void)
+inline void hostcmd_ua(void)
 {
 }
 
@@ -2010,7 +2010,7 @@ void hostcmd_ua(void)
  * 
  * The A axis does not exist on the SCARA robot.
  */
-void hostcmd_uh(void)
+inline void hostcmd_uh(void)
 {
 	if (param1.present)
 	{
@@ -2055,7 +2055,7 @@ void hostcmd_uh(void)
  * 
  * The A axis does not exist on the SCARA robot.
  */
-void hostcmd_uo(void)
+inline void hostcmd_uo(void)
 {
 	if (param1.present)
 	{
@@ -2096,7 +2096,7 @@ void hostcmd_uo(void)
  * 
  * The value returned is a floating point number in units of millimeters.
  */
-void hostcmd_ut(void)
+inline void hostcmd_ut(void)
 {
 }
 
@@ -2109,7 +2109,7 @@ void hostcmd_ut(void)
  * 
  * This parameter has no meaning if the current robot type is SCARA.
  */
-void hostcmd_uy(void)
+inline void hostcmd_uy(void)
 {
 }
 
@@ -2121,7 +2121,7 @@ void hostcmd_uy(void)
  * The value returned ranges from -100 to 100 whose absolute magnitude represents the percentage
  * of maximum motor velocity and whose sign represents the direction the motor is turning in.
  */
-void hostcmd_va(void)
+inline void hostcmd_va(void)
 {
 	if (param1.present)
 	{
@@ -2196,7 +2196,7 @@ void hostcmd_va(void)
  * on the mode the pendant is in or the function being executed. Once the system returns to play mode
  * and no function is being executed, the motor velocity will return to its original value.
  */
-void hostcmd_vr(void)
+inline void hostcmd_vr(void)
 {
 	if (param1.present)
 	{
@@ -2261,7 +2261,7 @@ void hostcmd_vr(void)
  * Returns the system velocity. The value returned ranges from 0 to 100 and represents the percentage
  * of maximum system velocity.
  */
-void hostcmd_vx(void)
+inline void hostcmd_vx(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_velocity);
@@ -2276,7 +2276,7 @@ void hostcmd_vx(void)
  * The value returned ranges from -100 to 100 whose absolute magnitude represents the percentage
  * of maximum motor velocity and whose sign represents the direction the motor is turning in.
  */
-void hostcmd_xr(void)
+inline void hostcmd_xr(void)
 {
 	if (param1.present)
 	{
@@ -2318,7 +2318,7 @@ void hostcmd_xr(void)
  * This command is normally used during startup to initialize a motor when a home on switch is not
  * available. Especially useful under generic controller mode when limit switches are not being used.
  */
-void hostcmd_ac(void)
+inline void hostcmd_ac(void)
 {
 	if (param1.present)
 	{
@@ -2400,7 +2400,7 @@ void hostcmd_ac(void)
  * 
  * Motors in velocity mode will immediately begin using the new acceleration.
  */
-void hostcmd_as(void)
+inline void hostcmd_as(void)
 {
 	if (param1.present)
 	{
@@ -2449,7 +2449,7 @@ void hostcmd_as(void)
  * 
  * The command cannot be used while under teach pendant mode.
  */
-void hostcmd_ds(void)
+inline void hostcmd_ds(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2564,7 +2564,7 @@ void hostcmd_ds(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_gc(void)
+inline void hostcmd_gc(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2614,7 +2614,7 @@ void hostcmd_gc(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_go(void)
+inline void hostcmd_go(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2667,7 +2667,7 @@ void hostcmd_go(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ha(void)
+inline void hostcmd_ha(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2712,7 +2712,7 @@ void hostcmd_ha(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_hg(void)
+inline void hostcmd_hg(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2764,7 +2764,7 @@ void hostcmd_hg(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_hh(void)
+inline void hostcmd_hh(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2814,7 +2814,7 @@ void hostcmd_hh(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_hl(void)
+inline void hostcmd_hl(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2901,7 +2901,7 @@ void hostcmd_hl(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_hs(void)
+inline void hostcmd_hs(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2932,7 +2932,7 @@ void hostcmd_hs(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ma(void)
+inline void hostcmd_ma(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -2970,7 +2970,7 @@ void hostcmd_ma(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_mc(void)
+inline void hostcmd_mc(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3012,7 +3012,7 @@ void hostcmd_mc(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_mi(void)
+inline void hostcmd_mi(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3032,7 +3032,7 @@ void hostcmd_mi(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_mm(void)
+inline void hostcmd_mm(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3100,7 +3100,7 @@ void hostcmd_mm(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ms(void)
+inline void hostcmd_ms(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3187,7 +3187,7 @@ void hostcmd_ms(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_mx(void)
+inline void hostcmd_mx(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3243,7 +3243,7 @@ void hostcmd_mx(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_pd(void)
+inline void hostcmd_pd(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3335,7 +3335,7 @@ void hostcmd_pd(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_pr(void)
+inline void hostcmd_pr(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3421,7 +3421,7 @@ void hostcmd_pr(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_px(void)
+inline void hostcmd_px(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3532,7 +3532,7 @@ void hostcmd_px(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_py(void)
+inline void hostcmd_py(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3642,7 +3642,7 @@ void hostcmd_py(void)
  * 
  * This command cannot be used while in teach pendant mode.
  */
-void hostcmd_vg(void)
+inline void hostcmd_vg(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3702,7 +3702,7 @@ void hostcmd_vg(void)
  * 
  * This command cannot be used while in teach pendant mode.
  */
-void hostcmd_vs(void)
+inline void hostcmd_vs(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3785,7 +3785,7 @@ void hostcmd_vs(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xa(void)
+inline void hostcmd_xa(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3834,7 +3834,7 @@ void hostcmd_xa(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xh(void)
+inline void hostcmd_xh(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -3921,7 +3921,7 @@ void hostcmd_xh(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xo(void)
+inline void hostcmd_xo(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -4006,7 +4006,7 @@ void hostcmd_xo(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xs(void)
+inline void hostcmd_xs(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -4080,7 +4080,7 @@ void hostcmd_xs(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xt(void)
+inline void hostcmd_xt(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -4127,7 +4127,7 @@ void hostcmd_xt(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_xy(void)
+inline void hostcmd_xy(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -4168,14 +4168,14 @@ void hostcmd_xy(void)
 /**
  * Receive Teach Pendant File from Host.
  */
-void hostcmd_fr(void)
+inline void hostcmd_fr(void)
 {
 }
 
 /**
  * Transmit Teach Pendant File to Host.
  */
-void hostcmd_ft(void)
+inline void hostcmd_ft(void)
 {
 }
 
@@ -4191,7 +4191,7 @@ void hostcmd_ft(void)
  * Issuing a second FX while a program is executing will result in an error, since
  * the pendant is no longer in play mode.
  */
-void hostcmd_fx(void)
+inline void hostcmd_fx(void)
 {
 }
 
@@ -4203,7 +4203,7 @@ void hostcmd_fx(void)
  * The controller must be under teach pendant control and in play mode. Issuing a
  * TA command is the same as pressing the ABORT key on the pendant.
  */
-void hostcmd_ta(void)
+inline void hostcmd_ta(void)
 {
 }
 
@@ -4215,7 +4215,7 @@ void hostcmd_ta(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_tc(void)
+inline void hostcmd_tc(void)
 {
 }
 
@@ -4230,7 +4230,7 @@ void hostcmd_tc(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_td(void)
+inline void hostcmd_td(void)
 {
 }
 
@@ -4249,7 +4249,7 @@ void hostcmd_td(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_te(void)
+inline void hostcmd_te(void)
 {
 }
 
@@ -4262,7 +4262,7 @@ void hostcmd_te(void)
  * must be in the PLAY mode. There is no effect if the controller is already under host
  * control or if no teach pendant is connected.
  */
-void hostcmd_th(void)
+inline void hostcmd_th(void)
 {
 	// Set bit 7 of the 'system_config' register, which indicates whether the system
 	// is in host mode or teach pendant mode. A value of 1 indicates host mode.
@@ -4277,7 +4277,7 @@ void hostcmd_th(void)
  * A teach pendant must be attached in order for the host computer to give control away.
  * There is no effect if the controller is already under teach pendant control.
  */
-void hostcmd_tx(void)
+inline void hostcmd_tx(void)
 {
 	// Clear bit 7 of the 'system_config' register, which indicates whether the system
 	// is in host mode or teach pendant mode. A value of 0 indicates teach pendant mode.
@@ -4291,7 +4291,7 @@ void hostcmd_tx(void)
  * 
  * Waits until a key is pressed and returns the associated key code.
  */
-void hostcmd_tk(void)
+inline void hostcmd_tk(void)
 {
 }
 
@@ -4302,7 +4302,7 @@ void hostcmd_tk(void)
  * 
  * Returns the code of the last key pressed.
  */
-void hostcmd_tl(void)
+inline void hostcmd_tl(void)
 {
 }
 
@@ -4313,7 +4313,7 @@ void hostcmd_tl(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_tr(void)
+inline void hostcmd_tr(void)
 {
 }
 
@@ -4329,7 +4329,7 @@ void hostcmd_tr(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ts(void)
+inline void hostcmd_ts(void)
 {
 }
 
@@ -4345,7 +4345,7 @@ void hostcmd_ts(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_tt(void)
+inline void hostcmd_tt(void)
 {
 }
 
@@ -4359,7 +4359,7 @@ void hostcmd_tt(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_ka(void)
+inline void hostcmd_ka(void)
 {
 	if (param1.present)
 	{
@@ -4436,7 +4436,7 @@ void hostcmd_ka(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_kb(void)
+inline void hostcmd_kb(void)
 {
 	if (param1.present)
 	{
@@ -4513,7 +4513,7 @@ void hostcmd_kb(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_kc(void)
+inline void hostcmd_kc(void)
 {
 	if (param1.present)
 	{
@@ -4592,7 +4592,7 @@ void hostcmd_kc(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_ra(void)
+inline void hostcmd_ra(void)
 {
 	if (param1.present)
 	{
@@ -4646,7 +4646,7 @@ void hostcmd_ra(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_rb(void)
+inline void hostcmd_rb(void)
 {
 	if (param1.present)
 	{
@@ -4700,7 +4700,7 @@ void hostcmd_rb(void)
  * 
  * This command can be used while udner teach pendant mode.
  */
-void hostcmd_rc(void)
+inline void hostcmd_rc(void)
 {
 	if (param1.present)
 	{
@@ -4752,7 +4752,7 @@ void hostcmd_rc(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_kr(void)
+inline void hostcmd_kr(void)
 {
 }
 
@@ -4766,7 +4766,7 @@ void hostcmd_kr(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_ks(void)
+inline void hostcmd_ks(void)
 {
 }
 
@@ -4779,7 +4779,7 @@ void hostcmd_ks(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_kx(void)
+inline void hostcmd_kx(void)
 {
 }
 
@@ -4798,7 +4798,7 @@ void hostcmd_kx(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_ib(void)
+inline void hostcmd_ib(void)
 {
 	if (param1.present)
 	{
@@ -4843,7 +4843,7 @@ void hostcmd_ib(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_ip(void)
+inline void hostcmd_ip(void)
 {
 }
 
@@ -4862,7 +4862,7 @@ void hostcmd_ip(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_ix(void)
+inline void hostcmd_ix(void)
 {
 }
 
@@ -4878,7 +4878,7 @@ void hostcmd_ix(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ob(void)
+inline void hostcmd_ob(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -4953,7 +4953,7 @@ void hostcmd_ob(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_op(void)
+inline void hostcmd_op(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -5011,7 +5011,7 @@ void hostcmd_op(void)
  * 
  * This command can be used while under teach pendant mode.
  */
-void hostcmd_or(void)
+inline void hostcmd_or(void)
 {
 }
 
@@ -5028,7 +5028,7 @@ void hostcmd_or(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_ot(void)
+inline void hostcmd_ot(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -5098,7 +5098,7 @@ void hostcmd_ot(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_wa(void)
+inline void hostcmd_wa(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
@@ -5134,7 +5134,7 @@ void hostcmd_wa(void)
  * 
  * This command cannot be used while under teach pendant mode.
  */
-void hostcmd_wi(void)
+inline void hostcmd_wi(void)
 {
 	if (controller_is_in_teach_pendant_mode())
 	{
