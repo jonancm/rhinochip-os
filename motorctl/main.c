@@ -23,6 +23,19 @@ int main(void)
 	pwm_set_duty5(75);
 	pwm_set_duty6(75);
 	
+	// Code for debugging. Send a message over RS232 notifying that the UART 1
+	// is ready and working fine.
+	#ifndef NDEBUG
+	{
+		char *c = "UART 1 MCMCU ready\n";
+		for (; *c != 0; ++c)
+		{
+			while (U1STAbits.UTXBF);
+			U1TXREG = *c;
+		}
+	}
+	#endif
+	
 	while (1)
 	{
 		// TODO: two approaches possible, compare and select the best.

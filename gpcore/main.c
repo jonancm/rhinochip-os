@@ -16,6 +16,20 @@ int main(void)
 	hostcom_setup();
 	mcuicom_setup();
 	
+	// Code for debugging. Send a message over RS232 notifying that the UART 1
+	// and the UART 2 of the GPMCU are ready and working fine.
+	#ifndef NDEBUG
+	{
+		char *c = "UART 1 GPMCU ready\n";
+		for (; *c != 0; ++c)
+		{
+			while (U1STAbits.UTXBF);
+			U1TXREG = *c;
+		}	
+	}
+	hostcom_send("UART 2 GPMCU ready\n", STRLEN("UART 2 GPMCU ready\n"));
+	#endif
+	
 	shell_run_interactive();
 	
 	return 0;
