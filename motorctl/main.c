@@ -8,6 +8,7 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "pwm.h"
 #include "qei.h"
 #include "../mcuicom.h"
+#include "gpcorecom.h"
 
 int main(void)
 {
@@ -22,7 +23,18 @@ int main(void)
 	pwm_set_duty5(75);
 	pwm_set_duty6(75);
 	
-	while (1);
+	while (1)
+	{
+		// TODO: two approaches possible, compare and select the best.
+		// 1) Perform both the interpretation of commands and the motor control
+		//    loop as equally important tasks inside a loop (i.e. one does not
+		//    have greater priority over the other).
+		// 2) Perform the interpretation of commands as single task in a loop and
+		//    perform motor control on a timely basis using interrupts, so that it
+		//    has greater priority over command interpretation (which can actually
+		//    be less efficiente).
+		gpcorecom_interpret_next();
+	}
 	
 	return 0;
 }
