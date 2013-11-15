@@ -5,6 +5,7 @@
 #include "controller_status.h"
 #include "self_test.h"
 #include "../mcuicom.h"
+#include "mctlcom.h"
 
 // debug
 #include "../macros.h"
@@ -1737,35 +1738,38 @@ inline void hostcmd_pa(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			int       cur_pos;
-			bool_t    error = false;
+			int            cur_pos;
+			bool_t         error = false;
+			mcuicom_cmd    cmd;
 			
 			switch (param1.value.letter)
 			{
 				case 'A':
-					cur_pos = controller.current_position.motor_a;
+					cmd.opcode = MCUICOM_READ_ENC_MA;
 					break;
 				case 'B':
-					cur_pos = controller.current_position.motor_b;
+					cmd.opcode = MCUICOM_READ_ENC_MB;
 					break;
 				case 'C':
-					cur_pos = controller.current_position.motor_c;
+					cmd.opcode = MCUICOM_READ_ENC_MC;
 					break;
 				case 'D':
-					cur_pos = controller.current_position.motor_d;
+					cmd.opcode = MCUICOM_READ_ENC_MD;
 					break;
 				case 'E':
-					cur_pos = controller.current_position.motor_e;
+					cmd.opcode = MCUICOM_READ_ENC_ME;
 					break;
 				case 'F':
-					cur_pos = controller.current_position.motor_f;
+					cmd.opcode = MCUICOM_READ_ENC_MF;
 					break;
+				/*
 				case 'G':
-					cur_pos = controller.current_position.motor_g;
+					cmd.opcode = MCUICOM_READ_ENC_MG;
 					break;
 				case 'H':
-					cur_pos = controller.current_position.motor_h;
+					cmd.opcode = MCUICOM_READ_ENC_MH;
 					break;
+				*/
 				default:
 					// error
 					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
@@ -1775,6 +1779,8 @@ inline void hostcmd_pa(void)
 			if (!error)
 			{
 				char buf[64];
+				mcuicom_send(&cmd);
+				cur_pos = mctlcom_get_response();
 				snprintf(buf, 64, "%d\n", cur_pos);
 				hostcom_send(buf, strlen(buf));
 			}
