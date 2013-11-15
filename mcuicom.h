@@ -130,6 +130,8 @@ typedef union {
 
 #include "datastruc/buffer.h"
 
+#ifndef MCUICOM_C
+
 /**
  * Receive buffer for the communication with the other MCU (using UART1).
  */
@@ -139,6 +141,8 @@ extern buffer_t mcuicom_rcv_buf;
  * Transmit buffer for the communication with the other MCU (using UART1).
  */
 extern buffer_t mcuicom_xfr_buf;
+
+#endif
 
 /*****************************************************************************************************
  * Function declarations                                                                             *
