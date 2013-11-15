@@ -18,7 +18,7 @@ int            next_cmd_data_pos = 0;
  * Size of the next command to be received, in bytes. This is the sum of the size of the opcode
  * plus the size of the parameters.
  */
-int            next_cmd_size = 1;
+int            next_cmd_size = sizeof(next_cmd.opcode);
 
 void gpcorecom_interpret_next(void)
 {
@@ -44,7 +44,7 @@ void gpcorecom_interpret_next(void)
 		else
 		{
 			next_cmd_data_pos = 0;
-			next_cmd_size = 1;
+			next_cmd_size = sizeof(next_cmd.opcode);
 			cmd_full = true;
 		}
 		
