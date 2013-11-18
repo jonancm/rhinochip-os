@@ -87,7 +87,6 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 	
 	// While UART1 receive buffer has data and the 'mcuicom_rcv_buf' has free
 	// space...
-	//int i = 0;
 	while (U1STAbits.URXDA && mcuicom_rcv_buf.used < mcuicom_rcv_buf.size)
 	{
 		// Read the received byte from the UART1 receive register
@@ -95,20 +94,7 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		
 		// Increment the count of elements stored in the buffer
 		++mcuicom_rcv_buf.used;
-		
-		//++i;
-		
-		/*
-		char buf[64];
-		snprintf(buf, 64, "got byte: %c\n", mcuicom_rcv_buf.data[mcuicom_rcv_buf.used - 1]);
-		mcuicom_send(buf);
-		*/
 	}
-	/*
-	char buf[64];
-	snprintf(buf, 64, "got %d bytes\n", i);
-	mcuicom_send(buf);
-	*/
 	
 	// Re-enable UART1 receiver interrupts
 	IEC0bits.U1RXIE = 1;

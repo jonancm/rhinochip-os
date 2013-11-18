@@ -1786,9 +1786,7 @@ inline void hostcmd_pa(void)
 				unsigned int timeout = MCTLCOM_TIMEOUT;
 				//mcuicom_send(&cmd);
 				mcuicom_send("ra");
-				//hostcom_send("before\n", STRLEN("before\n")); // debug
 				cur_pos = mctlcom_get_response(&timeout);
-				//hostcom_send("after\n", STRLEN("after\n")); // debug
 				/*
 				if (timeout)
 				{

@@ -3,9 +3,6 @@
 #include "../mcuicom.h"
 #include "motor_status.h"
 
-//debug
-#include <stdio.h>
-
 /**
  * Temporary variable to store the next command that is being parsed from the receive buffer.
  */
@@ -32,9 +29,6 @@ void gpcorecom_interpret_next(void)
 	// Operate on the buffer's data only if it actually contains data
 	if (mcuicom_rcv_buf.used)
 	{
-		// debug
-		//mcuicom_send((mcuicom_cmd *) "<");
-		
 		// Extract the available bytes of next command from the receive buffer
 		if (next_cmd_data_pos == 0)
 		{
@@ -64,12 +58,6 @@ void gpcorecom_interpret_next(void)
 		}
 		else
 			next_cmd_data_pos = i;
-		
-		// debug
-		//mcuicom_send((mcuicom_cmd *) "@");
-		
-		// debug
-		//mcuicom_send((mcuicom_cmd *) "D");
 		
 		// Interpret command
 		if (cmd_full)
@@ -114,22 +102,9 @@ void gpcorecom_interpret_next(void)
 			
 			switch (next_cmd.opcode)
 			{
-				case 'r': mcuicom_send("PASOS\n"); break;
-				default: mcuicom_send("DESCONOCIDO\n");
+				case 'r': mcuicom_send("Pasos"); break;
+				default: mcuicom_send("Unkno");
 			}
-			
-			/*
-			char buf[64];
-			snprintf(buf, 64, "%c1\n", next_cmd.data[0]);
-			mcuicom_send(buf);
-			*/
 		}
-		
-		/*
-		char buf[64];
-		next_cmd.data[i] = 0;
-		snprintf(buf, 64, "%s__\n", next_cmd.data);
-		mcuicom_send(buf);
-		*/
 	}
 }
