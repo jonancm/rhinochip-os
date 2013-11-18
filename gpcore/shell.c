@@ -1784,8 +1784,7 @@ inline void hostcmd_pa(void)
 			{
 				char buf[64];
 				unsigned int timeout = MCTLCOM_TIMEOUT;
-				//mcuicom_send(&cmd);
-				mcuicom_send("ra");
+				mcuicom_send(&cmd);
 				cur_pos = mctlcom_get_response(&timeout);
 				/*
 				if (timeout)
@@ -1794,8 +1793,10 @@ inline void hostcmd_pa(void)
 				}
 				else
 				{
+					*/
 					snprintf(buf, 64, "%d\n", cur_pos);
 					hostcom_send(buf, strlen(buf));
+					/*
 				}
 				*/
 			}
@@ -3304,8 +3305,7 @@ inline void hostcmd_pd(void)
 									
 									cmd.param[0] = intparam2;
 									
-									//mcuicom_send(&cmd);
-									mcuicom_send("pd");
+									mcuicom_send(&cmd);
 								}
 								else
 								{

@@ -45,7 +45,6 @@ inline void mcuicom_setup(void)
 	U1STAbits.UTXEN = 1;
 }
 
-/*
 int mcuicom_send(mcuicom_cmd *cmd)
 {
 	int sent, cmd_size = sizeof(cmd->opcode) + mcuicom_param_size(cmd);
@@ -53,17 +52,6 @@ int mcuicom_send(mcuicom_cmd *cmd)
 	{
 		while (U1STAbits.UTXBF); // Wait while the transmit buffer is full
 		U1TXREG = cmd->data[sent];
-	}
-	return sent;
-}
-*/
-int mcuicom_send(char msg[])
-{
-	int sent;
-	for (sent = 0; msg[sent] != 0; ++sent)
-	{
-		while (U1STAbits.UTXBF); // Wait while the transmit buffer is full
-		U1TXREG = msg[sent];
 	}
 	return sent;
 }

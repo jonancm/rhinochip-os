@@ -62,7 +62,6 @@ void gpcorecom_interpret_next(void)
 		// Interpret command
 		if (cmd_full)
 		{
-			/*
 			response.opcode = MCUICOM_RESPONSE;
 			switch (next_cmd.opcode)
 			{
@@ -97,13 +96,6 @@ void gpcorecom_interpret_next(void)
 					mcuicom_send(&response);
 					break;
 				//default: while (U1STAbits.UTXBF); U1TXREG = '!';
-			}
-			*/
-			
-			switch (next_cmd.opcode)
-			{
-				case 'r': mcuicom_send("Pasos"); break;
-				default: mcuicom_send("Unkno");
 			}
 		}
 	}
