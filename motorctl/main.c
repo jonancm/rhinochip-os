@@ -5,6 +5,8 @@ _FOSC(CSW_FSCM_OFF & XT_PLL16); // Fosc = 16x 7.37 MHz, Fcy = 29.50 MHz
 _FWDT(WDT_OFF);                 // Turn off the watchdog timer
 _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
+#define NDEBUG
+
 #include "pwm.h"
 #include "qei.h"
 #include "../mcuicom.h"
@@ -12,8 +14,8 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 
 int main(void)
 {
-	pwm_setup();
-	qei_setup();
+	//pwm_setup();
+	//qei_setup();
 	mcuicom_setup();
 	
 	pwm_set_duty1(75);

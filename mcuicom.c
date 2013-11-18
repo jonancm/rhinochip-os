@@ -8,6 +8,9 @@ buffer_t    mcuicom_rcv_buf;
 buffer_t    mcuicom_xfr_buf;
 char       *xfr_buf_ptr = mcuicom_xfr_buf.data;
 
+//debug
+#include <stdio.h>
+
 inline void mcuicom_setup(void)
 {
 	// Set up the receive buffer
@@ -42,6 +45,7 @@ inline void mcuicom_setup(void)
 	U1STAbits.UTXEN = 1;
 }
 
+/*
 int mcuicom_send(mcuicom_cmd *cmd)
 {
 	int sent, cmd_size = sizeof(cmd->opcode) + mcuicom_param_size(cmd);
@@ -52,13 +56,24 @@ int mcuicom_send(mcuicom_cmd *cmd)
 	}
 	return sent;
 }
+*/
+int mcuicom_send(char msg[])
+{
+	int sent;
+	for (sent = 0; msg[sent] != 0; ++sent)
+	{
+		while (U1STAbits.UTXBF); // Wait while the transmit buffer is full
+		U1TXREG = msg[sent];
+	}
+	return sent;
+}
 
 short int mcuicom_param_size(mcuicom_cmd *cmd)
 {
 	// Extract the two least-significant bits, which are the ones that contain the information
 	// on how many parameters the command requires, and multiply that number by the size that
 	// each parameter spans in memory.
-	return (cmd->opcode & 2) * sizeof(cmd->param[0]);
+	return (cmd->opcode & 3) * sizeof(cmd->param[0]);
 }
 
 /**
@@ -72,6 +87,7 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 	
 	// While UART1 receive buffer has data and the 'mcuicom_rcv_buf' has free
 	// space...
+	//int i = 0;
 	while (U1STAbits.URXDA && mcuicom_rcv_buf.used < mcuicom_rcv_buf.size)
 	{
 		// Read the received byte from the UART1 receive register
@@ -79,7 +95,20 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		
 		// Increment the count of elements stored in the buffer
 		++mcuicom_rcv_buf.used;
+		
+		//++i;
+		
+		/*
+		char buf[64];
+		snprintf(buf, 64, "got byte: %c\n", mcuicom_rcv_buf.data[mcuicom_rcv_buf.used - 1]);
+		mcuicom_send(buf);
+		*/
 	}
+	/*
+	char buf[64];
+	snprintf(buf, 64, "got %d bytes\n", i);
+	mcuicom_send(buf);
+	*/
 	
 	// Re-enable UART1 receiver interrupts
 	IEC0bits.U1RXIE = 1;

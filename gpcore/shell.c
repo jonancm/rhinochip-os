@@ -214,6 +214,10 @@ void shell_run_interactive(void)
 {
 	interactive = true;
 	
+	// Send version information to host PC upon controller startup,
+	// as though the SV command had been sent by the host PC.
+	hostcmd_sv();
+	
 	while (1)
 	{
 		// Read the next command from the hostcom buffer to the shell buffer
@@ -1779,10 +1783,23 @@ inline void hostcmd_pa(void)
 			if (!error)
 			{
 				char buf[64];
-				mcuicom_send(&cmd);
-				cur_pos = mctlcom_get_response();
-				snprintf(buf, 64, "%d\n", cur_pos);
-				hostcom_send(buf, strlen(buf));
+				unsigned int timeout = MCTLCOM_TIMEOUT;
+				//mcuicom_send(&cmd);
+				mcuicom_send("ra");
+				//hostcom_send("before\n", STRLEN("before\n")); // debug
+				cur_pos = mctlcom_get_response(&timeout);
+				//hostcom_send("after\n", STRLEN("after\n")); // debug
+				/*
+				if (timeout)
+				{
+					hostcom_send("Error: MCMCU timeout\n", STRLEN("Error: MCMCU timeout\n"));
+				}
+				else
+				{
+					snprintf(buf, 64, "%d\n", cur_pos);
+					hostcom_send(buf, strlen(buf));
+				}
+				*/
 			}
 		}
 		else
@@ -3289,7 +3306,8 @@ inline void hostcmd_pd(void)
 									
 									cmd.param[0] = intparam2;
 									
-									mcuicom_send(&cmd);
+									//mcuicom_send(&cmd);
+									mcuicom_send("pd");
 								}
 								else
 								{
