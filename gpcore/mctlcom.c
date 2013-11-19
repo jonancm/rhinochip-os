@@ -1,5 +1,7 @@
 #include "mctlcom.h"
 
+#include <string.h> // memcpy
+
 #include "../clock.h"
 
 #define T2PRESCALER     64    /* Timer 1 prescale value 1:64 */
@@ -58,9 +60,10 @@ void __attribute__((interrupt, auto_psv)) _T2Interrupt(void)
 }
 */
 
-int mctlcom_get_response(unsigned int *timeout)
+int mctlcom_get_response(char *response, int size, unsigned int *timeout)
 {
-	char      cmd[128];
+	const int cmd_buf_size = 128;
+	char      cmd[cmd_buf_size];
 	bool_t    full;
 	int       copied, retcode = 0;
 	
@@ -72,7 +75,7 @@ int mctlcom_get_response(unsigned int *timeout)
 	
 	// Wait until the receive buffer has at least one full command or a timeout occurs
 	while (!mcuicom_cmd_available() && !mctlcom_timeout);
-	copied = mcuicom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
+	copied = mcuicom_read_cmd(response, size, &full);
 	
 	// If a timeout occurred, reset the timeout flag and stop the timer
 	if (mctlcom_timeout)
@@ -84,17 +87,7 @@ int mctlcom_get_response(unsigned int *timeout)
 	// in order to return it to the callee
 	else
 	{
-		int i;
-		bool_t error = false;
-		
-		for (i = 0; i < copied && !error; ++i)
-		{
-			if ('0' <= cmd[i] && cmd[i] <= '9')
-				retcode = retcode * 10 + cmd[i];
-			else
-				error = true;
-		}
-		
+		memcpy(response, cmd, copied);
 		*timeout = false;
 	}
 	

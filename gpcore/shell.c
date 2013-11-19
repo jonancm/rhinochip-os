@@ -1742,63 +1742,25 @@ inline void hostcmd_pa(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			int            cur_pos;
-			bool_t         error = false;
-			mcuicom_cmd    cmd;
-			
-			switch (param1.value.letter)
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				case 'A':
-					cmd.opcode = MCUICOM_READ_ENC_MA;
-					break;
-				case 'B':
-					cmd.opcode = MCUICOM_READ_ENC_MB;
-					break;
-				case 'C':
-					cmd.opcode = MCUICOM_READ_ENC_MC;
-					break;
-				case 'D':
-					cmd.opcode = MCUICOM_READ_ENC_MD;
-					break;
-				case 'E':
-					cmd.opcode = MCUICOM_READ_ENC_ME;
-					break;
-				case 'F':
-					cmd.opcode = MCUICOM_READ_ENC_MF;
-					break;
-				/*
-				case 'G':
-					cmd.opcode = MCUICOM_READ_ENC_MG;
-					break;
-				case 'H':
-					cmd.opcode = MCUICOM_READ_ENC_MH;
-					break;
-				*/
-				default:
-					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
-					error = true;
-			}
-			
-			if (!error)
-			{
-				char buf[64];
+				int size = 64;
+				char buf[size];
 				unsigned int timeout = MCTLCOM_TIMEOUT;
-				mcuicom_send(&cmd);
-				cur_pos = mctlcom_get_response(&timeout);
-				/*
-				if (timeout)
-				{
-					hostcom_send("Error: MCMCU timeout\n", STRLEN("Error: MCMCU timeout\n"));
-				}
-				else
-				{
-					*/
-					snprintf(buf, 64, "%d\n", cur_pos);
-					hostcom_send(buf, strlen(buf));
-					/*
-				}
-				*/
+				
+				// Send MCUICOM command RA, RB, ..., RF depending on motor letter (param 1)
+				buf[0] = 'R';
+				buf[1] = param1.value.letter;
+				buf[3] = '\n';
+				mcuicom_send(buf, 3);
+				// Get response (motor steps) and re-send it to the host PC
+				size = mctlcom_get_response(buf, size, &timeout);
+				hostcom_send(buf, strlen(buf));
+			}
+			else
+			{
+				// error
+				hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
@@ -3295,17 +3257,7 @@ inline void hostcmd_pd(void)
 								int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 								if (-32767 <= intparam2 && intparam2 <= 32767)
 								{
-									mcuicom_cmd    cmd;
-									
-									// Compute the opcode of the command by adding the motor letter offset from the 'A'
-									// ASCII character to the opcode of the first command (i.e. the command for motor A).
-									// Thus, a switch structure with a lot of branch instructions is avoided, which leads
-									// to a better performance in the average case.
-									cmd.opcode = MCUICOM_SET_DST_MA + ((param1.value.letter - 'A') << 2);
-									
-									cmd.param[0] = intparam2;
-									
-									mcuicom_send(&cmd);
+									// TODO: send pd
 								}
 								else
 								{

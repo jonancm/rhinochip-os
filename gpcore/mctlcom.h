@@ -11,6 +11,6 @@
 #define MCTLCOM_TIMEOUT    0.100
 
 //void mctlcom_setup(void);
-int mctlcom_get_response(unsigned int *timeout);
+int mctlcom_get_response(char *response, int size, unsigned int *timeout);
 
 #endif
