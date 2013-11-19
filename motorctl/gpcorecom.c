@@ -194,7 +194,7 @@ void gpcorecom_interpret_next(void)
 {
 	while (1)
 	{
-		// Read the next command from the hostcom buffer to the shell buffer
+		// Read the next command from the mcuicom buffer to the shell buffer
 		next_cmd();
 		// Parse the command currently stored in the shell buffer
 		parse_cmd();
@@ -202,7 +202,7 @@ void gpcorecom_interpret_next(void)
 }
 
 /**
- * Read the next command from the hostcom buffer and place it into the shell
+ * Read the next command from the mcuicom buffer and place it into the shell
  * buffer (i.e. the buffer that the shell uses to store the symbols that are
  * being parsed).
  */
@@ -211,8 +211,8 @@ void next_cmd(void)
 	bool_t full;
 	int copied;
 	
-	while (!hostcom_cmd_available());
-	copied = hostcom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
+	while (!mcuicom_cmd_available());
+	copied = mcuicom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
 	cmd_buf_pos = 0;
 	param1.present = false;
 	param2.present = false;
@@ -237,7 +237,7 @@ void parse_cmd(void)
 		if (retval < 0) // it's not a program
 		{
 			// Syntax error (it's not an instruction nor a program)
-			hostcom_send(ERROR, STRLEN(ERROR));
+			mcuicom_send(ERROR, STRLEN(ERROR));
 		}
 		else
 		{
@@ -484,7 +484,7 @@ void interpret_cmd(void)
 					hostcmd_as(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -505,7 +505,7 @@ void interpret_cmd(void)
 					hostcmd_cr(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -520,7 +520,7 @@ void interpret_cmd(void)
 					hostcmd_ds(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -538,7 +538,7 @@ void interpret_cmd(void)
 					hostcmd_fx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -556,7 +556,7 @@ void interpret_cmd(void)
 					hostcmd_go(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -583,7 +583,7 @@ void interpret_cmd(void)
 					hostcmd_hs(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -601,7 +601,7 @@ void interpret_cmd(void)
 					hostcmd_ix(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -628,7 +628,7 @@ void interpret_cmd(void)
 					hostcmd_kx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -655,7 +655,7 @@ void interpret_cmd(void)
 					hostcmd_mx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -676,7 +676,7 @@ void interpret_cmd(void)
 					hostcmd_ot(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -706,7 +706,7 @@ void interpret_cmd(void)
 					hostcmd_py(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -727,7 +727,7 @@ void interpret_cmd(void)
 					hostcmd_rc(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -775,7 +775,7 @@ void interpret_cmd(void)
 					hostcmd_sz(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -817,7 +817,7 @@ void interpret_cmd(void)
 					hostcmd_tt(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -841,7 +841,7 @@ void interpret_cmd(void)
 					hostcmd_uy(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -865,7 +865,7 @@ void interpret_cmd(void)
 					hostcmd_vs(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -880,7 +880,7 @@ void interpret_cmd(void)
 					hostcmd_wi(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
@@ -910,13 +910,13 @@ void interpret_cmd(void)
 					hostcmd_xy(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					mcuicom_send("Error\n", STRLEN("Error\n"));
 					break;
 			}
 			break;
 		default:
 			// error: unknown command
-			hostcom_send(ERR_UNKOWN_CMD, STRLEN(ERR_UNKOWN_CMD));
+			mcuicom_send(ERR_UNKOWN_CMD, STRLEN(ERR_UNKOWN_CMD));
 			break;
 	}
 }
@@ -942,7 +942,7 @@ inline void hostcmd_sa(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.motor_status);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -991,7 +991,7 @@ inline void hostcmd_sc(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_config);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1013,19 +1013,19 @@ inline void hostcmd_sd(void)
 			else
 			{
 				// error: parameter out of range
-				hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+				mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1047,7 +1047,7 @@ inline void hostcmd_se(void)
 	char buf[64];
 	unsigned char error_code = 0;
 	snprintf(buf, 64, "%u\n", error_code);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1093,26 +1093,26 @@ inline void hostcmd_sm(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
 			if (!error)
 			{
 				snprintf(buf, 64, "%u\n", motor_mode);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
 			// error
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1130,7 +1130,7 @@ inline void hostcmd_sp(void)
 	char buf[64];
 	char pendant_error = 0;
 	snprintf(buf, 64, "%u", pendant_error);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1164,7 +1164,7 @@ inline void hostcmd_ss(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_status);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1194,7 +1194,7 @@ inline void hostcmd_su(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%lu\n", controller.usage_time);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1208,7 +1208,7 @@ inline void hostcmd_su(void)
 inline void hostcmd_sv(void)
 {
 	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX.\n"
-	hostcom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
+	mcuicom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
 }
 
 /**
@@ -1236,14 +1236,14 @@ inline void hostcmd_sx(void)
 		snprintf(buf, 64, TEACH_PENDANT_ONLINE);
 	else
 		snprintf(buf, 64, TEACH_PENDANT_OFFLINE);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 	
 	test_passed = test_ram(&last_addr, &bytes_ok);
 	if (test_passed)
 		snprintf(buf, 64, RAM_TEST_PASSED, last_addr, bytes_ok);
 	else
 		snprintf(buf, 64, RAM_TEST_FAILED, last_addr, bytes_ok);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1257,7 +1257,7 @@ inline void hostcmd_sz(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d\n", controller.delay_timer);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1275,7 +1275,7 @@ inline void hostcmd_cc(void)
 	if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 	{
 		// error
-		hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+		mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 	}
 	else
 	{
@@ -1296,31 +1296,31 @@ inline void hostcmd_cc(void)
 								break;
 							default:
 								// error
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error
-					hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+					mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 				}
 			}
 			else
 			{
 				// error
-				hostcom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
+				mcuicom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
 			}
 		}
 		else
 		{
 			// error
-			hostcom_send(ERR_NO_HARD_HOME, STRLEN(ERR_NO_HARD_HOME));
+			mcuicom_send(ERR_NO_HARD_HOME, STRLEN(ERR_NO_HARD_HOME));
 		}
 	}
 }
@@ -1351,19 +1351,19 @@ inline void hostcmd_cg(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1423,7 +1423,7 @@ inline void hostcmd_cm(void)
 								break;
 							default:
 								// error : parameter 1 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 								error = true;
 						}
 						
@@ -1432,7 +1432,7 @@ inline void hostcmd_cm(void)
 							if (hard_home_in_progress())
 							{
 								// error: hard home in progress
-								hostcom_send(ERR_EXECUTING_HARD_HOME, STRLEN(ERR_EXECUTING_HARD_HOME));
+								mcuicom_send(ERR_EXECUTING_HARD_HOME, STRLEN(ERR_EXECUTING_HARD_HOME));
 							}
 							else
 							{
@@ -1443,31 +1443,31 @@ inline void hostcmd_cm(void)
 					else
 					{
 						// error: parameter 2 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be an integer number
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 2 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be an integer number
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1491,7 +1491,7 @@ inline void hostcmd_cr(void)
 			if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 			{
 				// error: some motor is still executing a trapezoidal move
-				hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+				mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 			}
 			else
 			{
@@ -1516,20 +1516,20 @@ inline void hostcmd_cr(void)
 						break;
 					default:
 						// error: parameter 1 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be an integer number
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1543,7 +1543,7 @@ inline void hostcmd_ar(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_acceleration);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1599,7 +1599,7 @@ inline void hostcmd_dr(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -1607,17 +1607,17 @@ inline void hostcmd_dr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", (direction ? -pwm_level : pwm_level));
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1631,7 +1631,7 @@ inline void hostcmd_gs(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.gripper_status);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -1682,7 +1682,7 @@ inline void hostcmd_hr(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -1690,17 +1690,17 @@ inline void hostcmd_hr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", soft_home_pos);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1750,7 +1750,7 @@ inline void hostcmd_pa(void)
 				*/
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -1763,13 +1763,13 @@ inline void hostcmd_pa(void)
 				/*
 				if (timeout)
 				{
-					hostcom_send("Error: MCMCU timeout\n", STRLEN("Error: MCMCU timeout\n"));
+					mcuicom_send("Error: MCMCU timeout\n", STRLEN("Error: MCMCU timeout\n"));
 				}
 				else
 				{
 					*/
 					snprintf(buf, 64, "%d\n", cur_pos);
-					hostcom_send(buf, strlen(buf));
+					mcuicom_send(buf, strlen(buf));
 					/*
 				}
 				*/
@@ -1777,12 +1777,12 @@ inline void hostcmd_pa(void)
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1846,7 +1846,7 @@ inline void hostcmd_pw(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -1854,17 +1854,17 @@ inline void hostcmd_pw(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", dest_pos);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1906,7 +1906,7 @@ inline void hostcmd_pz(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -1914,17 +1914,17 @@ inline void hostcmd_pz(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%.2f\n", dest_val);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -1980,7 +1980,7 @@ inline void hostcmd_rl(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.limit_switches);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -2026,17 +2026,17 @@ inline void hostcmd_uh(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2071,17 +2071,17 @@ inline void hostcmd_uo(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2154,7 +2154,7 @@ inline void hostcmd_va(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -2162,17 +2162,17 @@ inline void hostcmd_va(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%u\n", velocity);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2229,7 +2229,7 @@ inline void hostcmd_vr(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -2237,17 +2237,17 @@ inline void hostcmd_vr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%u\n", velocity);
-				hostcom_send(buf, strlen(buf));
+				mcuicom_send(buf, strlen(buf));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2261,7 +2261,7 @@ inline void hostcmd_vx(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_velocity);
-	hostcom_send(buf, strlen(buf));
+	mcuicom_send(buf, strlen(buf));
 }
 
 /**
@@ -2287,19 +2287,19 @@ inline void hostcmd_xr(void)
 					break;
 				default:
 					// error
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2351,7 +2351,7 @@ inline void hostcmd_ac(void)
 					break;
 				default:
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
 			
@@ -2374,12 +2374,12 @@ inline void hostcmd_ac(void)
 		}
 		else
 		{
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2408,7 +2408,7 @@ inline void hostcmd_as(void)
 				if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 				{
 					// error: motors in trapezoidal mode must not be executing a trapezoidal move
-					hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+					mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 				}
 				else
 				{
@@ -2418,19 +2418,19 @@ inline void hostcmd_as(void)
 			else
 			{
 				// error: value of paramter 1 out of range
-				hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+				mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be an integer number
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2450,7 +2450,7 @@ inline void hostcmd_ds(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2496,7 +2496,7 @@ inline void hostcmd_ds(void)
 									break;
 								default:
 									// error: parameter 1 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 									error = true;
 							}
 							
@@ -2513,31 +2513,31 @@ inline void hostcmd_ds(void)
 						else
 						{
 							// error: parameter 2 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be an integer number
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error: parameter 1 must be a letter
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 2 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 		else
 		{
 			// error: paramter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -2565,7 +2565,7 @@ inline void hostcmd_gc(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2581,13 +2581,13 @@ inline void hostcmd_gc(void)
 			else
 			{
 				// error: the gripper must be enabled
-				hostcom_send(ERR_GRIPPER_NOT_ENABLED, STRLEN(ERR_GRIPPER_NOT_ENABLED));
+				mcuicom_send(ERR_GRIPPER_NOT_ENABLED, STRLEN(ERR_GRIPPER_NOT_ENABLED));
 			}
 		}
 		else
 		{
 			// error: controller must be in robot mode (either XR-3 or SCARA)
-			hostcom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
+			mcuicom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
 		}
 	}
 }
@@ -2615,7 +2615,7 @@ inline void hostcmd_go(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2631,13 +2631,13 @@ inline void hostcmd_go(void)
 			else
 			{
 				// error: the gripper must be enabled
-				hostcom_send(ERR_GRIPPER_NOT_ENABLED, STRLEN(ERR_GRIPPER_NOT_ENABLED));
+				mcuicom_send(ERR_GRIPPER_NOT_ENABLED, STRLEN(ERR_GRIPPER_NOT_ENABLED));
 			}
 		}
 		else
 		{
 			// error: controller must be in robot mode (either XR-3 or SCARA)
-			hostcom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
+			mcuicom_send(ERR_NOT_ROBOT_MODE, STRLEN(ERR_NOT_ROBOT_MODE));
 		}
 	}
 }
@@ -2668,7 +2668,7 @@ inline void hostcmd_ha(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2713,7 +2713,7 @@ inline void hostcmd_hg(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2765,14 +2765,14 @@ inline void hostcmd_hh(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
 		if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
 		{
 			// error: no motor can be executing a trapezoidal move
-			hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+			mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 		}
 		else
 		{
@@ -2815,7 +2815,7 @@ inline void hostcmd_hl(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2835,14 +2835,14 @@ inline void hostcmd_hl(void)
 					}
 					else
 					{
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				
 				if (param2_error)
 				{
 					// error: parameter 2 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 				else
 				{
@@ -2866,16 +2866,16 @@ inline void hostcmd_hl(void)
 							break;
 						default:
 							// error: parameter 1 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					}
 				}
 			}
 			else
 			{
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -2902,7 +2902,7 @@ inline void hostcmd_hs(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2933,7 +2933,7 @@ inline void hostcmd_ma(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -2971,7 +2971,7 @@ inline void hostcmd_mc(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3013,7 +3013,7 @@ inline void hostcmd_mi(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3033,7 +3033,7 @@ inline void hostcmd_mm(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3061,19 +3061,19 @@ inline void hostcmd_mm(void)
 						break;
 					default:
 						// error: parameter 1 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a letter
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3101,7 +3101,7 @@ inline void hostcmd_ms(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3115,7 +3115,7 @@ inline void hostcmd_ms(void)
 						if (gripper_is_enabled())
 						{
 							// error: port A is enabled as the gripper
-							hostcom_send(ERR_PORT_A_IS_GRIPPER, STRLEN(ERR_PORT_A_IS_GRIPPER));
+							mcuicom_send(ERR_PORT_A_IS_GRIPPER, STRLEN(ERR_PORT_A_IS_GRIPPER));
 						}
 						else
 						{
@@ -3138,19 +3138,19 @@ inline void hostcmd_ms(void)
 						break;
 					default:
 						// error: parameter 1 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a letter
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3188,7 +3188,7 @@ inline void hostcmd_mx(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3199,7 +3199,7 @@ inline void hostcmd_mx(void)
 				if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E | MOTOR_F))
 				{
 					// error: no motor can be executing a trapezoidal move
-					hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+					mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 				}
 				else
 				{
@@ -3211,7 +3211,7 @@ inline void hostcmd_mx(void)
 				if (any_motor_executing_trapezoidal_move(MOTOR_B | MOTOR_C | MOTOR_D | MOTOR_E))
 				{
 					// error: no motor can be executing a trapezoidal move
-					hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+					mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 				}
 				else
 				{
@@ -3244,7 +3244,7 @@ inline void hostcmd_pd(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3258,7 +3258,7 @@ inline void hostcmd_pd(void)
 					if (any_motor_executing_trapezoidal_move(motor))
 					{
 						// error: if the motor is in trapezoidal mode, it must not be executing a trapezoidal move
-						hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+						mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 					}
 					else
 					{
@@ -3284,36 +3284,36 @@ inline void hostcmd_pd(void)
 								else
 								{
 									// error: parameter 2 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 								}
 							}
 							else
 							{
 								// error: parameter 2 must be an integer number
-								hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+								mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be specified
-							hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+							mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 						}
 					}
 				}
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3336,7 +3336,7 @@ inline void hostcmd_pr(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3350,7 +3350,7 @@ inline void hostcmd_pr(void)
 					if (any_motor_executing_trapezoidal_move(motor))
 					{
 						// error: if the motor is in trapezoidal mode, it must not be executing a trapezoidal move
-						hostcom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
+						mcuicom_send(ERR_TRAPEZOIDAL_MOVE, STRLEN(ERR_TRAPEZOIDAL_MOVE));
 					}
 					else
 					{
@@ -3366,36 +3366,36 @@ inline void hostcmd_pr(void)
 								else
 								{
 									// error: parameter 2 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 								}
 							}
 							else
 							{
 								// error: parameter 2 must be an integer number
-								hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+								mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be specified
-							hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+							mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 						}
 					}
 				}
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3422,7 +3422,7 @@ inline void hostcmd_px(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3475,37 +3475,37 @@ inline void hostcmd_px(void)
 										break;
 									default:
 										// error: parameter 1 out of range
-										hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+										mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 								}
 							}
 							else
 							{
 								// error: parameter 2 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be a decimal number
-							hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+							mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be specified
-						hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+						mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 					}
 				}
 				else
 				{
 					// error parameter 1 must be a letter
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 	}
@@ -3533,7 +3533,7 @@ inline void hostcmd_py(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3586,37 +3586,37 @@ inline void hostcmd_py(void)
 										break;
 									default:
 										// error: parameter 1 out of range
-										hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+										mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 								}
 							}
 							else
 							{
 								// error: parameter 2 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be a decimal number
-							hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+							mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be specified
-						hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+						mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 					}
 				}
 				else
 				{
 					// error parameter 1 must be a letter
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 	}
@@ -3643,7 +3643,7 @@ inline void hostcmd_vg(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3659,19 +3659,19 @@ inline void hostcmd_vg(void)
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3703,7 +3703,7 @@ inline void hostcmd_vs(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3738,37 +3738,37 @@ inline void hostcmd_vs(void)
 									break;
 								default:
 									// error: parameter 1 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be an integer number
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be specified
-					hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+					mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a letter
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3786,7 +3786,7 @@ inline void hostcmd_xa(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3802,13 +3802,13 @@ inline void hostcmd_xa(void)
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a decimal number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
@@ -3835,7 +3835,7 @@ inline void hostcmd_xh(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3870,37 +3870,37 @@ inline void hostcmd_xh(void)
 									break;
 								default:
 									// error: parameter 1 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be a decimal number
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be specified
-					hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+					mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a letter
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -3922,7 +3922,7 @@ inline void hostcmd_xo(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -3957,37 +3957,37 @@ inline void hostcmd_xo(void)
 									break;
 								default:
 									// error: parameter 1 out of range
-									hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+									mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be a decimal number
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be specified
-					hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+					mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a letter
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -4007,7 +4007,7 @@ inline void hostcmd_xs(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -4034,37 +4034,37 @@ inline void hostcmd_xs(void)
 							else
 							{
 								// error: parameter 1 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 out of range
-							hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+							mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be an integer number
-						hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+						mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be specified
-					hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+					mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -4081,7 +4081,7 @@ inline void hostcmd_xt(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -4097,19 +4097,19 @@ inline void hostcmd_xt(void)
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a decimal number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -4128,7 +4128,7 @@ inline void hostcmd_xy(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -4144,19 +4144,19 @@ inline void hostcmd_xy(void)
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be a decimal number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -4388,37 +4388,37 @@ inline void hostcmd_ka(void)
 								break;
 							default:
 								// error: parameter 1 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be an integer number
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 2 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4465,37 +4465,37 @@ inline void hostcmd_kb(void)
 								break;
 							default:
 								// error: parameter 1 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be an integer number
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 2 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4542,37 +4542,37 @@ inline void hostcmd_kc(void)
 								break;
 							default:
 								// error: parameter 1 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 						}
 					}
 					else
 					{
 						// error: parameter 2 out of range
-						hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+						mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					}
 				}
 				else
 				{
 					// error: parameter 2 must be an integer number
-					hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+					mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 				}
 			}
 			else
 			{
 				// error: parameter 2 must be specified
-				hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+				mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4614,19 +4614,19 @@ inline void hostcmd_ra(void)
 					break;
 				default:
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4668,19 +4668,19 @@ inline void hostcmd_rb(void)
 					break;
 				default:
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4722,19 +4722,19 @@ inline void hostcmd_rc(void)
 					break;
 				default:
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be a letter
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4808,19 +4808,19 @@ inline void hostcmd_ib(void)
 			else
 			{
 				// error: parameter 1 out of range
-				hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+				mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be an integer number
-			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+			mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
 		// error: parameter 1 must be specified
-		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+		mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
 
@@ -4879,7 +4879,7 @@ inline void hostcmd_ob(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -4902,37 +4902,37 @@ inline void hostcmd_ob(void)
 							else
 							{
 								// error: parameter 2 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be an integer number
-							hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+							mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be specified
-						hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+						mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 					}
 				}
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -4954,7 +4954,7 @@ inline void hostcmd_op(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -4970,19 +4970,19 @@ inline void hostcmd_op(void)
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -5029,7 +5029,7 @@ inline void hostcmd_ot(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -5052,37 +5052,37 @@ inline void hostcmd_ot(void)
 							else
 							{
 								// error: parameter 2 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be an integer number
-							hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+							mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be specified
-						hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+						mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 					}
 				}
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
@@ -5099,7 +5099,7 @@ inline void hostcmd_wa(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -5135,7 +5135,7 @@ inline void hostcmd_wi(void)
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
-		hostcom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
+		mcuicom_send(ERR_TEACH_PENDANT_MODE, STRLEN(ERR_TEACH_PENDANT_MODE));
 	}
 	else
 	{
@@ -5158,37 +5158,37 @@ inline void hostcmd_wi(void)
 							else
 							{
 								// error: parameter 2 out of range
-								hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+								mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 							}
 						}
 						else
 						{
 							// error: parameter 2 must be an integer number
-							hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+							mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 						}
 					}
 					else
 					{
 						// error: parameter 2 must be specified
-						hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+						mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 					}
 				}
 				else
 				{
 					// error: parameter 1 out of range
-					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
+					mcuicom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 				}
 			}
 			else
 			{
 				// error: parameter 1 must be an integer number
-				hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
+				mcuicom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 			}
 		}
 		else
 		{
 			// error: parameter 1 must be specified
-			hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
+			mcuicom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 		}
 	}
 }
