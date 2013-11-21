@@ -21,7 +21,7 @@
 #define ERR_EXECUTING_HARD_HOME    "Error: a hard home is in progress\n"
 #define ERR_TEACH_PENDANT_MODE     "Error: command not allowed in teach pendant mode\n"
 #define ERR_GRIPPER_NOT_ENABLED    "Error: the gripper is not enabled\n"
-#define ERR_PORT_A_IS_GRIPPER      "Error: port A is enabled as the gripper"
+#define ERR_PORT_A_IS_GRIPPER      "Error: port A is enabled as the gripper\n"
 
 /**
  * Enumeration of all accepted token types
@@ -510,7 +510,7 @@ void interpret_cmd(void)
 					hostcmd_as(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -531,7 +531,7 @@ void interpret_cmd(void)
 					hostcmd_cr(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -546,7 +546,7 @@ void interpret_cmd(void)
 					hostcmd_ds(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -564,7 +564,7 @@ void interpret_cmd(void)
 					hostcmd_fx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -582,7 +582,7 @@ void interpret_cmd(void)
 					hostcmd_go(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -609,7 +609,7 @@ void interpret_cmd(void)
 					hostcmd_hs(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -627,7 +627,7 @@ void interpret_cmd(void)
 					hostcmd_ix(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -654,7 +654,7 @@ void interpret_cmd(void)
 					hostcmd_kx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -681,7 +681,7 @@ void interpret_cmd(void)
 					hostcmd_mx(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -702,7 +702,7 @@ void interpret_cmd(void)
 					hostcmd_ot(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -732,7 +732,7 @@ void interpret_cmd(void)
 					hostcmd_py(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -753,7 +753,7 @@ void interpret_cmd(void)
 					hostcmd_rc(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -801,7 +801,7 @@ void interpret_cmd(void)
 					hostcmd_sz(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -843,7 +843,7 @@ void interpret_cmd(void)
 					hostcmd_tt(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -867,7 +867,7 @@ void interpret_cmd(void)
 					hostcmd_uy(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -891,7 +891,7 @@ void interpret_cmd(void)
 					hostcmd_vs(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -906,7 +906,7 @@ void interpret_cmd(void)
 					hostcmd_wi(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -936,7 +936,7 @@ void interpret_cmd(void)
 					hostcmd_xy(); break;
 				default:
 					// error: unknown command
-					hostcom_send("Error\n", STRLEN("Error\n"));
+					hostcom_send(ERROR, STRLEN(ERROR));
 					break;
 			}
 			break;
@@ -1044,13 +1044,13 @@ inline void hostcmd_sd(void)
 		}
 		else
 		{
-			// error
+			// error: parameter must be an integer
 			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		// error
+		// error: parameter must be specified
 		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }
@@ -1118,7 +1118,7 @@ inline void hostcmd_sm(void)
 					motor_mode = controller.motor_mode.motor_h;
 					break;
 				default:
-					// error
+					// error: out of range
 					hostcom_send(ERR_OUT_OF_RANGE, STRLEN(ERR_OUT_OF_RANGE));
 					error = true;
 			}
@@ -1131,13 +1131,13 @@ inline void hostcmd_sm(void)
 		}
 		else
 		{
-			// error
+			// error: wrong type
 			hostcom_send(ERR_WRONG_TYPE_PARAM, STRLEN(ERR_WRONG_TYPE_PARAM));
 		}
 	}
 	else
 	{
-		// error
+		// error: missing params
 		hostcom_send(ERR_MISSING_PARAMS, STRLEN(ERR_MISSING_PARAMS));
 	}
 }

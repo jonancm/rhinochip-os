@@ -143,7 +143,6 @@ void parse_cmd(void)
 		if (retval < 0) // it's not a program
 		{
 			// Syntax error (it's not an instruction nor a program)
-			mcuicom_send(ERROR, STRLEN(ERROR));
 		}
 		else
 		{
