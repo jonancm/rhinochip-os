@@ -2,6 +2,7 @@
 
 #include "../mcuicom.h"
 #include "motor_status.h"
+#include "../hostcmdset.h"
 
 /**
  * Enumeration of all accepted token types
@@ -91,6 +92,12 @@ int letterparam(void);
 int str(void);
 void interpret_cmd(void);
 
+inline void read_encoder_a(void);
+inline void read_encoder_b(void);
+inline void read_encoder_c(void);
+inline void read_encoder_d(void);
+inline void read_encoder_e(void);
+inline void read_encoder_f(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -373,10 +380,85 @@ int next_token(void)
 
 void interpret_cmd(void)
 {
+	switch (cmd_name[0])
+	{
+		case 'R':
+			switch (cmd_name[1])
+			{
+				// RA: Read encoder of motor A
+				case 'A':
+					read_encoder_a(); break;
+				// RB: Read encoder of motor B
+				case 'B':
+					read_encoder_b(); break;
+				// RC: Read encoder of motor C
+				case 'C':
+					read_encoder_c(); break;
+				// RD: Read encoder of motor D
+				case 'D':
+					read_encoder_d(); break;
+				// RE: Read encoder of motor E
+				case 'E':
+					read_encoder_e(); break;
+				// RF: Read encoder of motor F
+				case 'F':
+					read_encoder_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		default:
+			// error: unknown command
+			break;
+	}
 }
 
 /******************************************************************************
- *                    HOST COMMAND FUNCTION IMPLEMENTATION                    *
+ *                  MCUICOM COMMAND FUNCTION IMPLEMENTATION                   *
  ******************************************************************************/
 
+#include <stdio.h>
+#include <string.h>
 
+inline void read_encoder_a(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_A], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void read_encoder_b(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_B], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void read_encoder_c(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_C], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void read_encoder_d(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_D], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void read_encoder_e(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_E], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void read_encoder_f(void)
+{
+	char buf[64];
+	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_F], *CMDEND);
+	mcuicom_send(buf, strlen(buf));
+}
