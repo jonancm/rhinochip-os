@@ -4240,7 +4240,7 @@ inline void hostcmd_th(void)
 {
 	// Set bit 7 of the 'system_config' register, which indicates whether the system
 	// is in host mode or teach pendant mode. A value of 1 indicates host mode.
-	controller.system_config |= 0x80;
+	controller.system_config |= BIT_7;
 }
 
 /**
