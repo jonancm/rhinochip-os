@@ -105,30 +105,20 @@ inline void read_encoder_f(void);
 
 void gpcorecom_interpret_next(void)
 {
-	while (1)
-	{
-		// Read the next command from the mcuicom buffer to the shell buffer
-		next_cmd();
-		// Parse the command currently stored in the shell buffer
-		parse_cmd();
-	}
-}
-
-/**
- * Read the next command from the mcuicom buffer and place it into the shell
- * buffer (i.e. the buffer that the shell uses to store the symbols that are
- * being parsed).
- */
-void next_cmd(void)
-{
 	bool_t full;
 	int copied;
 	
-	while (!mcuicom_cmd_available());
-	copied = mcuicom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
-	cmd_buf_pos = 0;
-	param1.present = false;
-	param2.present = false;
+	if (mcuicom_cmd_available())
+	{
+		// Read the next command from the mcuicom buffer to the shell buffer
+		copied = mcuicom_read_cmd(cmd_buf, CMD_BUF_SIZE, &full);
+		cmd_buf_pos = 0;
+		param1.present = false;
+		param2.present = false;
+		
+		// Parse the command currently stored in the shell buffer
+		parse_cmd();
+	}
 }
 
 /**
