@@ -12,11 +12,13 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "../macros.h"
 #include "shell.h"
 #include "../mcuicom.h"
+#include "mctlcom.h"
 
 int main(void)
 {
 	hostcom_setup();
 	mcuicom_setup();
+	mctlcom_setup();
 	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// and the UART 2 of the GPMCU are ready and working fine.

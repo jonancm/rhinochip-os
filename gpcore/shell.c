@@ -1755,7 +1755,8 @@ inline void hostcmd_pa(void)
 				mcuicom_send(buf, 3);
 				// Get response (motor steps) and re-send it to the host PC
 				size = mctlcom_get_response(buf, size, &timeout);
-				hostcom_send(buf, strlen(buf));
+				if (!timeout)
+					hostcom_send(buf, size);
 			}
 			else
 			{
