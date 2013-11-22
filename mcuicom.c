@@ -66,12 +66,14 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 	IEC0bits.U1RXIE = 0;
 	
 	// debug
+	/*
 	#ifdef __dsPIC30F4011__
 	if (U1STAbits.URXDA)
 		mcuicom_send("data received\n", STRLEN("data received\n"));
 	if (mcuicom_rcv_buf.used < mcuicom_rcv_buf.size)
 		mcuicom_send("used < size\n", STRLEN("used < size\n"));
 	#endif
+	*/
 	
 	// While UART1 receive buffer has data and the 'mcuicom_rcv_buf' has free
 	// space...
@@ -81,11 +83,13 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] = U1RXREG;
 		
 		// debug
+		/*
 		#ifdef __dsPIC30F4011__
 		mcuicom_send(&mcuicom_rcv_buf.data[mcuicom_rcv_buf.used], 1);
 		if (mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] == '\r')
 			mcuicom_send("carriage return received\n", STRLEN("carriage return received\n"));
 		#endif
+		*/
 		
 		// If this byte is a command separator and no command separator has been
 		// found previously, remember its position in the buffer
@@ -93,9 +97,11 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		    mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] == *CMDEND)
 		{
 			// debug
+			/*
 			#ifdef __dsPIC30F4011__
 			mcuicom_send("first_cmdend set\n", STRLEN("first_cmdend set\n"));
 			#endif
+			*/
 			
 			first_cmdend = mcuicom_rcv_buf.used;
 		}
@@ -105,9 +111,11 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 	}
 	
 	// debug
+	/*
 	#ifdef __dsPIC30F4011__
 	mcuicom_send("_U1RXInterrupt\n", STRLEN("_U1RXInterrupt\n"));
 	#endif
+	*/
 	
 	// Re-enable UART1 receiver interrupts
 	IEC0bits.U1RXIE = 1;
