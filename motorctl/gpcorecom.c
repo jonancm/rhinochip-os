@@ -141,22 +141,15 @@ void parse_cmd(void)
 	// Fetch the next token and parse it (lexical parser)
 	next_token();
 	
-	// The command can be a single instruction...
+	// The command must be a single instruction...
 	retval = instr();
-	if (retval < 0) // it's not an instruction
+	// If it's not an instruction, error
+	if (retval < 0)
 	{
-		// ... or a program
-		retval = prog();
-		if (retval < 0) // it's not a program
-		{
-			// Syntax error (it's not an instruction nor a program)
-		}
-		else
-		{
-			// save program to EEPROM
-		}
+		// error
 	}
-	else // it's an instruction
+	// If it's an instruction, interpret it
+	else
 	{
 		interpret_cmd();
 	}
