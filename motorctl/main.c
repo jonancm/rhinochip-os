@@ -12,10 +12,15 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "../mcuicom.h"
 #include "gpcorecom.h"
 
+// debug
+#include "../macros.h"
+
 int main(void)
 {
+	/*
 	pwm_setup();
 	qei_setup();
+	*/
 	mcuicom_setup();
 	
 	pwm_set_duty1(75);
@@ -37,6 +42,8 @@ int main(void)
 		}
 	}
 	#endif
+	// debug
+	mcuicom_send("MCMCU ready\n", STRLEN("MCMCU ready\n"));
 	
 	while (1)
 	{
