@@ -10,8 +10,7 @@ static buffer_t mcuicom_rcv_buf;
 
 static int first_cmdend = -1;
 
-//debug
-#include <stdio.h>
+#include "debug.h"
 
 inline void mcuicom_setup(void)
 {
@@ -65,15 +64,12 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 	// and modifying the receive buffer.
 	IEC0bits.U1RXIE = 0;
 	
-	// debug
-	/*
 	#ifdef __dsPIC30F4011__
 	if (U1STAbits.URXDA)
-		mcuicom_send("data received\n", STRLEN("data received\n"));
+		dbgmsg_uart1("data received\n");
 	if (mcuicom_rcv_buf.used < mcuicom_rcv_buf.size)
-		mcuicom_send("used < size\n", STRLEN("used < size\n"));
+		dbgmsg_uart1("used < size\n");
 	#endif
-	*/
 	
 	// While UART1 receive buffer has data and the 'mcuicom_rcv_buf' has free
 	// space...
@@ -82,26 +78,19 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		// Read the received byte from the UART1 receive register
 		mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] = U1RXREG;
 		
-		// debug
-		/*
 		#ifdef __dsPIC30F4011__
-		mcuicom_send(&mcuicom_rcv_buf.data[mcuicom_rcv_buf.used], 1);
 		if (mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] == '\r')
-			mcuicom_send("carriage return received\n", STRLEN("carriage return received\n"));
+			dbgmsg_uart1("carriage return received\n");
 		#endif
-		*/
 		
 		// If this byte is a command separator and no command separator has been
 		// found previously, remember its position in the buffer
 		if (first_cmdend < 0 &&
 		    mcuicom_rcv_buf.data[mcuicom_rcv_buf.used] == *CMDEND)
 		{
-			// debug
-			/*
 			#ifdef __dsPIC30F4011__
-			mcuicom_send("first_cmdend set\n", STRLEN("first_cmdend set\n"));
+			dbgmsg_uart1("first_cmdend set\n");
 			#endif
-			*/
 			
 			first_cmdend = mcuicom_rcv_buf.used;
 		}
@@ -110,12 +99,9 @@ void __attribute__((interrupt, auto_psv)) _U1RXInterrupt(void)
 		++mcuicom_rcv_buf.used;
 	}
 	
-	// debug
-	/*
 	#ifdef __dsPIC30F4011__
-	mcuicom_send("_U1RXInterrupt\n", STRLEN("_U1RXInterrupt\n"));
+	dbgmsg_uart1("_U1RXInterrupt\n");
 	#endif
-	*/
 	
 	// Re-enable UART1 receiver interrupts
 	IEC0bits.U1RXIE = 1;

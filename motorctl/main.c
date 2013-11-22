@@ -5,15 +5,12 @@ _FOSC(CSW_FSCM_OFF & XT_PLL16); // Fosc = 16x 7.37 MHz, Fcy = 29.50 MHz
 _FWDT(WDT_OFF);                 // Turn off the watchdog timer
 _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
-#define NDEBUG
-
 #include "pwm.h"
 #include "qei.h"
 #include "../mcuicom.h"
 #include "gpcorecom.h"
 
-// debug
-#include "../macros.h"
+#include "../debug.h"
 
 int main(void)
 {
@@ -30,18 +27,7 @@ int main(void)
 	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// is ready and working fine.
-	#ifndef NDEBUG
-	{
-		char *c = "UART 1 MCMCU ready\n";
-		for (; *c != 0; ++c)
-		{
-			while (U1STAbits.UTXBF);
-			U1TXREG = *c;
-		}
-	}
-	#endif
-	// debug
-	//mcuicom_send("MCMCU ready\n", STRLEN("MCMCU ready\n"));
+	dbgmsg_uart1("UART 1 MCMCU ready\n");
 	
 	while (1)
 	{

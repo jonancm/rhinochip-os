@@ -1,17 +1,16 @@
 #include "mctlcom.h"
 
-#include <string.h> // memcpy
-
 #include "../clock.h"
 
 #define T2PRESCALER     64    /* Timer 2 prescale value 1:64 */
 
 bool_t mctlcom_timeout = false;
 
-// debug
-#include "../macros.h"
-#include "hostcom.h"
+#include "../debug.h"
+#ifndef NDEBUG
 #include <stdio.h>
+#include <string.h>
+#endif
 
 inline void mctlcom_setup(void)
 {
@@ -40,10 +39,11 @@ inline void mctlcom_start_timer(unsigned int timeout)
 	// Set Timer 2 period
 	PR2 = (((timeout / 1000.0) * FCY) / T2PRESCALER);
 	
-	// debug
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "PR2 = %u\n", PR2);
-	hostcom_send(buf, strlen(buf));
+	dbgmsg_uart2(buf, strlen(buf));
+	#endif
 	
 	// Start Timer 2
 	T2CONbits.TON = 1;
@@ -60,8 +60,10 @@ void __attribute__((interrupt, auto_psv)) _T2Interrupt(void)
 	mctlcom_timeout = true;
 	// Clear interrupt flag
 	IFS0bits.T2IF = 0;
-	// debug
-	hostcom_send("_T2Interrupt\n", STRLEN("_T2Interrupt\n"));
+	
+	#ifndef NDEBUG
+	dbgmsg_uart2("_T2Interrupt\n");
+	#endif
 }
 
 int mctlcom_get_response(char *response, int size, unsigned int *timeout)
@@ -72,8 +74,9 @@ int mctlcom_get_response(char *response, int size, unsigned int *timeout)
 	// If timeout was requested, start timer
 	if (*timeout != 0)
 	{
-		// debug
-		hostcom_send("start timer\n", STRLEN("start timer\n"));
+		#ifndef NDEBUG
+		dbgmsg_uart2("start timer\n");
+		#endif
 		
 		mctlcom_start_timer(*timeout);
 	}
@@ -87,8 +90,9 @@ int mctlcom_get_response(char *response, int size, unsigned int *timeout)
 		mctlcom_timeout = false;
 		mctlcom_stop_timer();
 		
-		// debug
-		hostcom_send("timeout occurred\n", STRLEN("timeout occurred\n"));
+		#ifndef NDEBUG
+		dbgmsg_uart2("timeout occurred\n");
+		#endif
 	}
 	// Otherwise, if a command has been fully received, get it and extract the response code
 	// in order to return it to the callee
@@ -97,8 +101,9 @@ int mctlcom_get_response(char *response, int size, unsigned int *timeout)
 		copied = mcuicom_read_cmd(response, size, &full);
 		*timeout = false;
 		
-		// debug
-		hostcom_send("response received\n", STRLEN("response received\n"));
+		#ifndef NDEBUG
+		dbgmsg_uart2("response received\n");
+		#endif
 	}
 	
 	return copied;

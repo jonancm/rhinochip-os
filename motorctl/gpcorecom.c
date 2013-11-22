@@ -4,8 +4,7 @@
 #include "motor_status.h"
 #include "../hostcmdset.h"
 
-// debug
-#include "../macros.h"
+#include "../debug.h"
 
 /**
  * Enumeration of all accepted token types
@@ -111,7 +110,7 @@ void gpcorecom_interpret_next(void)
 	bool_t full;
 	int copied;
 	
-	//mcuicom_send("gpcorecom_interpret_next\n", STRLEN("gpcorecom_interpret_next\n")); // debug
+	dbgmsg_uart1("gpcorecom_interpret_next\n");
 	
 	if (mcuicom_cmd_available())
 	{
@@ -133,7 +132,7 @@ void parse_cmd(void)
 {
 	int retval;
 	
-	//mcuicom_send("parse_cmd\n", STRLEN("parse_cmd\n")); // debug
+	dbgmsg_uart1("parse_cmd\n");
 	
 	// Fetch the next token and parse it (lexical parser)
 	next_token();
@@ -370,7 +369,8 @@ int next_token(void)
 
 void interpret_cmd(void)
 {
-	//mcuicom_send("interpret_cmd\n", STRLEN("interpret_cmd\n")); // debug
+	dbgmsg_uart1("interpret_cmd\n");
+	
 	switch (cmd_name[0])
 	{
 		case 'R':
@@ -415,10 +415,8 @@ void interpret_cmd(void)
 inline void read_encoder_a(void)
 {
 	char buf[64];
-	motor_steps[MOTOR_A] = 12345; // debug
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_A], *CMDEND);
 	mcuicom_send(buf, strlen(buf));
-	//mcuicom_send("read_encoder_a\n", STRLEN("read_encoder_a\n")); // debug
 }
 
 inline void read_encoder_b(void)
