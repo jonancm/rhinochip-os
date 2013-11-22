@@ -1751,7 +1751,7 @@ inline void hostcmd_pa(void)
 				// Send MCUICOM command RA, RB, ..., RF depending on motor letter (param 1)
 				buf[0] = 'R';
 				buf[1] = param1.value.letter;
-				buf[3] = '\n';
+				buf[2] = *CMDEND;
 				mcuicom_send(buf, 3);
 				// Get response (motor steps) and re-send it to the host PC
 				size = mctlcom_get_response(buf, size, &timeout);
