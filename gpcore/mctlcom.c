@@ -17,6 +17,7 @@ inline void mctlcom_setup(void)
 	/*****************************************************************
 	 * Set up Timer 2 to be used for communication timeout           *
 	 *****************************************************************/
+	
 	// Clear the Timer 2 interrupt flag
 	
 	IFS0bits.T2IF = 0;
@@ -28,10 +29,6 @@ inline void mctlcom_setup(void)
 	// Set Timer 2 prescaler (0=1:1, 1=1:8, 2=1:64, 3=1:256)
 	
 	T2CONbits.TCKPS = 2;
-	
-	// Set Timer 2 interrupt priority to 1 (default: 2)
-	
-	//IPC1bits.T2IP = 1;
 }
 
 inline void mctlcom_start_timer(unsigned int timeout)
@@ -84,11 +81,13 @@ int mctlcom_get_response(char *response, int size, unsigned int *timeout)
 	// Wait until the receive buffer has at least one full command or a timeout occurs
 	while (!mcuicom_cmd_available() && !mctlcom_timeout);
 	
+	// Stop the timer
+	mctlcom_stop_timer();
+	
 	// If a timeout occurred, reset the timeout flag and stop the timer
 	if (mctlcom_timeout)
 	{
 		mctlcom_timeout = false;
-		mctlcom_stop_timer();
 		
 		#ifndef NDEBUG
 		dbgmsg_uart2("timeout occurred\n");
