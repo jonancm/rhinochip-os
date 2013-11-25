@@ -1748,7 +1748,6 @@ inline void hostcmd_pa(void)
 			{
 				int size = 64;
 				char buf[size];
-				unsigned int timeout = MCTLCOM_TIMEOUT;
 				
 				// Send MCUICOM command RA, RB, ..., RF depending on motor letter (param 1)
 				buf[0] = 'R';
@@ -1756,9 +1755,8 @@ inline void hostcmd_pa(void)
 				buf[2] = *CMDEND;
 				mcuicom_send(buf, 3);
 				// Get response (motor steps) and re-send it to the host PC
-				size = mctlcom_get_response(buf, size, &timeout);
-				if (!timeout)
-					hostcom_send(buf, size);
+				size = mctlcom_get_response(buf, size);
+				hostcom_send(buf, size);
 			}
 			else
 			{
