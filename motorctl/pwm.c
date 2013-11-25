@@ -23,7 +23,7 @@ struct {
 	unsigned int channel6;
 } pwmduty;
 
-void pwm_setup(void)
+inline void pwm_setup(void)
 {
 	/******************************
 	 * Set up hardware PWM module *
@@ -138,7 +138,7 @@ inline void pwm_set_duty6(int duty)
 	pwmduty.channel6 = duty;
 }
 
-void __attribute__((__interrupt__)) _T1Interrupt(void)
+void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 {
 	// Disable Timer 1 interrupts while executing ISR
 	IEC0bits.T1IE = 0;

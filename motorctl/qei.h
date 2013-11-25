@@ -3,7 +3,7 @@
 
 #include <p30fxxxx.h>
 
-#include "clock.h"
+#include "../clock.h"
 #include "motor_status.h"
 
 #define QEA_MA               PORTBbits.RB0
@@ -39,7 +39,7 @@
 /**
  * Set up the Quadrature Encoder Interface.
  */
-void qei_setup(void);
+inline void qei_setup(void);
 
 /**
  * Timer 2 ISR to sample the QEA and QEB lines for each motor and count motor

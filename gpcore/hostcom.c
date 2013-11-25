@@ -10,7 +10,7 @@ static buffer_t hostcom_rcv_buf;
 
 static int first_cmdend = -1;
 
-void hostcom_setup(void)
+inline void hostcom_setup(void)
 {
 	// Set up the receive buffer
 	buffer_init(&hostcom_rcv_buf);
@@ -42,7 +42,10 @@ void hostcom_setup(void)
 	U2STAbits.UTXEN = 1;
 }
 
-void __attribute__((__interrupt__)) _U2RXInterrupt(void)
+/**
+ * UART2 receive ISR.
+ */
+void __attribute__((interrupt, auto_psv)) _U2RXInterrupt(void)
 {
 	// While UART2 receive buffer has data and the 'hostcom_rcv_buf' has free
 	// space...

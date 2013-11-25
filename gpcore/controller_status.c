@@ -1,4 +1,10 @@
+#ifndef CONTROLLER_STATUS_C
+#define CONTROLLER_STATUS_C
+#endif
+
 #include "controller_status.h"
+
+controller_status_t    controller;
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
 {

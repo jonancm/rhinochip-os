@@ -6,28 +6,28 @@ _FWDT(WDT_OFF);                 // Turn off the watchdog timer
 _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
 #include "hostcom.h"
-#include "../lcd.h"
 #include "../types.h"
 #include "../macros.h"
 #include "shell.h"
+#include "../mcuicom.h"
+#include "mctlcom.h"
 
-#define BUF_SIZE    64
-
-#define LCD_READY    "GPMCU ready"
-#define MSG_READY    "GPMCU ready\n"
+#include "../debug.h"
 
 int main(void)
 {
 	hostcom_setup();
-	lcd_setup();
+	mcuicom_setup();
+	mctlcom_setup();
 	
-	// Set up port pin RB0 the LED D3
-	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
-	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
+	// Code for debugging. Send a message over RS232 notifying that the UART 1
+	// and the UART 2 of the GPMCU are ready and working fine.
+	#ifndef NDEBUG
+	mcuicom_send("UART 1 GPMCU ready\n", STRLEN("UART 1 GPMCU ready\n"));
+	hostcom_send("UART 2 GPMCU ready\n", STRLEN("UART 2 GPMCU ready\n"));
+	#endif
 	
-	lcd_write(LCD_READY);
-	hostcom_send(MSG_READY, STRLEN(MSG_READY));
-	
+	// Start shell in interactive mode
 	shell_run_interactive();
 	
 	return 0;

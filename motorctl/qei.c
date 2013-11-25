@@ -12,7 +12,7 @@ char prev_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
  */
 char curr_encoder_state[NUM_MOTORS] = {0, 0, 0, 0, 0, 0};
 
-void qei_setup(void)
+inline void qei_setup(void)
 {
 	// Set up digital I/O pins for digital input
 	
@@ -35,7 +35,7 @@ void qei_setup(void)
 	T2CONbits.TON = 1; // Start the timer
 }
 
-void __attribute__((__interrupt__)) _T2Interrupt(void)
+void __attribute__((interrupt, auto_psv)) _T2Interrupt(void)
 {
 	// Disable timer 2 interrupts
 	IEC0bits.T2IE = 0;
