@@ -12,6 +12,12 @@
 #define MOTOR_E       4
 #define MOTOR_F       5
 
+#define NUM_COORDS    3
+
+#define COORD_X       0
+#define COORD_Y       1
+#define COORD_Z       2
+
 typedef enum {MOTOR_IDLE, MOTOR_TRAPEZOIDAL, MOTOR_VELOCITY, MOTOR_OPEN_LOOP} motor_mode_t;
 
 #ifndef MOTOR_STATUS_C
@@ -32,6 +38,8 @@ extern motor_mode_t motor_mode[NUM_MOTORS];
 extern char motor_pwm_level[NUM_MOTORS];
 extern char motor_direction[NUM_MOTORS];
 extern char motor_desired_velocity[NUM_MOTORS];
+
+extern float cartesian_desired_pos[NUM_COORDS];
 
 #endif /* MOTOR_STATUS_C */
 

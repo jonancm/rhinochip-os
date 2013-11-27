@@ -11,3 +11,5 @@ motor_mode_t    motor_mode[NUM_MOTORS];
 char            motor_pwm_level[NUM_MOTORS];
 char            motor_direction[NUM_MOTORS];
 char            motor_desired_velocity[NUM_MOTORS];
+
+float           cartesian_desired_pos[NUM_COORDS] = {0, 0, 0};

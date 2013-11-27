@@ -3432,52 +3432,42 @@ inline void hostcmd_px(void)
 			{
 				if (param1.type == TOKEN_LETTER)
 				{
-					if (param2.present)
+					if ('X' <= param1.value.letter && param1.value.letter <= 'Z')
 					{
-						if (param2.type == TOKEN_DEC)
+						if (param2.present)
 						{
-							float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
-							if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
+							if (param2.type == TOKEN_DEC)
 							{
-								switch (param1.value.letter)
+								float floatparam2 = param2.value.decimal.int_part + param2.value.decimal.dec_part / 100.0;
+								if (-1000.00 <= floatparam2 && floatparam2 <= 1000.00)
 								{
-									case 'A':
-										break;
-									case 'B':
-										break;
-									case 'C':
-										break;
-									case 'D':
-										break;
-									case 'E':
-										break;
-									case 'F':
-										break;
-									case 'G':
-										break;
-									case 'H':
-										break;
-									default:
-										// error: parameter 1 out of range
-										dbgmsg_uart2(ERR_OUT_OF_RANGE);
+									const int size = 64;
+									char buf[size];
+									snprintf(buf, size, "C%c,%.2f%c", param1.value.letter, floatparam2, *CMDEND);
+									mcuicom_send(buf, strlen(buf));
+								}
+								else
+								{
+									// error: parameter 2 out of range
+									dbgmsg_uart2(ERR_OUT_OF_RANGE);
 								}
 							}
 							else
 							{
-								// error: parameter 2 out of range
-								dbgmsg_uart2(ERR_OUT_OF_RANGE);
+								// error: parameter 2 must be a decimal number
+								dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 							}
 						}
 						else
 						{
-							// error: parameter 2 must be a decimal number
-							dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+							// error: parameter 2 must be specified
+							dbgmsg_uart2(ERR_MISSING_PARAMS);
 						}
 					}
 					else
 					{
-						// error: parameter 2 must be specified
-						dbgmsg_uart2(ERR_MISSING_PARAMS);
+						// error: parameter 1 out of range
+						dbgmsg_uart2(ERR_OUT_OF_RANGE);
 					}
 				}
 				else
