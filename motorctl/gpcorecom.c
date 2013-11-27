@@ -6,6 +6,9 @@
 
 #include "../debug.h"
 
+// debug
+#include "../macros.h"
+
 /**
  * Enumeration of all accepted token types
  */
@@ -550,7 +553,7 @@ inline void set_joint_abs_a(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_a: %d\n", motor_desired_pos[MOTOR_A]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -576,7 +579,7 @@ inline void set_joint_abs_b(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_b: %d\n", motor_desired_pos[MOTOR_B]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -602,7 +605,7 @@ inline void set_joint_abs_c(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_c: %d\n", motor_desired_pos[MOTOR_C]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -628,7 +631,7 @@ inline void set_joint_abs_d(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_d: %d\n", motor_desired_pos[MOTOR_D]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -654,7 +657,7 @@ inline void set_joint_abs_e(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_e: %d\n", motor_desired_pos[MOTOR_E]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -680,7 +683,7 @@ inline void set_joint_abs_f(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_f: %d\n", motor_desired_pos[MOTOR_F]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -707,7 +710,7 @@ inline void set_joint_rel_a(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_a: %d\n", motor_desired_pos[MOTOR_A]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -734,7 +737,7 @@ inline void set_joint_rel_b(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_b: %d\n", motor_desired_pos[MOTOR_B]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -761,7 +764,7 @@ inline void set_joint_rel_c(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_c: %d\n", motor_desired_pos[MOTOR_C]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -788,7 +791,7 @@ inline void set_joint_rel_d(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_d: %d\n", motor_desired_pos[MOTOR_D]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -815,7 +818,7 @@ inline void set_joint_rel_e(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_e: %d\n", motor_desired_pos[MOTOR_E]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -842,7 +845,7 @@ inline void set_joint_rel_f(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_rel_f: %d\n", motor_desired_pos[MOTOR_F]);
-			mcuicom_send(buf, strlen(buf));
+			dbgmsg_uart1(buf);
 			#endif
 		}
 		else
@@ -865,7 +868,7 @@ inline void move_independent(void)
 	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
-	mcuicom_send("move_independent\n", STRLEN("move_independent\n"));
+	dbgmsg_uart1("move_independent\n");
 }
 
 inline void move_coordinated(void)
@@ -877,5 +880,5 @@ inline void move_coordinated(void)
 	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
-	mcuicom_send("move_coordinated\n", STRLEN("move_coordinated\n"));
+	dbgmsg_uart1("move_coordinated\n");
 }
