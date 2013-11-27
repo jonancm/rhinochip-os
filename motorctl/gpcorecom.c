@@ -108,6 +108,13 @@ inline void set_joint_abs_d(void);
 inline void set_joint_abs_e(void);
 inline void set_joint_abs_f(void);
 
+inline void set_joint_rel_a(void);
+inline void set_joint_rel_b(void);
+inline void set_joint_rel_c(void);
+inline void set_joint_rel_d(void);
+inline void set_joint_rel_e(void);
+inline void set_joint_rel_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -407,6 +414,32 @@ void interpret_cmd(void)
 					break;
 			}
 			break;
+		case 'B':
+			switch (cmd_name[1])
+			{
+				// BA: Set joint relative position of motor A
+				case 'A':
+					set_joint_rel_a(); break;
+				// BB: Set joint relative position of motor B
+				case 'B':
+					set_joint_rel_b(); break;
+				// BC: Set joint relative position of motor C
+				case 'C':
+					set_joint_rel_c(); break;
+				// BD: Set joint relative position of motor D
+				case 'D':
+					set_joint_rel_d(); break;
+				// BE: Set joint relative position of motor E
+				case 'E':
+					set_joint_rel_e(); break;
+				// BF: Set joint relative position of motor F
+				case 'F':
+					set_joint_rel_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
 		case 'R':
 			switch (cmd_name[1])
 			{
@@ -630,6 +663,168 @@ inline void set_joint_abs_f(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "set_joint_abs_f: %d\n", motor_desired_pos[MOTOR_F]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_a: %d\n", motor_desired_pos[MOTOR_A]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_b: %d\n", motor_desired_pos[MOTOR_B]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_c: %d\n", motor_desired_pos[MOTOR_C]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_d: %d\n", motor_desired_pos[MOTOR_D]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_e: %d\n", motor_desired_pos[MOTOR_E]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_rel_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			// A relative position increment means: desired position = current position + increment
+			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_rel_f: %d\n", motor_desired_pos[MOTOR_F]);
 			mcuicom_send(buf, strlen(buf));
 			#endif
 		}

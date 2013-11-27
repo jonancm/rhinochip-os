@@ -3329,7 +3329,7 @@ inline void hostcmd_pr(void)
 		{
 			if (param1.type == TOKEN_LETTER)
 			{
-				if ('A' <= param1.value.letter && param1.value.letter <= 'H')
+				if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 				{
 					char motor = 1 << (param1.value.letter - 'A');
 					if (any_motor_executing_trapezoidal_move(motor))
@@ -3346,7 +3346,12 @@ inline void hostcmd_pr(void)
 								int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 								if (-32767 <= intparam2 && intparam2 <= 32767)
 								{
-									// proceed
+									const int size = 64;
+									char buf[size];
+									
+									// Send MCUICOM command BA, BB, ..., BF depending on motor letter (param 1)
+									snprintf(buf, size, "B%c,%d%c", param1.value.letter, intparam2, *CMDEND);
+									mcuicom_send(buf, strlen(buf));
 								}
 								else
 								{
