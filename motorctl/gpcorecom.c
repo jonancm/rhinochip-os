@@ -104,6 +104,13 @@ inline void read_encoder_d(void);
 inline void read_encoder_e(void);
 inline void read_encoder_f(void);
 
+inline void stop_motor_a(void);
+inline void stop_motor_b(void);
+inline void stop_motor_c(void);
+inline void stop_motor_d(void);
+inline void stop_motor_e(void);
+inline void stop_motor_f(void);
+
 inline void set_joint_abs_a(void);
 inline void set_joint_abs_b(void);
 inline void set_joint_abs_c(void);
@@ -486,6 +493,32 @@ void interpret_cmd(void)
 					break;
 			}
 			break;
+		case 'S':
+			switch (cmd_name[1])
+			{
+				// SA: Stop motor A
+				case 'A':
+					stop_motor_a(); break;
+				// SB: Stop motor B
+				case 'B':
+					stop_motor_b(); break;
+				// SC: Stop motor C
+				case 'C':
+					stop_motor_c(); break;
+				// SD: Stop motor D
+				case 'D':
+					stop_motor_d(); break;
+				// SE: Stop motor E
+				case 'E':
+					stop_motor_e(); break;
+				// SF: Stop motor F
+				case 'F':
+					stop_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
 		default:
 			// error: unknown command
 			break;
@@ -539,6 +572,60 @@ inline void read_encoder_f(void)
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_F], *CMDEND);
 	mcuicom_send(buf, strlen(buf));
+}
+
+inline void stop_motor_a(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
+}
+
+inline void stop_motor_b(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
+}
+
+inline void stop_motor_c(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
+}
+
+inline void stop_motor_d(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
+}
+
+inline void stop_motor_e(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
+}
+
+inline void stop_motor_f(void)
+{
+	// TODO: implement
+	
+	// Set PWM level to zero, so that motor doesn't move
+	
+	// Set destination position to current position
 }
 
 inline void set_joint_abs_a(void)

@@ -3031,27 +3031,21 @@ inline void hostcmd_mm(void)
 		{
 			if (param1.type == TOKEN_LETTER)
 			{
-				switch (param1.value.letter)
+				if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 				{
-					case 'A':
-						break;
-					case 'B':
-						break;
-					case 'C':
-						break;
-					case 'D':
-						break;
-					case 'E':
-						break;
-					case 'F':
-						break;
-					case 'G':
-						break;
-					case 'H':
-						break;
-					default:
-						// error: parameter 1 out of range
-						dbgmsg_uart2(ERR_OUT_OF_RANGE);
+					int size = 64;
+					char buf[size];
+					
+					// Send MCUICOM command SA, SB, ..., SF depending on motor letter (param 1)
+					buf[0] = 'S';
+					buf[1] = param1.value.letter;
+					buf[2] = *CMDEND;
+					mcuicom_send(buf, 3);
+				}
+				else
+				{
+					// error: parameter 1 out of range
+					dbgmsg_uart2(ERR_OUT_OF_RANGE);
 				}
 			}
 			else
