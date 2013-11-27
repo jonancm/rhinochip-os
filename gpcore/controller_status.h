@@ -62,7 +62,7 @@ typedef struct {
 	 * System Status.
 	 * 
 	 * Bit 7: 1 = At least one motor is performing a trapezoidal move.
-	 * Bit 6: 1 = A system error as occurred.
+	 * Bit 6: 1 = A system error has occurred.
 	 * Bit 5: 1 = The general purpose delay timer is active.
 	 * Bit 4: 1 = At least one wait on input or wait on switch is still pending.
 	 * Bit 3: 1 = No teach pendant is connected.
@@ -70,7 +70,7 @@ typedef struct {
 	 * Bit 1: 1 = The teach pendant ESCAPE key has been pressed.
 	 * Bit 0: 1 = A teach pendant error has occurred.
 	 */
-	char system_status;
+	unsigned char system_status;
 	
 	/**
 	 * Delay Timer Value.
