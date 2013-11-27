@@ -101,6 +101,13 @@ inline void read_encoder_d(void);
 inline void read_encoder_e(void);
 inline void read_encoder_f(void);
 
+inline void set_joint_abs_a(void);
+inline void set_joint_abs_b(void);
+inline void set_joint_abs_c(void);
+inline void set_joint_abs_d(void);
+inline void set_joint_abs_e(void);
+inline void set_joint_abs_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -373,6 +380,32 @@ void interpret_cmd(void)
 	
 	switch (cmd_name[0])
 	{
+		case 'A':
+			switch (cmd_name[1])
+			{
+				// AA: Set joint absolute position of motor A
+				case 'A':
+					set_joint_abs_a(); break;
+				// AB: Set joint absolute position of motor B
+				case 'B':
+					set_joint_abs_b(); break;
+				// AC: Set joint absolute position of motor C
+				case 'C':
+					set_joint_abs_c(); break;
+				// AD: Set joint absolute position of motor D
+				case 'D':
+					set_joint_abs_d(); break;
+				// AE: Set joint absolute position of motor E
+				case 'E':
+					set_joint_abs_e(); break;
+				// AF: Set joint absolute position of motor F
+				case 'F':
+					set_joint_abs_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
 		case 'R':
 			switch (cmd_name[1])
 			{
@@ -452,4 +485,160 @@ inline void read_encoder_f(void)
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_F], *CMDEND);
 	mcuicom_send(buf, strlen(buf));
+}
+
+inline void set_joint_abs_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_A] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_a: %d\n", motor_desired_pos[MOTOR_A]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_abs_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_B] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_b: %d\n", motor_desired_pos[MOTOR_B]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_abs_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_C] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_c: %d\n", motor_desired_pos[MOTOR_C]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_abs_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_D] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_d: %d\n", motor_desired_pos[MOTOR_D]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_abs_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_E] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_e: %d\n", motor_desired_pos[MOTOR_E]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_joint_abs_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_F] = intparam1;
+			
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_joint_abs_f: %d\n", motor_desired_pos[MOTOR_F]);
+			mcuicom_send(buf, strlen(buf));
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
 }
