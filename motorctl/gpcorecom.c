@@ -298,9 +298,10 @@ int next_token(void)
 			token_value.integer.sign = 1;
 			token_value.integer.abs_value = 0;
 			
-			if (cmd_buf[cmd_buf_pos++] == '-')
+			if (cmd_buf[cmd_buf_pos] == '-')
 			{
 				token_value.integer.sign = -1;
+				++cmd_buf_pos;
 			}
 			
 			for (; cmd_buf_pos < CMD_BUF_SIZE &&
