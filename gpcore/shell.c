@@ -2965,7 +2965,7 @@ inline void hostcmd_mc(void)
 	}
 	else
 	{
-		// proceed
+		mcuicom_send("MC" CMDEND, STRLEN("MC" CMDEND));
 	}
 }
 
@@ -3007,7 +3007,7 @@ inline void hostcmd_mi(void)
 	}
 	else
 	{
-		// proceed
+		mcuicom_send("MI" CMDEND, STRLEN("MI" CMDEND));
 	}
 }
 

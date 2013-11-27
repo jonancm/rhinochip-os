@@ -115,6 +115,9 @@ inline void set_joint_rel_d(void);
 inline void set_joint_rel_e(void);
 inline void set_joint_rel_f(void);
 
+inline void move_independent(void);
+inline void move_coordinated(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -435,6 +438,20 @@ void interpret_cmd(void)
 				// BF: Set joint relative position of motor F
 				case 'F':
 					set_joint_rel_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'M':
+			switch (cmd_name[1])
+			{
+				// MC: Move coordinated
+				case 'C':
+					move_coordinated(); break;
+				// MI: Move independent
+				case 'I':
+					move_independent(); break;
 				default:
 					// error: unknown command
 					break;
@@ -837,4 +854,28 @@ inline void set_joint_rel_f(void)
 	{
 		// error: parameter must be specified
 	}
+}
+
+inline void move_independent(void)
+{
+	// TODO: implement properly (the code below is just for testing PD and PR)
+	motor_steps[MOTOR_A] = motor_desired_pos[MOTOR_A];
+	motor_steps[MOTOR_B] = motor_desired_pos[MOTOR_B];
+	motor_steps[MOTOR_C] = motor_desired_pos[MOTOR_C];
+	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
+	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
+	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
+	mcuicom_send("move_independent\n", STRLEN("move_independent\n"));
+}
+
+inline void move_coordinated(void)
+{
+	// TODO: implement properly (the code below is just for testing PD and PR)
+	motor_steps[MOTOR_A] = motor_desired_pos[MOTOR_A];
+	motor_steps[MOTOR_B] = motor_desired_pos[MOTOR_B];
+	motor_steps[MOTOR_C] = motor_desired_pos[MOTOR_C];
+	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
+	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
+	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
+	mcuicom_send("move_coordinated\n", STRLEN("move_coordinated\n"));
 }
