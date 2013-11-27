@@ -217,6 +217,8 @@ typedef struct {
 extern controller_status_t    controller;
 #endif
 
+void controller_status_setup(void);
+
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor);
 
 /**

@@ -6,6 +6,17 @@
 
 controller_status_t    controller;
 
+void controller_status_setup(void)
+{
+	// At startup, the system configuration is read from the EEPROM.
+	// TODO: implement this
+	
+	// The RhinoChip platform doesn't allow a teach pendant to be connect.
+	// Thus, bit 3 of the system status register must be set.
+	// At system startup, the other bits are cleared.
+	controller.system_status = BIT_3;
+}
+
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
 {
 	bool_t condition = false;
