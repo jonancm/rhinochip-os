@@ -56,7 +56,7 @@ typedef struct {
 	 * Bit 1:    always 0
 	 * Bit 0:    always 0
 	 */
-	char system_config;
+	unsigned char system_config;
 	
 	/**
 	 * System Status.
