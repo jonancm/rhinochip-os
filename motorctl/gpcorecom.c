@@ -136,6 +136,8 @@ inline void set_cartesian_rel_z(void);
 inline void move_independent(void);
 inline void move_coordinated(void);
 
+inline void hard_home(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -490,6 +492,17 @@ void interpret_cmd(void)
 				// DZ: Set cartesian relative position of motor Z
 				case 'Z':
 					set_cartesian_rel_z(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'H':
+			switch (cmd_name[1])
+			{
+				// HH: Hard home on all motors
+				case 'H':
+					hard_home(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1058,4 +1071,9 @@ inline void move_coordinated(void)
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_coordinated\n");
+}
+
+inline void hard_home(void)
+{
+	
 }

@@ -2766,7 +2766,7 @@ inline void hostcmd_hh(void)
 		}
 		else
 		{
-			// proceed
+			mcuicom_send("HH" CMDEND, STRLEN("HH" CMDEND));
 		}
 	}
 }
