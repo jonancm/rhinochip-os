@@ -129,6 +129,10 @@ inline void set_cartesian_abs_x(void);
 inline void set_cartesian_abs_y(void);
 inline void set_cartesian_abs_z(void);
 
+inline void set_cartesian_rel_x(void);
+inline void set_cartesian_rel_y(void);
+inline void set_cartesian_rel_z(void);
+
 inline void move_independent(void);
 inline void move_coordinated(void);
 
@@ -469,6 +473,23 @@ void interpret_cmd(void)
 				// CZ: Set cartesian absolute position of motor Z
 				case 'Z':
 					set_cartesian_abs_z(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'D':
+			switch (cmd_name[1])
+			{
+				// DX: Set cartesian relative position of motor X
+				case 'X':
+					set_cartesian_rel_x(); break;
+				// DY: Set cartesian relative position of motor Y
+				case 'Y':
+					set_cartesian_rel_y(); break;
+				// DZ: Set cartesian relative position of motor Z
+				case 'Z':
+					set_cartesian_rel_z(); break;
 				default:
 					// error: unknown command
 					break;
@@ -988,6 +1009,30 @@ inline void set_cartesian_abs_z(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_z: %f\n", cartesian_desired_pos[COORD_Z]);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void set_cartesian_rel_x(void)
+{
+	// TODO: implement
+	char buf[64];
+	snprintf(buf, 64, "set_cartesian_rel_x: %f\n", cartesian_desired_pos[COORD_X]);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void set_cartesian_rel_y(void)
+{
+	// TODO: implement
+	char buf[64];
+	snprintf(buf, 64, "set_cartesian_rel_y: %f\n", cartesian_desired_pos[COORD_Y]);
+	mcuicom_send(buf, strlen(buf));
+}
+
+inline void set_cartesian_rel_z(void)
+{
+	// TODO: implement
+	char buf[64];
+	snprintf(buf, 64, "set_cartesian_rel_z: %f\n", cartesian_desired_pos[COORD_Z]);
 	mcuicom_send(buf, strlen(buf));
 }
 
