@@ -1903,7 +1903,7 @@ inline void hostcmd_pz(void)
 			if (!error)
 			{
 				char buf[64];
-				snprintf(buf, 64, "%.2f\n", dest_val);
+				snprintf(buf, 64, "%.2f\n", (double) dest_val);
 				hostcom_send(buf, strlen(buf));
 			}
 		}
@@ -3443,7 +3443,7 @@ inline void hostcmd_px(void)
 								{
 									const int size = 64;
 									char buf[size];
-									snprintf(buf, size, "C%c,%.2f%c", param1.value.letter, floatparam2, *CMDEND);
+									snprintf(buf, size, "C%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
 									mcuicom_send(buf, strlen(buf));
 								}
 								else
@@ -3544,7 +3544,7 @@ inline void hostcmd_py(void)
 								{
 									const int size = 64;
 									char buf[size];
-									snprintf(buf, size, "D%c,%.2f%c", param1.value.letter, floatparam2, *CMDEND);
+									snprintf(buf, size, "D%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
 									mcuicom_send(buf, strlen(buf));
 								}
 								else
