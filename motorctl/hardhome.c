@@ -22,32 +22,24 @@ inline void hardhome(void)
 	// Select LMT lines from QEI-LMT multiplexer
 	LMT_SEL = SEL_LMT;
 	
-	mcuicom_send("hardhome\n", STRLEN("hardhome\n"));
-	
 	/********************************
 	 * Perform Hard Home on motor A *
 	 ********************************/
 	
 	// Start moving motor at high speed searching for the limit switch
-	
-	pwm_set_duty1(HARDHOME_PWM_LEVEL1);
-	
-	// Wait until the limit switch is activated
-	
-	mcuicom_send("wait lmt\n", STRLEN("wait lmt\n"));
+	// until the limit switch is activated
+	if (!LMT_MA)
+		pwm_set_duty1(HARDHOME_PWM_LEVEL1);
 	while (!LMT_MA);
-	mcuicom_send("proceed\n", STRLEN("proceed\n"));
 	
-	// When the limit switch is activated, reset step counter
-	// and go on moving until limit switch is reached again
-	
+	// When the limit switch is activated, reset the step counter
+	// and go on moving until the limit switch is reached again
 	pwm_set_duty1(0);
 	motor_steps[MOTOR_A] = 0;
-	pwm_set_duty1(HARDHOME_PWM_LEVEL1);
+	pwm_set_duty1(HARDHOME_PWM_LEVEL2);
 	while (LMT_MA);
 	
 	// When the limit switch is reached again, stop the motor and finish
-	
 	while (!LMT_MA);
 	pwm_set_duty1(0);
 	
