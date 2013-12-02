@@ -3,6 +3,7 @@
 #include "../mcuicom.h"
 #include "motor_status.h"
 #include "../hostcmdset.h"
+#include "hardhome.h"
 
 #include "../debug.h"
 
@@ -1075,5 +1076,5 @@ inline void move_coordinated(void)
 
 inline void hard_home(void)
 {
-	
+	hardhome();
 }
