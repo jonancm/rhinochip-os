@@ -42,7 +42,7 @@ inline void hardhome_setup(void)
 	
 	// Enable RB0..RB5 to interrupt the CPU on input change (CN2..CN7)
 	
-	CNEN1 |= LMT_MSK;
+	CNEN1 |= CNE_MSK;
 	
 	/***********************************
 	 * Initialize port state variables *

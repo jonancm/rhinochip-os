@@ -17,7 +17,8 @@
 
 #define LMT_ON                 1
 #define LMT_OFF                0
-#define LMT_MSK                0x00FC            /* Limit Switch Mask to extract the appropriate bits from port B */
+#define CNE_MSK                0x00FC            /* Change Notification Enable mask to enable the appropriate pins for Change Notification */
+#define LMT_MSK                0x003F            /* Limit Switch Mask to extract the appropriate bits from port B (RB0..RB5) */
 
 #define LMT_MA_MSK             1                 /* Mask to extract the bit corresponding to LMT_MA from port B */
 #define LMT_MB_MSK             2                 /* Mask to extract the bit corresponding to LMT_MB from port B */
