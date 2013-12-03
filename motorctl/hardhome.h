@@ -9,11 +9,11 @@
  * sime pin as the QEA lines.
  */
 #define LMT_MA                 PORTBbits.RB0
-#define LMT_MB                 PORTBbits.RB2
-#define LMT_MC                 PORTBbits.RB4
-#define LMT_MD                 PORTDbits.RD2
-#define LMT_ME                 PORTFbits.RF0
-#define LMT_MF                 PORTFbits.RF4
+#define LMT_MB                 PORTBbits.RB1
+#define LMT_MC                 PORTBbits.RB2
+#define LMT_MD                 PORTBbits.RB3
+#define LMT_ME                 PORTBbits.RB4
+#define LMT_MF                 PORTBbits.RB5
 
 #define LMT_ON                 1
 #define LMT_OFF                0
