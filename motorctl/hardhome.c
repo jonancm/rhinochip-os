@@ -136,6 +136,7 @@ void __attribute__((interrupt, auto_psv)) _CNInterrupt(void)
 	// where a bit change has occurred, while positions where no bit change has occurred
 	// will remain set to logical 0.
 	unsigned char pin_changes = curr_port_state ^ prev_port_state;
+	prev_port_state = curr_port_state;
 	// If the current port state shows changes with respect to its previous state,
 	// process accordingly.
 	switch (pin_changes)
