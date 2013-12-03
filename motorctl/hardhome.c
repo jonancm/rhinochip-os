@@ -7,15 +7,15 @@
 #include "../macros.h"
 
 typedef enum {
-	HH_START,
-	HH_FIND_SWITCH, // Finding limit switch
-	HH_FIND_B,      // Finding point B (past end of limit switch)
-	HH_FIND_A1,     // Finding point A (before limit switch, LMT 1 => 0)
-	HH_FIND_A2,     // Finding point A (before limit switch, LMT 0 => 1)
-	HH_END
+	HH_IDLE,
+	HH_SEARCHING_SWITCH, // Searching limit switch
+	HH_SEARCHING_B,      // Searching point B (past end of limit switch)
+	HH_SEARCHING_A1,     // Searching point A (before limit switch, LMT = 1 -> 0)
+	HH_SEARCHING_A2,     // Searching point A (before limit switch, LMT = 0 -> 1)
+	HH_FINISHED
 } hhstate_t;
 
-hhstate_t    hardhome_state[NUM_MOTORS] = {HH_START, HH_START, HH_START, HH_START, HH_START, HH_START};
+hhstate_t    hardhome_state[NUM_MOTORS] = {HH_IDLE, HH_IDLE, HH_IDLE, HH_IDLE, HH_IDLE, HH_IDLE};
 int          point_a[NUM_MOTORS];
 int          point_b[NUM_MOTORS];
 
@@ -69,21 +69,30 @@ inline void hardhome(void)
 	// Enable Change Notification interrupt
 	
 	IEC0bits.CNIE = 1;
-	// Enabling the Change Notification interrupt probably causes the interrupt to be
-	// triggered. Thus, the ISR must either check if it's the first time it runs (and thus
-	// don't do anything), or check if any of the inputs has really changed (to ensure that
-	// the interrupt hasn't been triggered by the previous instruction, but rather by an
-	// actual change in any of the inputs).
-	// [See ISR below]
 	
 	/********************************
 	 * Perform Hard Home on motor A *
 	 ********************************/
 	
+	// If LMT = 1, the limit switch has already been found, thus, jump directly
+	// to 2nd phase of the hard home process: searching the point B at a low speed
+	if (LMT_MA)
+	{
+		hardhome_state[MOTOR_A] = HH_SEARCHING_B;
+		pwm_set_duty1(HARDHOME_PWM_LEVEL2);
+	}
+	// If LMT = 0, the limit switch has not been found yet, thus, proceed with
+	// 1st phase of the hard home process: searching the limit switch at high speed
+	else
+	{
+		hardhome_state[MOTOR_A] = HH_SEARCHING_SWITCH;
+		pwm_set_duty1(HARDHOME_PWM_LEVEL1);
+	}
+	
 	// Block execution while the hard home is in progress.
 	// The hard home process is executed by the Change Notification ISR, which has been
 	// triggered in the previous instruction, where the interrupts were enabled.
-	while (hardhome_state[MOTOR_A] != HH_END);
+	while (hardhome_state[MOTOR_A] != HH_FINISHED);
 	
 	// Compute mid-point of points A and B. That will be the assumed position of the limit switch, i.e.
 	// the hard home position.
@@ -108,7 +117,7 @@ inline void hardhome(void)
 	
 	// Re-initialize the hard home automaton to the initial state
 	
-	hardhome_state[MOTOR_A] = HH_START;
+	hardhome_state[MOTOR_A] = HH_IDLE;
 }
 
 /**
@@ -142,53 +151,37 @@ void __attribute__((interrupt, auto_psv)) _CNInterrupt(void)
 		case LMT_MA_MSK:
 			switch (hardhome_state[MOTOR_A])
 			{
-				case HH_START:
-					// If LMT = 1, the limit switch has already been found, thus, jump directly
-					// to 2nd phase of the hard home process: finding the point B at a low speed
-					if (LMT_MA)
-					{
-						hardhome_state[MOTOR_A] = HH_FIND_B;
-						pwm_set_duty1(HARDHOME_PWM_LEVEL2);
-					}
-					// If LMT = 0, the limit switch has not been found yet, thus, proceed with
-					// 1st phase of the hard home process: finding the limit switch at high speed
-					else
-					{
-						hardhome_state[MOTOR_A] = HH_FIND_SWITCH;
-						pwm_set_duty1(HARDHOME_PWM_LEVEL1);
-					}
-					break;
-				case HH_FIND_SWITCH:
+				case HH_SEARCHING_SWITCH:
 					// If LMT = 0 -> 1, the limit switch has been found. Thus, proceed with the next step:
-					// finding point B at a low speed
+					// searching point B at a low speed
 					if (LMT_MA)
 					{
-						hardhome_state[MOTOR_A] = HH_FIND_B;
+						hardhome_state[MOTOR_A] = HH_SEARCHING_B;
 						pwm_set_duty1(HARDHOME_PWM_LEVEL2);
 					}
 					break;
-				case HH_FIND_B:
+				case HH_SEARCHING_B:
 					// If LMT = 1 -> 0, the limit switch has become inactive, thus, point B has been found.
-					// Proceed now with the next step: finding point A (same speed, opposite direction)
+					// Proceed now with the next step: searching point A (same speed, opposite direction)
 					if (!LMT_MA)
 					{
 						point_b[MOTOR_A] = motor_steps[MOTOR_A];
 						DIR1 = ~DIR1;
-						hardhome_state[MOTOR_A] = HH_FIND_A1;
+						hardhome_state[MOTOR_A] = HH_SEARCHING_A1;
 					}
 					break;
-				case HH_FIND_A1:
+				case HH_SEARCHING_A1:
 					// While searching for point A, the switch goes from inactive to active (LMT = 0 -> 1)
 					// and then from active to inactive (LMT = 0 -> 1). That's when point A is reached (when
 					// the second transition occurrs). The first transition must be ignored. Thus, break.
 					break;
-				case HH_FIND_A2:
+				case HH_SEARCHING_A2:
 					// If LMT = 1 -> 0, the limit switch has become inactive, thus, point A has been found.
 					// We're done. Now just finish the process and return control to the hard home routine.
 					if (!LMT_MA)
 					{
 						point_a[MOTOR_A] = motor_steps[MOTOR_A];
-						hardhome_state[MOTOR_A] = HH_END;
+						hardhome_state[MOTOR_A] = HH_FINISHED;
 					}
 					break;
 			}
