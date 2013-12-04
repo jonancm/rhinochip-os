@@ -40,7 +40,7 @@ inline void hostcom_setup(void);
  */
 int hostcom_read_cmd(char buf[], int size, bool_t *full);
 
-int hostcom_send(const char * const data, const int size);
+int hostcom_send(const char * const data);
 
 /**
  * Return true if a full command is available (i.e. a command end mark has been
