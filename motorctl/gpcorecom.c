@@ -613,48 +613,47 @@ void interpret_cmd(void)
  ******************************************************************************/
 
 #include <stdio.h>
-#include <string.h>
 
 inline void read_encoder_a(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_A], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_b(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_B], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_c(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_C], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_d(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_D], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_e(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_E], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_f(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_F], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void stop_motor_a(void)
@@ -1050,7 +1049,7 @@ inline void set_cartesian_abs_x(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void set_cartesian_abs_y(void)
@@ -1058,7 +1057,7 @@ inline void set_cartesian_abs_y(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void set_cartesian_abs_z(void)
@@ -1066,7 +1065,7 @@ inline void set_cartesian_abs_z(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void set_cartesian_rel_x(void)
@@ -1074,7 +1073,7 @@ inline void set_cartesian_rel_x(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void set_cartesian_rel_y(void)
@@ -1082,7 +1081,7 @@ inline void set_cartesian_rel_y(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void set_cartesian_rel_z(void)
@@ -1090,7 +1089,7 @@ inline void set_cartesian_rel_z(void)
 	// TODO: implement
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void move_independent(void)

@@ -6,7 +6,6 @@
 #include "self_test.h"
 #include "../mcuicom.h"
 #include "mctlcom.h"
-#include "../macros.h"
 
 #include "../debug.h"
 //#ifndef NDEBUG
@@ -1754,7 +1753,8 @@ inline void hostcmd_pa(void)
 				buf[0] = 'R';
 				buf[1] = param1.value.letter;
 				buf[2] = *CMDEND;
-				mcuicom_send(buf, 3);
+				buf[3] = '\0';
+				mcuicom_send(buf);
 				// Get response (motor steps) and re-send it to the host PC
 				size = mctlcom_get_response(buf, size);
 				hostcom_send(buf, size);
@@ -2965,7 +2965,7 @@ inline void hostcmd_mc(void)
 	}
 	else
 	{
-		mcuicom_send("MC" CMDEND, STRLEN("MC" CMDEND));
+		mcuicom_send("MC" CMDEND);
 	}
 }
 
@@ -3007,7 +3007,7 @@ inline void hostcmd_mi(void)
 	}
 	else
 	{
-		mcuicom_send("MI" CMDEND, STRLEN("MI" CMDEND));
+		mcuicom_send("MI" CMDEND);
 	}
 }
 
@@ -3040,7 +3040,7 @@ inline void hostcmd_mm(void)
 					buf[0] = 'S';
 					buf[1] = param1.value.letter;
 					buf[2] = *CMDEND;
-					mcuicom_send(buf, 3);
+					mcuicom_send(buf);
 				}
 				else
 				{
@@ -3258,7 +3258,7 @@ inline void hostcmd_pd(void)
 									
 									// Send MCUICOM command AA, AB, ..., AF depending on motor letter (param 1)
 									snprintf(buf, size, "A%c,%d%c", param1.value.letter, intparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3345,7 +3345,7 @@ inline void hostcmd_pr(void)
 									
 									// Send MCUICOM command BA, BB, ..., BF depending on motor letter (param 1)
 									snprintf(buf, size, "B%c,%d%c", param1.value.letter, intparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3444,7 +3444,7 @@ inline void hostcmd_px(void)
 									const int size = 64;
 									char buf[size];
 									snprintf(buf, size, "C%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3545,7 +3545,7 @@ inline void hostcmd_py(void)
 									const int size = 64;
 									char buf[size];
 									snprintf(buf, size, "D%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
