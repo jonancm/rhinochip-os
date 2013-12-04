@@ -135,6 +135,7 @@ inline void set_cartesian_rel_z(void);
 
 inline void move_independent(void);
 inline void move_coordinated(void);
+inline void move_pwm(void);
 
 inline void set_pwm_dir_a(void);
 inline void set_pwm_dir_b(void);
@@ -511,6 +512,9 @@ void interpret_cmd(void)
 				// MI: Move independent
 				case 'I':
 					move_independent(); break;
+				// MP: Move motors according to PWM and direction registers (never stop)
+				case 'P':
+					move_pwm(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1091,6 +1095,27 @@ inline void move_coordinated(void)
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_coordinated\n");
+}
+
+inline void move_pwm(void)
+{
+	DIR1 = motor_direction[MOTOR_A];
+	pwm_set_duty1(motor_pwm_level[MOTOR_A]);
+	
+	DIR2 = motor_direction[MOTOR_B];
+	pwm_set_duty2(motor_pwm_level[MOTOR_B]);
+	
+	DIR3 = motor_direction[MOTOR_C];
+	pwm_set_duty3(motor_pwm_level[MOTOR_C]);
+	
+	DIR4 = motor_direction[MOTOR_D];
+	pwm_set_duty4(motor_pwm_level[MOTOR_D]);
+	
+	DIR5 = motor_direction[MOTOR_E];
+	pwm_set_duty5(motor_pwm_level[MOTOR_E]);
+	
+	DIR6 = motor_direction[MOTOR_F];
+	pwm_set_duty6(motor_pwm_level[MOTOR_F]);
 }
 
 inline void set_pwm_dir_a(void)
