@@ -110,6 +110,7 @@ inline void stop_motor_c(void);
 inline void stop_motor_d(void);
 inline void stop_motor_e(void);
 inline void stop_motor_f(void);
+inline void stop_all_motors(void);
 
 inline void set_joint_abs_a(void);
 inline void set_joint_abs_b(void);
@@ -593,6 +594,9 @@ void interpret_cmd(void)
 				// SF: Stop motor F
 				case 'F':
 					stop_motor_f(); break;
+				// SS: Stop all motors
+				case 'S':
+					stop_all_motors(); break;
 				default:
 					// error: unknown command
 					break;
@@ -705,6 +709,16 @@ inline void stop_motor_f(void)
 	// Set PWM level to zero, so that motor doesn't move
 	
 	// Set destination position to current position
+}
+
+inline void stop_all_motors(void)
+{
+	pwm_set_duty1(0);
+	pwm_set_duty2(0);
+	pwm_set_duty3(0);
+	pwm_set_duty4(0);
+	pwm_set_duty5(0);
+	pwm_set_duty6(0);
 }
 
 inline void set_joint_abs_a(void)
