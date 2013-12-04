@@ -3,6 +3,7 @@
 #include "../mcuicom.h"
 #include "motor_status.h"
 #include "../hostcmdset.h"
+#include "pwm.h"
 
 #include "../debug.h"
 
