@@ -662,6 +662,7 @@ inline void stop_motor_a(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty1(0);
 	
 	// Set destination position to current position
 }
@@ -671,6 +672,7 @@ inline void stop_motor_b(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty2(0);
 	
 	// Set destination position to current position
 }
@@ -680,6 +682,7 @@ inline void stop_motor_c(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty3(0);
 	
 	// Set destination position to current position
 }
@@ -689,6 +692,7 @@ inline void stop_motor_d(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty4(0);
 	
 	// Set destination position to current position
 }
@@ -698,6 +702,7 @@ inline void stop_motor_e(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty5(0);
 	
 	// Set destination position to current position
 }
@@ -707,6 +712,7 @@ inline void stop_motor_f(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty6(0);
 	
 	// Set destination position to current position
 }
