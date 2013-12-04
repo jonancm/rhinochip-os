@@ -136,6 +136,13 @@ inline void set_cartesian_rel_z(void);
 inline void move_independent(void);
 inline void move_coordinated(void);
 
+inline void set_pwm_dir_a(void);
+inline void set_pwm_dir_b(void);
+inline void set_pwm_dir_c(void);
+inline void set_pwm_dir_d(void);
+inline void set_pwm_dir_e(void);
+inline void set_pwm_dir_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -504,6 +511,32 @@ void interpret_cmd(void)
 				// MI: Move independent
 				case 'I':
 					move_independent(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'P':
+			switch (cmd_name[1])
+			{
+				// PA: Set PWM level and direction for motor A
+				case 'A':
+					set_pwm_dir_a(); break;
+				// PB: Set PWM level and direction for motor B
+				case 'B':
+					set_pwm_dir_b(); break;
+				// PC: Set PWM level and direction for motor C
+				case 'C':
+					set_pwm_dir_c(); break;
+				// PD: Set PWM level and direction for motor D
+				case 'D':
+					set_pwm_dir_d(); break;
+				// PE: Set PWM level and direction for motor E
+				case 'E':
+					set_pwm_dir_e(); break;
+				// PF: Set PWM level and direction for motor F
+				case 'F':
+					set_pwm_dir_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1058,4 +1091,172 @@ inline void move_coordinated(void)
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_coordinated\n");
+}
+
+inline void set_pwm_dir_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_A] = pwm_level;
+				motor_direction[MOTOR_A] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_B] = pwm_level;
+				motor_direction[MOTOR_B] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_C] = pwm_level;
+				motor_direction[MOTOR_C] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_D] = pwm_level;
+				motor_direction[MOTOR_D] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_E] = pwm_level;
+				motor_direction[MOTOR_E] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_F] = pwm_level;
+				motor_direction[MOTOR_F] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
 }
