@@ -1048,49 +1048,61 @@ inline void set_joint_rel_f(void)
 inline void set_cartesian_abs_x(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_abs_y(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_abs_z(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_x(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_y(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_z(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf);
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void move_independent(void)
