@@ -146,6 +146,8 @@ inline void set_pwm_dir_d(void);
 inline void set_pwm_dir_e(void);
 inline void set_pwm_dir_f(void);
 
+inline void restore_pwm_eeprom(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -569,6 +571,9 @@ void interpret_cmd(void)
 				// RF: Read encoder of motor F
 				case 'F':
 					read_encoder_f(); break;
+				// RP: Restore PWM settings from EEPROM
+				case 'P':
+					restore_pwm_eeprom(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1324,4 +1329,23 @@ inline void set_pwm_dir_f(void)
 	{
 		// error: parameter must be specified
 	}
+}
+
+inline void restore_pwm_eeprom(void)
+{
+	// TODO: implement properly (this is a temporary implementation to test the hard home routine)
+	
+	motor_pwm_level[MOTOR_A] = 100;
+	motor_pwm_level[MOTOR_B] = 100;
+	motor_pwm_level[MOTOR_C] = 100;
+	motor_pwm_level[MOTOR_D] = 100;
+	motor_pwm_level[MOTOR_E] = 100;
+	motor_pwm_level[MOTOR_F] = 100;
+	
+	motor_direction[MOTOR_A] = 0;
+	motor_direction[MOTOR_B] = 0;
+	motor_direction[MOTOR_C] = 0;
+	motor_direction[MOTOR_D] = 0;
+	motor_direction[MOTOR_E] = 0;
+	motor_direction[MOTOR_F] = 0;
 }
