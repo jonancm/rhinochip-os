@@ -6,6 +6,7 @@
 #include "self_test.h"
 #include "../mcuicom.h"
 #include "mctlcom.h"
+#include "hardhome.h"
 
 #include "../debug.h"
 //#ifndef NDEBUG
@@ -2766,7 +2767,7 @@ inline void hostcmd_hh(void)
 		}
 		else
 		{
-			// proceed
+			hardhome();
 		}
 	}
 }

@@ -1131,6 +1131,8 @@ inline void move_coordinated(void)
 
 inline void move_pwm(void)
 {
+	dbgmsg_uart1("move_pwm\n");
+	
 	DIR1 = motor_direction[MOTOR_A];
 	pwm_set_duty1(motor_pwm_level[MOTOR_A]);
 	
@@ -1152,6 +1154,7 @@ inline void move_pwm(void)
 
 inline void set_pwm_dir_a(void)
 {
+	dbgmsg_uart1("set_pwm_dir_a\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)
@@ -1180,6 +1183,7 @@ inline void set_pwm_dir_a(void)
 
 inline void set_pwm_dir_b(void)
 {
+	dbgmsg_uart1("set_pwm_dir_b\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)
@@ -1208,6 +1212,7 @@ inline void set_pwm_dir_b(void)
 
 inline void set_pwm_dir_c(void)
 {
+	dbgmsg_uart1("set_pwm_dir_c\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)
@@ -1236,6 +1241,7 @@ inline void set_pwm_dir_c(void)
 
 inline void set_pwm_dir_d(void)
 {
+	dbgmsg_uart1("set_pwm_dir_d\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)
@@ -1264,6 +1270,7 @@ inline void set_pwm_dir_d(void)
 
 inline void set_pwm_dir_e(void)
 {
+	dbgmsg_uart1("set_pwm_dir_e\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)
@@ -1292,6 +1299,7 @@ inline void set_pwm_dir_e(void)
 
 inline void set_pwm_dir_f(void)
 {
+	dbgmsg_uart1("set_pwm_dir_f\n");
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_INT)

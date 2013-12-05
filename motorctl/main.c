@@ -18,13 +18,6 @@ int main(void)
 	qei_setup();
 	mcuicom_setup();
 	
-	pwm_set_duty1(75);
-	pwm_set_duty2(75);
-	pwm_set_duty3(75);
-	pwm_set_duty4(75);
-	pwm_set_duty5(75);
-	pwm_set_duty6(75);
-	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// is ready and working fine.
 	dbgmsg_uart1("UART 1 MCMCU ready\n");
