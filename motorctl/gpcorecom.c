@@ -4,6 +4,7 @@
 #include "motor_status.h"
 #include "../hostcmdset.h"
 #include "pwm.h"
+#include "motorctl.h"
 
 #include "../debug.h"
 
@@ -147,6 +148,20 @@ inline void set_pwm_dir_e(void);
 inline void set_pwm_dir_f(void);
 
 inline void restore_pwm_eeprom(void);
+
+inline void enable_pid_control_a(void);
+inline void enable_pid_control_b(void);
+inline void enable_pid_control_c(void);
+inline void enable_pid_control_d(void);
+inline void enable_pid_control_e(void);
+inline void enable_pid_control_f(void);
+
+inline void disable_pid_control_a(void);
+inline void disable_pid_control_b(void);
+inline void disable_pid_control_c(void);
+inline void disable_pid_control_d(void);
+inline void disable_pid_control_e(void);
+inline void disable_pid_control_f(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -493,6 +508,24 @@ void interpret_cmd(void)
 		case 'D':
 			switch (cmd_name[1])
 			{
+				// DA: Disable PID control for motor A
+				case 'A':
+					disable_pid_control_a(); break;
+				// DB: Disable PID control for motor B
+				case 'B':
+					disable_pid_control_b(); break;
+				// DC: Disable PID control for motor C
+				case 'C':
+					disable_pid_control_c(); break;
+				// DD: Disable PID control for motor D
+				case 'D':
+					disable_pid_control_d(); break;
+				// DE: Disable PID control for motor E
+				case 'E':
+					disable_pid_control_e(); break;
+				// DF: Disable PID control for motor F
+				case 'F':
+					disable_pid_control_f(); break;
 				// DX: Set cartesian relative position of motor X
 				case 'X':
 					set_cartesian_rel_x(); break;
@@ -502,6 +535,32 @@ void interpret_cmd(void)
 				// DZ: Set cartesian relative position of motor Z
 				case 'Z':
 					set_cartesian_rel_z(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'E':
+			switch (cmd_name[1])
+			{
+				// EA: Enable PID control for motor A
+				case 'A':
+					enable_pid_control_a(); break;
+				// EB: Enable PID control for motor B
+				case 'B':
+					enable_pid_control_b(); break;
+				// EC: Enable PID control for motor C
+				case 'C':
+					enable_pid_control_c(); break;
+				// ED: Enable PID control for motor D
+				case 'D':
+					enable_pid_control_d(); break;
+				// EE: Enable PID control for motor E
+				case 'E':
+					enable_pid_control_e(); break;
+				// EF: Enable PID control for motor F
+				case 'F':
+					enable_pid_control_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1348,4 +1407,64 @@ inline void restore_pwm_eeprom(void)
 	motor_direction[MOTOR_D] = 0;
 	motor_direction[MOTOR_E] = 0;
 	motor_direction[MOTOR_F] = 0;
+}
+
+inline void enable_pid_control_a(void)
+{
+	motorctl_enable_pid(MOTOR_A);
+}
+
+inline void enable_pid_control_b(void)
+{
+	motorctl_enable_pid(MOTOR_B);
+}
+
+inline void enable_pid_control_c(void)
+{
+	motorctl_enable_pid(MOTOR_C);
+}
+
+inline void enable_pid_control_d(void)
+{
+	motorctl_enable_pid(MOTOR_D);
+}
+
+inline void enable_pid_control_e(void)
+{
+	motorctl_enable_pid(MOTOR_E);
+}
+
+inline void enable_pid_control_f(void)
+{
+	motorctl_enable_pid(MOTOR_F);
+}
+
+inline void disable_pid_control_a(void)
+{
+	motorctl_disable_pid(MOTOR_A);
+}
+
+inline void disable_pid_control_b(void)
+{
+	motorctl_disable_pid(MOTOR_B);
+}
+
+inline void disable_pid_control_c(void)
+{
+	motorctl_disable_pid(MOTOR_C);
+}
+
+inline void disable_pid_control_d(void)
+{
+	motorctl_disable_pid(MOTOR_D);
+}
+
+inline void disable_pid_control_e(void)
+{
+	motorctl_disable_pid(MOTOR_E);
+}
+
+inline void disable_pid_control_f(void)
+{
+	motorctl_disable_pid(MOTOR_F);
 }
