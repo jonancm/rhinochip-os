@@ -5,6 +5,26 @@
 
 #include <string.h> // memset
 
+/*********************************************
+ * Velocity profile generation (trapezoidal) *
+ *********************************************/
+
+typedef struct {
+	unsigned int enabled            : 1;
+	unsigned int phase              : 1;
+	unsigned int velocity_saturated : 1;
+	unsigned int flatcount;
+	unsigned int velocity;
+	unsigned int acceleration;
+	unsigned int phase1displacement;
+	unsigned int midpoint;
+	unsigned int max_velocity;
+	int          curr_pos;
+	int          next_pos;
+} motorctl_info_t;
+
+motorctl_info_t    motorctl_info[NUM_MOTORS];
+
 /********************
  * PID control loop *
  ********************/
