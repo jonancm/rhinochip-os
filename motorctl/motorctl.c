@@ -57,3 +57,57 @@ inline void motorctl_setup(void)
 	setup_pid_info();
 	setup_trapezoidal_movement();
 }
+
+void motorctl_enable_pid(unsigned char motors)
+{
+	// Enable PID control for motor A
+	if (motors & MOTOR_BIT_A)
+		pid_enabled[MOTOR_A] = true;
+	
+	// Enable PID control for motor B
+	if (motors & MOTOR_BIT_B)
+		pid_enabled[MOTOR_B] = true;
+	
+	// Enable PID control for motor C
+	if (motors & MOTOR_BIT_C)
+		pid_enabled[MOTOR_C] = true;
+	
+	// Enable PID control for motor D
+	if (motors & MOTOR_BIT_D)
+		pid_enabled[MOTOR_D] = true;
+	
+	// Enable PID control for motor E
+	if (motors & MOTOR_BIT_E)
+		pid_enabled[MOTOR_E] = true;
+	
+	// Enable PID control for motor F
+	if (motors & MOTOR_BIT_F)
+		pid_enabled[MOTOR_F] = true;
+}
+
+void motorctl_disable_pid(unsigned char motors)
+{
+	// Disable PID control for motor A
+	if (motors & MOTOR_BIT_A)
+		pid_enabled[MOTOR_A] = false;
+	
+	// Disable PID control for motor B
+	if (motors & MOTOR_BIT_B)
+		pid_enabled[MOTOR_B] = false;
+	
+	// Disable PID control for motor C
+	if (motors & MOTOR_BIT_C)
+		pid_enabled[MOTOR_C] = false;
+	
+	// Disable PID control for motor D
+	if (motors & MOTOR_BIT_D)
+		pid_enabled[MOTOR_D] = false;
+	
+	// Disable PID control for motor E
+	if (motors & MOTOR_BIT_E)
+		pid_enabled[MOTOR_E] = false;
+	
+	// Disable PID control for motor F
+	if (motors & MOTOR_BIT_F)
+		pid_enabled[MOTOR_F] = false;
+}
