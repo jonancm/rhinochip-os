@@ -1,4 +1,7 @@
 #include "motorctl.h"
+#include "pwm.h"
+#include "qei.h"
+#include "motor_status.h"
 
 #include <string.h> // memset
 
@@ -50,6 +53,34 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	return pid_output;
 }
 
+/**
+ * Return the absolute value and the sign of a given integer quantity.
+ * 
+ * The absolute value of the quantity is returned by means of the function's return value,
+ * while the sign is returned using an input/output parameter (pointer to a variable) which
+ * represents a flag that indicates whether the number is negative (flag = 1) or positive
+ * (flag = 0).
+ * 
+ * @param num         integer quantity
+ * @param negative    pointer to the variable where the sign flag should be returned
+ *                    (1 = the quantity is negative, 0 = the quantity is positive)
+ * 
+ * @returns           absolute value of the given integer quantity
+ */
+int abs_sign(int num, unsigned char *negative)
+{
+	if (num < 0)
+	{
+		*negative = 1;
+		return -num;
+	}
+	else
+	{
+		*negative = 0;
+		return num;
+	}
+}
+
 void setup_pid_info(void)
 {
 	// Clear the PID information structure for each motor (set memory to zero)
@@ -72,6 +103,29 @@ inline void motorctl_setup(void)
 {
 	setup_pid_info();
 	setup_trapezoidal_movement();
+}
+
+inline void motorctl(void)
+{
+	// If the PID control for motor A is enabled, control motor A,
+	// correcting its position according to the PID gains.
+	if (pid_enabled[MOTOR_A])
+	{
+		// Re-calculate PWM duty cycle using the PID controller
+		int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motor_desired_pos[MOTOR_A]);
+		// Translate the PWM duty cycle into a PWM level and a PWM direction
+		// and update the corresponding registers
+		unsigned char direction;
+		duty = abs_sign(duty, &direction);
+		//direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
+		/*
+		motor_pwm_level[MOTOR_A] = duty;
+		motor_direction[MOTOR_A] = direction;
+		// These registers are for open-loop mode only
+		*/
+		pwm_set_duty1(duty);
+		DIR1 = direction;
+	}
 }
 
 void motorctl_enable_pid(unsigned char motors)

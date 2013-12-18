@@ -26,6 +26,7 @@ int main(void)
 	
 	while (1)
 	{
+		motorctl();
 		// TODO: two approaches possible, compare and select the best.
 		// 1) Perform both the interpretation of commands and the motor control
 		//    loop as equally important tasks inside a loop (i.e. one does not
