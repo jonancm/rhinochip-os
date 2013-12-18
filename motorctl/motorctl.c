@@ -39,8 +39,7 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].phase1displacement = 0;
 	motorctl_info[MOTOR_A].midpoint = (motor_desired_pos[MOTOR_A] + motor_steps[MOTOR_A]) / 2;
 	motorctl_info[MOTOR_A].max_velocity = SYSTEM_VELOCITY * motor_desired_velocity[MOTOR_A]; // Maximum motor velocity
-	motorctl_info[MOTOR_A].curr_pos = 0;
-	motorctl_info[MOTOR_A].next_pos = 0;
+	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
 
 void generate_trapezoidal_profile(void)
@@ -100,6 +99,9 @@ void generate_trapezoidal_profile(void)
 			else
 				++motorctl_info[MOTOR_A].phase1displacement;
 		}
+		
+		// Calculate next position
+		motorctl_info[MOTOR_A].position = motorctl_info[MOTOR_A].position + motorctl_info[MOTOR_A].velocity;
 	}
 }
 
