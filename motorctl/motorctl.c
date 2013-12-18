@@ -1,5 +1,7 @@
 #include "motorctl.h"
 
+#include <string.h> // memset
+
 /********************
  * PID control loop *
  ********************/
@@ -46,6 +48,20 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	pid_info->prev_error = pid_info->curr_error;
 	
 	return pid_output;
+}
+
+void setup_pid_info(void)
+{
+	// Clear the PID information structure for each motor (set memory to zero)
+	int i;
+	for (i = 0; i < NUM_MOTORS; ++i)
+		memset(pid_info, 0, sizeof(pid_info_t));
+	// TODO: Enable/disable PID control according to motor mode
+	motorctl_enable_pid(MOTOR_ALL);
+	// TODO: Set PID gains to the values stored in the EEPROM
+	pid_info[MOTOR_A].KP = 25;
+	pid_info[MOTOR_A].KI = 5;
+	pid_info[MOTOR_A].KD = 10;
 }
 
 /***************************
