@@ -50,6 +50,12 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	
 	pid_info->prev_error = pid_info->curr_error;
 	
+	// Adjust sign according to sense of movement
+	if (pid_info->curr_error > 0 && pid_output < 0)
+		pid_output = -pid_output;
+	else if (pid_info->curr_error < 0 && pid_output > 0)
+		pid_output = -pid_output;
+	
 	return pid_output;
 }
 
@@ -130,7 +136,7 @@ inline void motorctl(void)
 		// and update the corresponding registers
 		unsigned char direction;
 		duty = abs_sign(duty, &direction);
-		//direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
+		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
 		/*
 		motor_pwm_level[MOTOR_A] = duty;
 		motor_direction[MOTOR_A] = direction;
