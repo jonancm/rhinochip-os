@@ -30,13 +30,13 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	int      pid_output;
 	
 	pid_info->curr_error = desired_pos - current_pos;
-	pid_info->error_sum += pid_info->curr_error;
+	pid_info->error_sum += pid_info->curr_error * T3PERIOD; // Sum error * dt
 	
 	error_diff = pid_info->curr_error - pid_info->prev_error;
 	
 	pid_output = pid_info->KP * pid_info->curr_error
 	           + pid_info->KI * pid_info->error_sum
-	           + pid_info->KD * error_diff;
+	           + pid_info->KD * error_diff * T3FREQ; // d(error) / dt
 	
 	/*
 	if (PWM_MIN_DUTY <= pid_output && pid_output <= PWM_MAX_DUTY)
