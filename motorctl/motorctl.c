@@ -114,7 +114,8 @@ inline void motorctl_setup(void)
 	
 	// Set up data structures for trapezoidal velocity profile generation
 	
-	setup_trapezoidal_movement();
+	// TODO: implement
+	// setup_trapezoidal_movement();
 }
 
 inline void motorctl(void)
