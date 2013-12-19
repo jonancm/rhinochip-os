@@ -146,6 +146,8 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 	// Disable Timer 3 interrupts
 	IEC0bits.T3IE = 0;
 	
+	dbgmsg_uart1("_T3Interrupt\n");
+	
 	// Run PID loop
 	motorctl();
 	
