@@ -101,7 +101,19 @@ void setup_pid_info(void)
 
 inline void motorctl_setup(void)
 {
+	// Set up data structures for PID position control
+	
 	setup_pid_info();
+	
+	// Set up Timer 2 to implement a custom multi-channel QEI
+	
+	IFS0bits.T3IF = 0; // Clear the timer 3 interrupt flag
+	IEC0bits.T3IE = 1; // Enable timer 3 interrupts
+	PR3 = PR3VAL;      // Set the timer period
+	T3CONbits.TON = 1; // Start the timer
+	
+	// Set up data structures for trapezoidal velocity profile generation
+	
 	setup_trapezoidal_movement();
 }
 
@@ -126,6 +138,20 @@ inline void motorctl(void)
 		pwm_set_duty1(duty);
 		DIR1 = direction;
 	}
+}
+
+void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
+{
+	// Disable Timer 3 interrupts
+	IEC0bits.T3IE = 0;
+	
+	// Run PID loop
+	motorctl();
+	
+	// Clear Timer 3 interrupt flag
+	IFS0bits.T3IF = 0;
+	// Re-enable Timer 3 interrupt flag
+	IEC0bits.T3IE = 1;
 }
 
 void motorctl_enable_pid(unsigned char motors)

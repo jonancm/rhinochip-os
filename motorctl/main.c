@@ -26,7 +26,6 @@ int main(void)
 	
 	while (1)
 	{
-		motorctl();
 		// TODO: two approaches possible, compare and select the best.
 		// 1) Perform both the interpretation of commands and the motor control
 		//    loop as equally important tasks inside a loop (i.e. one does not
@@ -34,7 +33,7 @@ int main(void)
 		// 2) Perform the interpretation of commands as single task in a loop and
 		//    perform motor control on a timely basis using interrupts, so that it
 		//    has greater priority over command interpretation (which can actually
-		//    be less efficiente).
+		//    be less efficient).
 		gpcorecom_interpret_next();
 	}
 	
