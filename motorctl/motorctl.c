@@ -19,8 +19,7 @@ typedef struct {
 	unsigned int phase1displacement;
 	unsigned int midpoint;
 	unsigned int max_velocity;
-	int          curr_pos;
-	int          next_pos;
+	int          position;
 } motorctl_info_t;
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
