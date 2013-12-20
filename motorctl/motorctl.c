@@ -37,7 +37,7 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].velocity = 0;
 	motorctl_info[MOTOR_A].acceleration = 50; // Motor acceleration expressed as percentage of maximum motor velocity (default: SYSTEM_ACCELERATION)
 	motorctl_info[MOTOR_A].phase1displacement = 0;
-	motorctl_info[MOTOR_A].midpoint = (motor_desired_pos[MOTOR_A] + motor_steps[MOTOR_A]) / 2;
+	motorctl_info[MOTOR_A].midpoint = (motor_steps[MOTOR_A] + motor_commanded_pos[MOTOR_A]) / 2;
 	motorctl_info[MOTOR_A].max_velocity = SYSTEM_VELOCITY * motor_desired_velocity[MOTOR_A]; // Maximum motor velocity
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
@@ -270,6 +270,8 @@ void motorctl_move(void)
 	
 	// Declare flag to check if all the motors have finished moving
 	bool_t move_not_finished = false;
+	// Set up the data structure for the trapezoidal velocity profile generation
+	setup_trapezoidal_movement();
 	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
 	motorctl_info[MOTOR_A].enabled = true;
 	// Perform the trapezoidal move. The microcontrollers blocks until the movement has finished.
@@ -280,7 +282,7 @@ void motorctl_move(void)
 		// Re-calculate PWM duty cycle using the PID controller
 		// TODO: this code is duplicated (has been copied from motorctl), although call to pid_loop has different parameters;
 		//       create a separate function to elliminate duplication
-		int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motor_desired_pos[MOTOR_A]);
+		int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motorctl_info[MOTOR_A].position);
 		// Translate the PWM duty cycle into a PWM level and a PWM direction
 		// and update the corresponding registers
 		unsigned char direction;
@@ -302,6 +304,9 @@ void motorctl_move(void)
 		                  | motorctl_info[MOTOR_E].enabled
 		                  | motorctl_info[MOTOR_F].enabled;
 	} while (move_not_finished);
+	
+	// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+	motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
 	
 	// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
 	motorctl_enable_pid(MOTOR_ALL);
