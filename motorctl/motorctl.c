@@ -263,6 +263,50 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 	IEC0bits.T3IE = 1;
 }
 
+void motorctl_move(void)
+{
+	// Disable PID on all motors, so that no position correction is performed while executing a trapezoidal move
+	motorctl_disable_pid(MOTOR_ALL);
+	
+	// Declare flag to check if all the motors have finished moving
+	bool_t move_not_finished = false;
+	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
+	motorctl_info[MOTOR_A].enabled = true;
+	// Perform the trapezoidal move. The microcontrollers blocks until the movement has finished.
+	do {
+		// Calculate next motor position in order to achieve a trapezoidal velocity profile
+		generate_trapezoidal_profile();
+		
+		// Re-calculate PWM duty cycle using the PID controller
+		// TODO: this code is duplicated (has been copied from motorctl), although call to pid_loop has different parameters;
+		//       create a separate function to elliminate duplication
+		int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motor_desired_pos[MOTOR_A]);
+		// Translate the PWM duty cycle into a PWM level and a PWM direction
+		// and update the corresponding registers
+		unsigned char direction;
+		duty = abs_sign(duty, &direction);
+		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
+		/*
+		motor_pwm_level[MOTOR_A] = duty;
+		motor_direction[MOTOR_A] = direction;
+		// These registers are for open-loop mode only
+		*/
+		pwm_set_duty1(duty);
+		DIR1 = direction;
+		
+		// Check if all motors have finished moving and set flag accordingly
+		move_not_finished = motorctl_info[MOTOR_A].enabled
+		                  | motorctl_info[MOTOR_B].enabled
+		                  | motorctl_info[MOTOR_C].enabled
+		                  | motorctl_info[MOTOR_D].enabled
+		                  | motorctl_info[MOTOR_E].enabled
+		                  | motorctl_info[MOTOR_F].enabled;
+	} while (move_not_finished);
+	
+	// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
+	motorctl_enable_pid(MOTOR_ALL);
+}
+
 void motorctl_enable_pid(unsigned char motors)
 {
 	// Enable PID control for motor A
