@@ -1171,14 +1171,14 @@ inline void set_cartesian_rel_z(void)
 
 inline void move_independent(void)
 {
-	// TODO: implement properly (the code below is just for testing PD and PR)
-	motor_steps[MOTOR_A] = motor_desired_pos[MOTOR_A];
-	motor_steps[MOTOR_B] = motor_desired_pos[MOTOR_B];
-	motor_steps[MOTOR_C] = motor_desired_pos[MOTOR_C];
-	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
-	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
-	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_independent\n");
+	
+	// The 'motorctl_move' function does everything that needs to be done:
+	// 1) Disable the PID loop
+	// 2) Execute the trapezoidal movement control
+	// 3) Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+	// 4) Re-enable the PID loop after the trapezoidal move has finished
+	motorctl_move();
 }
 
 inline void move_coordinated(void)
