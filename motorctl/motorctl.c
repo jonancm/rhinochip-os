@@ -130,13 +130,13 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	int      pid_output;
 	
 	pid_info->curr_error = desired_pos - current_pos;
-	pid_info->error_sum += pid_info->curr_error;
+	pid_info->error_sum += pid_info->curr_error * T3PERIOD; // Sum error * dt
 	
 	error_diff = pid_info->curr_error - pid_info->prev_error;
 	
 	pid_output = pid_info->KP * pid_info->curr_error
 	           + pid_info->KI * pid_info->error_sum
-	           + pid_info->KD * error_diff;
+	           + pid_info->KD * error_diff * T3FREQ; // d(error) / dt
 	
 	/*
 	if (PWM_MIN_DUTY <= pid_output && pid_output <= PWM_MAX_DUTY)
@@ -149,6 +149,12 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 		pid_output = PWM_MAX_DUTY;
 	
 	pid_info->prev_error = pid_info->curr_error;
+	
+	// Adjust sign according to sense of movement
+	if (pid_info->curr_error > 0 && pid_output < 0)
+		pid_output = -pid_output;
+	else if (pid_info->curr_error < 0 && pid_output > 0)
+		pid_output = -pid_output;
 	
 	return pid_output;
 }
@@ -190,9 +196,9 @@ void setup_pid_info(void)
 	// TODO: Enable/disable PID control according to motor mode
 	motorctl_enable_pid(MOTOR_ALL);
 	// TODO: Set PID gains to the values stored in the EEPROM
-	pid_info[MOTOR_A].KP = 25;
-	pid_info[MOTOR_A].KI = 5;
-	pid_info[MOTOR_A].KD = 10;
+	pid_info[MOTOR_A].KP = 46;
+	pid_info[MOTOR_A].KI = 40;
+	pid_info[MOTOR_A].KD = 110;
 }
 
 /***************************
@@ -201,8 +207,21 @@ void setup_pid_info(void)
 
 inline void motorctl_setup(void)
 {
+	// Set up data structures for PID position control
+	
 	setup_pid_info();
-	setup_trapezoidal_movement();
+	
+	// Set up Timer 2 to implement a custom multi-channel QEI
+	
+	IFS0bits.T3IF = 0; // Clear the timer 3 interrupt flag
+	IEC0bits.T3IE = 1; // Enable timer 3 interrupts
+	PR3 = PR3VAL;      // Set the timer period
+	T3CONbits.TON = 1; // Start the timer
+	
+	// Set up data structures for trapezoidal velocity profile generation
+	
+	// TODO: implement
+	// setup_trapezoidal_movement();
 }
 
 inline void motorctl(void)
@@ -217,7 +236,7 @@ inline void motorctl(void)
 		// and update the corresponding registers
 		unsigned char direction;
 		duty = abs_sign(duty, &direction);
-		//direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
+		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
 		/*
 		motor_pwm_level[MOTOR_A] = duty;
 		motor_direction[MOTOR_A] = direction;
@@ -226,6 +245,22 @@ inline void motorctl(void)
 		pwm_set_duty1(duty);
 		DIR1 = direction;
 	}
+}
+
+void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
+{
+	// Disable Timer 3 interrupts
+	IEC0bits.T3IE = 0;
+	
+	dbgmsg_uart1("_T3Interrupt\n");
+	
+	// Run PID loop
+	motorctl();
+	
+	// Clear Timer 3 interrupt flag
+	IFS0bits.T3IF = 0;
+	// Re-enable Timer 3 interrupt flag
+	IEC0bits.T3IE = 1;
 }
 
 void motorctl_enable_pid(unsigned char motors)
