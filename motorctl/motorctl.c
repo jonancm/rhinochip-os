@@ -5,6 +5,8 @@
 
 #include <string.h> // memset
 
+#include "../debug.h"
+
 /*********************************************
  * Velocity profile generation (trapezoidal) *
  *********************************************/
