@@ -27,6 +27,13 @@ inline void qei_setup(void)
 	prev_encoder_state[MOTOR_E] = (QEA_ME << 1) | QEB_ME;
 	prev_encoder_state[MOTOR_F] = (QEA_MF << 1) | QEB_MF;
 	
+	curr_encoder_state[MOTOR_A] = (QEA_MA << 1) | QEB_MA;
+	curr_encoder_state[MOTOR_B] = (QEA_MB << 1) | QEB_MB;
+	curr_encoder_state[MOTOR_C] = (QEA_MC << 1) | QEB_MC;
+	curr_encoder_state[MOTOR_D] = (QEA_MD << 1) | QEB_MD;
+	curr_encoder_state[MOTOR_E] = (QEA_ME << 1) | QEB_ME;
+	curr_encoder_state[MOTOR_F] = (QEA_MF << 1) | QEB_MF;
+	
 	// Set up Timer 2 to implement a custom multi-channel QEI
 	
 	IFS0bits.T2IF = 0; // Clear the timer 2 interrupt flag
