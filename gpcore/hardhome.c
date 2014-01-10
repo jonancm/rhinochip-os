@@ -54,14 +54,17 @@ void __attribute__((interrupt, auto_psv)) _CNInterrupt(void)
 
 void hardhome_motor_a(void)
 {
+	// Disable PID control on motor A, to be able to change the PWM duty cycle manually
+	mcuicom_send("DA" CMDEND);
+	
+	// Stop all motors
+	mcuicom_send("SS" CMDEND);
+	
 	// If the limit switch is not active, search it.
 	// To do this, move motor at high speed until the
 	// Change Notification interrupt is triggered.
 	if (!LMT_MA)
 	{
-		// Stop all motors
-		mcuicom_send("SS" CMDEND);
-		
 		// Enable Change Notification interrupts
 		IEC0bits.CNIE = 1;
 		
@@ -72,7 +75,8 @@ void hardhome_motor_a(void)
 		mcuicom_send("MP" CMDEND);
 		
 		// Wait until the switch is found
-		while (!switch_found);
+		//while (!switch_found);
+		while (!LMT_MA);
 		
 		// Stop motor
 		mcuicom_send("SA" CMDEND);
@@ -83,6 +87,9 @@ void hardhome_motor_a(void)
 		// Reset flag to allow more hard homes to be executed
 		switch_found = false;
 	}
+	
+	// Re-enable PID control on motor A
+	mcuicom_send("EA" CMDEND);
 }
 
 void hardhome_motor_b(void)
