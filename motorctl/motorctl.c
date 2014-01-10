@@ -96,9 +96,12 @@ void setup_pid_info(void)
 	// TODO: Enable/disable PID control according to motor mode
 	motorctl_enable_pid(MOTOR_ALL);
 	// TODO: Set PID gains to the values stored in the EEPROM
-	pid_info[MOTOR_A].KP = 46;
-	pid_info[MOTOR_A].KI = 40;
-	pid_info[MOTOR_A].KD = 110;
+	//pid_info[MOTOR_A].KP = 46;
+	pid_info[MOTOR_A].KP = 1;
+	//pid_info[MOTOR_A].KI = 40;
+	pid_info[MOTOR_A].KI = 0;
+	//pid_info[MOTOR_A].KD = 110;
+	pid_info[MOTOR_A].KD = 0;
 }
 
 /***************************
