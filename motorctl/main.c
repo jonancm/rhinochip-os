@@ -9,27 +9,31 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "qei.h"
 #include "../mcuicom.h"
 #include "gpcorecom.h"
-#include "hardhome.h"
+#include "motorctl.h"
 
 #include "../debug.h"
+#ifndef NDEBUG
+#include <stdio.h>
+#define INTERPRET_CMDS ""
+#define CLEAR_DISPLAY "\x1B\x5B" "2J" // Erase the screen: ESC [ Ps J
+#define CURSOR_HOME "\x1B\x5BH" // ESC [ H
+#define DISPLAY_CMDS ""
+#endif
 
 int main(void)
 {
 	pwm_setup();
 	qei_setup();
 	mcuicom_setup();
-	hardhome_setup();
-	
-	pwm_set_duty1(0);
-	pwm_set_duty2(0);
-	pwm_set_duty3(0);
-	pwm_set_duty4(0);
-	pwm_set_duty5(0);
-	pwm_set_duty6(0);
+	motorctl_setup();
 	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// is ready and working fine.
 	dbgmsg_uart1("UART 1 MCMCU ready\n");
+	
+	#ifndef NDEBUG
+	printf(CLEAR_DISPLAY);
+	#endif
 	
 	while (1)
 	{
@@ -40,8 +44,13 @@ int main(void)
 		// 2) Perform the interpretation of commands as single task in a loop and
 		//    perform motor control on a timely basis using interrupts, so that it
 		//    has greater priority over command interpretation (which can actually
-		//    be less efficiente).
+		//    be less efficient).
 		gpcorecom_interpret_next();
+		
+		#ifndef NDEBUG
+		printf(INTERPRET_CMDS    CURSOR_HOME    "% 6d"    DISPLAY_CMDS,
+		       motor_steps[MOTOR_A]);
+		#endif
 	}
 	
 	return 0;

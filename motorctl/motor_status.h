@@ -3,20 +3,31 @@
 
 #include "../types.h"
 
-#define NUM_MOTORS    6
+#define NUM_MOTORS     6
 
-#define MOTOR_A       0
-#define MOTOR_B       1
-#define MOTOR_C       2
-#define MOTOR_D       3
-#define MOTOR_E       4
-#define MOTOR_F       5
+#define MOTOR_A        0
+#define MOTOR_B        1
+#define MOTOR_C        2
+#define MOTOR_D        3
+#define MOTOR_E        4
+#define MOTOR_F        5
 
-#define NUM_COORDS    3
+#define MOTOR_BIT_A    0x01
+#define MOTOR_BIT_B    0x02
+#define MOTOR_BIT_C    0x04
+#define MOTOR_BIT_D    0x08
+#define MOTOR_BIT_E    0x10
+#define MOTOR_BIT_F    0x20
+#define MOTOR_BIT_G    0x40
+#define MOTOR_BIT_H    0x80
 
-#define COORD_X       0
-#define COORD_Y       1
-#define COORD_Z       2
+#define MOTOR_ALL      0xFF
+
+#define NUM_COORDS     3
+
+#define COORD_X        0
+#define COORD_Y        1
+#define COORD_Z        2
 
 typedef enum {MOTOR_IDLE, MOTOR_TRAPEZOIDAL, MOTOR_VELOCITY, MOTOR_OPEN_LOOP} motor_mode_t;
 

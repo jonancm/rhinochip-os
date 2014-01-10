@@ -44,10 +44,10 @@ inline void mcuicom_setup(void)
 	U1STAbits.UTXEN = 1;
 }
 
-int mcuicom_send(const char * const data, const int size)
+int mcuicom_send(const char * const data)
 {
 	int sent;
-	for (sent = 0; sent < size; ++sent)
+	for (sent = 0; data[sent] != '\0'; ++sent)
 	{
 		while (U1STAbits.UTXBF); // Wait while the transmit buffer is full
 		U1TXREG = data[sent];
