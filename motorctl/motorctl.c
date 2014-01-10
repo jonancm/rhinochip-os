@@ -9,7 +9,7 @@
  * PID control loop *
  ********************/
 
-#define PWM_MIN_DUTY    0
+#define PWM_MIN_DUTY    10
 #define PWM_MAX_DUTY    100
 
 typedef struct {
@@ -43,6 +43,7 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 		pid_info->error_sum = tmpi;
 	else
 	*/
+	int sig = (pid_output < 0 ? -1 : 1);
 	if (pid_output < PWM_MIN_DUTY)
 		pid_output = PWM_MIN_DUTY;
 	else if (PWM_MAX_DUTY < pid_output)
@@ -51,10 +52,13 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	pid_info->prev_error = pid_info->curr_error;
 	
 	// Adjust sign according to sense of movement
+	/*
 	if (pid_info->curr_error > 0 && pid_output < 0)
 		pid_output = -pid_output;
 	else if (pid_info->curr_error < 0 && pid_output > 0)
 		pid_output = -pid_output;
+	*/
+	pid_output *= sig;
 	
 	return pid_output;
 }
