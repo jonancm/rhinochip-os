@@ -88,6 +88,12 @@ void hardhome_motor_a(void)
 		switch_found = false;
 	}
 	
+	// Tune position of the limit switch more finely
+	// TODO: implement
+	
+	// Clear position register
+	mcuicom_send("KA" CMDEND);
+	
 	// Re-enable PID control on motor A
 	mcuicom_send("EA" CMDEND);
 }
