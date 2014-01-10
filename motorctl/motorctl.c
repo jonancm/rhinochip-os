@@ -5,6 +5,40 @@
 
 #include <string.h> // memset
 
+#include "../debug.h"
+
+/***********************
+ * Auxiliary functions *
+ ***********************/
+
+/**
+ * Return the absolute value and the sign of a given integer quantity.
+ * 
+ * The absolute value of the quantity is returned by means of the function's return value,
+ * while the sign is returned using an input/output parameter (pointer to a variable) which
+ * represents a flag that indicates whether the number is negative (flag = 1) or positive
+ * (flag = 0).
+ * 
+ * @param num         integer quantity
+ * @param negative    pointer to the variable where the sign flag should be returned
+ *                    (1 = the quantity is negative, 0 = the quantity is positive)
+ * 
+ * @returns           absolute value of the given integer quantity
+ */
+int abs_sign(int num, unsigned char *negative)
+{
+	if (num < 0)
+	{
+		*negative = 1;
+		return -num;
+	}
+	else
+	{
+		*negative = 0;
+		return num;
+	}
+}
+
 /********************
  * PID control loop *
  ********************/
@@ -61,34 +95,6 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	pid_output *= sig;
 	
 	return pid_output;
-}
-
-/**
- * Return the absolute value and the sign of a given integer quantity.
- * 
- * The absolute value of the quantity is returned by means of the function's return value,
- * while the sign is returned using an input/output parameter (pointer to a variable) which
- * represents a flag that indicates whether the number is negative (flag = 1) or positive
- * (flag = 0).
- * 
- * @param num         integer quantity
- * @param negative    pointer to the variable where the sign flag should be returned
- *                    (1 = the quantity is negative, 0 = the quantity is positive)
- * 
- * @returns           absolute value of the given integer quantity
- */
-int abs_sign(int num, unsigned char *negative)
-{
-	if (num < 0)
-	{
-		*negative = 1;
-		return -num;
-	}
-	else
-	{
-		*negative = 0;
-		return num;
-	}
 }
 
 void setup_pid_info(void)
