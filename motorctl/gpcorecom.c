@@ -1413,60 +1413,60 @@ inline void restore_pwm_eeprom(void)
 
 inline void enable_pid_control_a(void)
 {
-	motorctl_enable_pid(MOTOR_A);
+	motorctl_enable_pid(MOTOR_BIT_A);
 }
 
 inline void enable_pid_control_b(void)
 {
-	motorctl_enable_pid(MOTOR_B);
+	motorctl_enable_pid(MOTOR_BIT_B);
 }
 
 inline void enable_pid_control_c(void)
 {
-	motorctl_enable_pid(MOTOR_C);
+	motorctl_enable_pid(MOTOR_BIT_C);
 }
 
 inline void enable_pid_control_d(void)
 {
-	motorctl_enable_pid(MOTOR_D);
+	motorctl_enable_pid(MOTOR_BIT_D);
 }
 
 inline void enable_pid_control_e(void)
 {
-	motorctl_enable_pid(MOTOR_E);
+	motorctl_enable_pid(MOTOR_BIT_E);
 }
 
 inline void enable_pid_control_f(void)
 {
-	motorctl_enable_pid(MOTOR_F);
+	motorctl_enable_pid(MOTOR_BIT_F);
 }
 
 inline void disable_pid_control_a(void)
 {
-	motorctl_disable_pid(MOTOR_A);
+	motorctl_disable_pid(MOTOR_BIT_A);
 }
 
 inline void disable_pid_control_b(void)
 {
-	motorctl_disable_pid(MOTOR_B);
+	motorctl_disable_pid(MOTOR_BIT_B);
 }
 
 inline void disable_pid_control_c(void)
 {
-	motorctl_disable_pid(MOTOR_C);
+	motorctl_disable_pid(MOTOR_BIT_C);
 }
 
 inline void disable_pid_control_d(void)
 {
-	motorctl_disable_pid(MOTOR_D);
+	motorctl_disable_pid(MOTOR_BIT_D);
 }
 
 inline void disable_pid_control_e(void)
 {
-	motorctl_disable_pid(MOTOR_E);
+	motorctl_disable_pid(MOTOR_BIT_E);
 }
 
 inline void disable_pid_control_f(void)
 {
-	motorctl_disable_pid(MOTOR_F);
+	motorctl_disable_pid(MOTOR_BIT_F);
 }
