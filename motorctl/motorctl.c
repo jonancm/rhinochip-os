@@ -25,7 +25,7 @@
  * 
  * @returns           absolute value of the given integer quantity
  */
-int abs_sign(int num, unsigned char *negative)
+int abs_neg(int num, unsigned char *negative)
 {
 	if (num < 0)
 	{
@@ -35,6 +35,31 @@ int abs_sign(int num, unsigned char *negative)
 	else
 	{
 		*negative = 0;
+		return num;
+	}
+}
+
+/**
+ * Return the absolute value and the sign of a given integer quantity.
+ * 
+ * The absolute value of the quantity is returned by means of the function's return value,
+ * while the sign is returned using an input/output parameter (pointer to a variable).
+ * 
+ * @param num    integer quantity
+ * @param sig    pointer to the variable where the sign should be returned (-1 or 1)
+ * 
+ * @returns      absolute value of the given integer quantity
+ */
+int abs_sign(int num, int *sig)
+{
+	if (num < 0)
+	{
+		*sig = -1;
+		return -num;
+	}
+	else
+	{
+		*sig = 1;
 		return num;
 	}
 }
@@ -139,7 +164,7 @@ inline void motorctl(void)
 		// Translate the PWM duty cycle into a PWM level and a PWM direction
 		// and update the corresponding registers
 		unsigned char direction;
-		duty = abs_sign(duty, &direction);
+		duty = abs_neg(duty, &direction);
 		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
 		/*
 		motor_pwm_level[MOTOR_A] = duty;
