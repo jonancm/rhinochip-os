@@ -165,6 +165,13 @@ inline void disable_pid_control_f(void);
 
 inline void hard_home(void);
 
+inline void clear_pos_motor_a(void);
+inline void clear_pos_motor_b(void);
+inline void clear_pos_motor_c(void);
+inline void clear_pos_motor_d(void);
+inline void clear_pos_motor_e(void);
+inline void clear_pos_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -563,6 +570,32 @@ void interpret_cmd(void)
 				// EF: Enable PID control for motor F
 				case 'F':
 					enable_pid_control_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'K':
+			switch (cmd_name[1])
+			{
+				// KA: Clear position register of motor A
+				case 'A':
+					clear_pos_motor_a(); break;
+				// KB: Clear position register of motor B
+				case 'B':
+					clear_pos_motor_b(); break;
+				// KC: Clear position register of motor C
+				case 'C':
+					clear_pos_motor_c(); break;
+				// KD: Clear position register of motor D
+				case 'D':
+					clear_pos_motor_d(); break;
+				// KE: Clear position register of motor E
+				case 'E':
+					clear_pos_motor_e(); break;
+				// KF: Clear position register of motor F
+				case 'F':
+					clear_pos_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1469,4 +1502,34 @@ inline void disable_pid_control_e(void)
 inline void disable_pid_control_f(void)
 {
 	motorctl_disable_pid(MOTOR_BIT_F);
+}
+
+inline void clear_pos_motor_a(void)
+{
+	motor_steps[MOTOR_A] = 0;
+}
+
+inline void clear_pos_motor_b(void)
+{
+	motor_steps[MOTOR_B] = 0;
+}
+
+inline void clear_pos_motor_c(void)
+{
+	motor_steps[MOTOR_C] = 0;
+}
+
+inline void clear_pos_motor_d(void)
+{
+	motor_steps[MOTOR_D] = 0;
+}
+
+inline void clear_pos_motor_e(void)
+{
+	motor_steps[MOTOR_E] = 0;
+}
+
+inline void clear_pos_motor_f(void)
+{
+	motor_steps[MOTOR_F] = 0;
 }
