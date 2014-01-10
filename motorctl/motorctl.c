@@ -61,7 +61,7 @@ bool_t        pid_enabled[NUM_MOTORS];
 int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 {
 	float    error_diff;
-	int      pid_output;
+	int      pid_output, pid_abs, pid_sig;
 	
 	pid_info->curr_error = desired_pos - current_pos;
 	pid_info->error_sum += pid_info->curr_error * T3PERIOD; // Sum error * dt
@@ -77,22 +77,13 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 		pid_info->error_sum = tmpi;
 	else
 	*/
-	int sig = (pid_output < 0 ? -1 : 1);
-	if (pid_output < PWM_MIN_DUTY)
-		pid_output = PWM_MIN_DUTY;
-	else if (PWM_MAX_DUTY < pid_output)
-		pid_output = PWM_MAX_DUTY;
+	pid_abs = abs_sign(pid_output, &pid_sig);
+	if (0 < pid_abs && pid_abs < PWM_MIN_DUTY)
+		pid_output = pid_sig * PWM_MIN_DUTY;
+	else if (PWM_MAX_DUTY < pid_abs)
+		pid_output = pid_sig * PWM_MAX_DUTY;
 	
 	pid_info->prev_error = pid_info->curr_error;
-	
-	// Adjust sign according to sense of movement
-	/*
-	if (pid_info->curr_error > 0 && pid_output < 0)
-		pid_output = -pid_output;
-	else if (pid_info->curr_error < 0 && pid_output > 0)
-		pid_output = -pid_output;
-	*/
-	pid_output *= sig;
 	
 	return pid_output;
 }
