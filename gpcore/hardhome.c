@@ -146,10 +146,13 @@ void hardhome_motor_a(void)
 	// Move motor to the mid-point of points A and B.
 	snprintf(buf, size, "GA,%d" CMDEND, mid_point);
 	mcuicom_send(buf);
+
+	// Wait until motor A stops
+	mcuicom_send("HA" CMDEND);
+	size = mctlcom_get_response(buf, size);
 	
 	// Clear position register to make PID take the current position as its reference (zero) position
-	// mcuicom_send("KA" CMDEND);
-	// FIXME: need to wait until the motor stops before clearing the register
+	mcuicom_send("KA" CMDEND);
 }
 
 void hardhome_motor_b(void)
