@@ -1,7 +1,17 @@
 #include "hardhome.h"
 
-#include "../mcuicom.h"
+#include "mctlcom.h"
 #include "../hostcmdset.h"
+
+#include <stdlib.h> // atoi
+#include <stdio.h>  // snprintf
+
+#define MOTOR_A_CHAR    'A'
+#define MOTOR_B_CHAR    'B'
+#define MOTOR_C_CHAR    'C'
+#define MOTOR_D_CHAR    'D'
+#define MOTOR_E_CHAR    'E'
+#define MOTOR_F_CHAR    'F'
 
 inline void lmtswitch_setup(void)
 {
@@ -52,8 +62,30 @@ void __attribute__((interrupt, auto_psv)) _CNInterrupt(void)
 	IFS0bits.CNIF = 0;
 }
 
+int get_motor_pos(char motor)
+{
+	int size = 64, motor_pos = 0;
+	char buf[size];
+	
+	// Send MCUICOM command RA, RB, ..., RF depending on motor letter (param 1)
+	buf[0] = 'R';
+	buf[1] = motor;
+	buf[2] = *CMDEND;
+	buf[3] = '\0';
+	mcuicom_send(buf);
+	// Get response (motor steps) and convert it to integer
+	size = mctlcom_get_response(buf, size);
+	if (size > 0)
+		motor_pos = atoi(buf);
+
+	return motor_pos;
+}
+
 void hardhome_motor_a(void)
 {
+	int size = 64;
+	char buf[size];
+
 	// Disable PID control on motor A, to be able to change the PWM duty cycle manually
 	mcuicom_send("DA" CMDEND);
 	
@@ -88,14 +120,36 @@ void hardhome_motor_a(void)
 		switch_found = false;
 	}
 	
-	// Tune position of the limit switch more finely
-	// TODO: implement
-	
-	// Clear position register
+	// Clear position register to make PID take the current position as its reference (zero) position
 	mcuicom_send("KA" CMDEND);
 	
-	// Re-enable PID control on motor A
+	// Re-enable PID control on motor A to be able to increment position by a given amount of motor steps
 	mcuicom_send("EA" CMDEND);
+	
+	// Tune position of the limit switch more finely. To do this, keep moving in the same direction by a few steps
+	// at a time until the switch goes off. The move backwards in the same way until the switch goes on and off again.
+	// At this point, we have reach both ends of the limit switch and can now compute the mid-point.
+	#define STEP_INC 4                              // Increment 4 motor steps at a time
+	snprintf(buf, size, "IA,%d" CMDEND, STEP_INC);
+	while (LMT_MA)
+		mcuicom_send(buf);
+	int pointA = get_motor_pos(MOTOR_A_CHAR);       // The one end of the limit switch has been reached. Save position.
+	snprintf(buf, size, "IA,%d" CMDEND, -STEP_INC); // Minus sign inverts direction
+	while (!LMT_MA)
+		mcuicom_send(buf);
+	while (LMT_MA)
+		mcuicom_send(buf);
+	int pointB = get_motor_pos(MOTOR_A_CHAR);       // The other end of the limit switch has been reached. Save position.
+	int mid_point = (pointA + pointB) / 2;
+	#undef STEP_INC
+	
+	// Move motor to the mid-point of points A and B.
+	snprintf(buf, size, "GA,%d" CMDEND, mid_point);
+	mcuicom_send(buf);
+	
+	// Clear position register to make PID take the current position as its reference (zero) position
+	// mcuicom_send("KA" CMDEND);
+	// FIXME: need to wait until the motor stops before clearing the register
 }
 
 void hardhome_motor_b(void)
