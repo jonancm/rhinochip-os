@@ -179,6 +179,13 @@ inline void inc_pos_motor_d(void);
 inline void inc_pos_motor_e(void);
 inline void inc_pos_motor_f(void);
 
+inline void set_pos_motor_a(void);
+inline void set_pos_motor_b(void);
+inline void set_pos_motor_c(void);
+inline void set_pos_motor_d(void);
+inline void set_pos_motor_e(void);
+inline void set_pos_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -577,6 +584,32 @@ void interpret_cmd(void)
 				// EF: Enable PID control for motor F
 				case 'F':
 					enable_pid_control_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'G':
+			switch (cmd_name[1])
+			{
+				// GA: Set desired position register of motor A
+				case 'A':
+					set_pos_motor_a(); break;
+				// GB: Set desired position register of motor B
+				case 'B':
+					set_pos_motor_b(); break;
+				// GC: Set desired position register of motor C
+				case 'C':
+					set_pos_motor_c(); break;
+				// GD: Set desired position register of motor D
+				case 'D':
+					set_pos_motor_d(); break;
+				// GE: Set desired position register of motor E
+				case 'E':
+					set_pos_motor_e(); break;
+				// GF: Set desired position register of motor F
+				case 'F':
+					set_pos_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1721,6 +1754,162 @@ inline void inc_pos_motor_f(void)
 			#ifndef NDEBUG
 			char buf[64];
 			snprintf(buf, 64, "inc_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_A] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_a: %d\n", motor_desired_pos[MOTOR_A]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_B] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_b: %d\n", motor_desired_pos[MOTOR_B]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_C] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_c: %d\n", motor_desired_pos[MOTOR_C]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_D] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_d: %d\n", motor_desired_pos[MOTOR_D]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_E] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_e: %d\n", motor_desired_pos[MOTOR_E]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_F] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
