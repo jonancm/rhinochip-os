@@ -5,6 +5,7 @@
 #include "../hostcmdset.h"
 #include "pwm.h"
 #include "motorctl.h"
+#include "../delay.h"
 
 #include "../debug.h"
 
@@ -185,6 +186,13 @@ inline void set_pos_motor_c(void);
 inline void set_pos_motor_d(void);
 inline void set_pos_motor_e(void);
 inline void set_pos_motor_f(void);
+
+inline void check_halt_motor_a(void);
+inline void check_halt_motor_b(void);
+inline void check_halt_motor_c(void);
+inline void check_halt_motor_d(void);
+inline void check_halt_motor_e(void);
+inline void check_halt_motor_f(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -610,6 +618,32 @@ void interpret_cmd(void)
 				// GF: Set desired position register of motor F
 				case 'F':
 					set_pos_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'H':
+			switch (cmd_name[1])
+			{
+				// HA: Wait until motor A stops
+				case 'A':
+					check_halt_motor_a(); break;
+				// HB: Wait until motor B stops
+				case 'B':
+					check_halt_motor_b(); break;
+				// HC: Wait until motor C stops
+				case 'C':
+					check_halt_motor_c(); break;
+				// HD: Wait until motor D stops
+				case 'D':
+					check_halt_motor_d(); break;
+				// HE: Wait until motor E stops
+				case 'E':
+					check_halt_motor_e(); break;
+				// HF: Wait until motor F stops
+				case 'F':
+					check_halt_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1922,4 +1956,78 @@ inline void set_pos_motor_f(void)
 	{
 		// error: parameter must be specified
 	}
+}
+
+#define HALT_COUNT    5 /* Number of times to check if a motor has changed its position */
+
+inline void check_halt_motor_a(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_A], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_A];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
+}
+
+inline void check_halt_motor_b(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_B], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_B];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
+}
+
+inline void check_halt_motor_c(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_C], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_C];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
+}
+
+inline void check_halt_motor_d(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_D], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_D];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
+}
+
+inline void check_halt_motor_e(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_E], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_E];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
+}
+
+inline void check_halt_motor_f(void)
+{
+	int count, prev_steps = motor_steps[MOTOR_F], curr_steps;
+	for (count = HALT_COUNT; count > 0;)
+	{
+		delay_us(5);
+		curr_steps = motor_steps[MOTOR_F];
+		count -= 1 - (curr_steps - prev_steps > 0);
+	}
+	mcuicom_send(CMDEND);
 }
