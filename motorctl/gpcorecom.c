@@ -172,6 +172,13 @@ inline void clear_pos_motor_d(void);
 inline void clear_pos_motor_e(void);
 inline void clear_pos_motor_f(void);
 
+inline void inc_pos_motor_a(void);
+inline void inc_pos_motor_b(void);
+inline void inc_pos_motor_c(void);
+inline void inc_pos_motor_d(void);
+inline void inc_pos_motor_e(void);
+inline void inc_pos_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -575,6 +582,32 @@ void interpret_cmd(void)
 					break;
 			}
 			break;
+		case 'I':
+			switch (cmd_name[1])
+			{
+				// IA: Increment desired position register of motor A by X steps
+				case 'A':
+					inc_pos_motor_a(); break;
+				// IB: Increment desired position register of motor B by X steps
+				case 'B':
+					inc_pos_motor_b(); break;
+				// IC: Increment desired position register of motor C by X steps
+				case 'C':
+					inc_pos_motor_c(); break;
+				// ID: Increment desired position register of motor D by X steps
+				case 'D':
+					inc_pos_motor_d(); break;
+				// IE: Increment desired position register of motor E by X steps
+				case 'E':
+					inc_pos_motor_e(); break;
+				// IF: Increment desired position register of motor F by X steps
+				case 'F':
+					inc_pos_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
 		case 'K':
 			switch (cmd_name[1])
 			{
@@ -834,6 +867,7 @@ inline void set_joint_abs_a(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_A] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -860,6 +894,7 @@ inline void set_joint_abs_b(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_B] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -886,6 +921,7 @@ inline void set_joint_abs_c(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_C] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -912,6 +948,7 @@ inline void set_joint_abs_d(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_D] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -938,6 +975,7 @@ inline void set_joint_abs_e(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_E] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -964,6 +1002,7 @@ inline void set_joint_abs_f(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_F] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -991,6 +1030,7 @@ inline void set_joint_rel_a(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1018,6 +1058,7 @@ inline void set_joint_rel_b(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1045,6 +1086,7 @@ inline void set_joint_rel_c(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1072,6 +1114,7 @@ inline void set_joint_rel_d(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1099,6 +1142,7 @@ inline void set_joint_rel_e(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1126,6 +1170,7 @@ inline void set_joint_rel_f(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -1532,4 +1577,160 @@ inline void clear_pos_motor_e(void)
 inline void clear_pos_motor_f(void)
 {
 	motor_steps[MOTOR_F] = 0;
+}
+
+inline void inc_pos_motor_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_a: %d\n", motor_desired_pos[MOTOR_A]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_b: %d\n", motor_desired_pos[MOTOR_B]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_c: %d\n", motor_desired_pos[MOTOR_C]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_d: %d\n", motor_desired_pos[MOTOR_D]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_e: %d\n", motor_desired_pos[MOTOR_E]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
 }
