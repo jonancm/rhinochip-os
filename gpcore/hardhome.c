@@ -148,11 +148,13 @@ void hardhome_motor_a(void)
 	mcuicom_send(buf);
 
 	// Wait until motor A stops
-	mcuicom_send("HA" CMDEND);
-	size = mctlcom_get_response(buf, size);
+	while (get_motor_pos(MOTOR_A_CHAR) != mid_point);
 	
 	// Clear position register to make PID take the current position as its reference (zero) position
 	mcuicom_send("KA" CMDEND);
+	
+	// Move motor to the hard home position.
+	mcuicom_send("GA,0" CMDEND);
 }
 
 void hardhome_motor_b(void)
