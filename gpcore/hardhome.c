@@ -155,6 +155,8 @@ void hardhome_motor_a(void)
 	
 	// Move motor to the hard home position.
 	mcuicom_send("GA,0" CMDEND);
+	// TODO: Include clearance of the motor desired position register in the KA
+	// command?
 }
 
 void hardhome_motor_b(void)
