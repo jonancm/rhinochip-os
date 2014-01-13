@@ -2,6 +2,7 @@
 #include "pwm.h"
 #include "qei.h"
 #include "motor_status.h"
+#include "controller_status.h"
 
 #include <string.h> // memset
 
@@ -171,7 +172,7 @@ inline void motorctl(void)
 		motor_direction[MOTOR_A] = direction;
 		// These registers are for open-loop mode only
 		*/
-		pwm_set_duty1(duty);
+		pwm_set_duty1(duty * controller.system_velocity / 100.0);
 		DIR1 = direction;
 	}
 }
