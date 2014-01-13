@@ -10,6 +10,7 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "../mcuicom.h"
 #include "gpcorecom.h"
 #include "motorctl.h"
+#include "controller_status.h"
 
 #include "../debug.h"
 
@@ -19,6 +20,7 @@ int main(void)
 	qei_setup();
 	mcuicom_setup();
 	motorctl_setup();
+	controller_status_setup();
 	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// is ready and working fine.

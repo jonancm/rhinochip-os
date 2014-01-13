@@ -6,6 +6,7 @@
 #include "pwm.h"
 #include "motorctl.h"
 #include "../delay.h"
+#include "controller_status.h"
 
 #include "../debug.h"
 
@@ -186,6 +187,9 @@ inline void set_pos_motor_c(void);
 inline void set_pos_motor_d(void);
 inline void set_pos_motor_e(void);
 inline void set_pos_motor_f(void);
+
+inline void get_system_velocity(void);
+inline void set_system_velocity(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -611,6 +615,9 @@ void interpret_cmd(void)
 				// GF: Set desired position register of motor F
 				case 'F':
 					set_pos_motor_f(); break;
+				// GV: Get system velocity
+				case 'V':
+					get_system_velocity(); break;
 				default:
 					// error: unknown command
 					break;
@@ -764,6 +771,9 @@ void interpret_cmd(void)
 				// SS: Stop all motors
 				case 'S':
 					stop_all_motors(); break;
+				// SV: Set system velocity
+				case 'V':
+					set_system_velocity(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1913,6 +1923,34 @@ inline void set_pos_motor_f(void)
 			snprintf(buf, 64, "set_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
 			dbgmsg_uart1(buf);
 			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void get_system_velocity(void)
+{
+	int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, controller.system_velocity);
+	mcuicom_send(buf);
+}
+
+inline void set_system_velocity(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			controller.system_velocity = intparam1;
 		}
 		else
 		{
