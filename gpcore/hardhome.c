@@ -142,6 +142,16 @@ void hardhome_motor_a(void)
 	int pointB = get_motor_pos(MOTOR_A_CHAR);       // The other end of the limit switch has been reached. Save position.
 	int mid_point = (pointA + pointB) / 2;
 	#undef STEP_INC
+
+	// Back up system velocity to be able to restore it later
+	mcuicom_send("GV" CMDEND);
+	size = mctlcom_get_response(buf, size);
+	char system_velocity = atoi(buf);
+	// Reduce system velocity, to make the movement to the hard home position smoother
+	#define HH_VELOCITY 50                                // Hard home velocity = 50% of the duty cycle
+	snprintf(buf, size, "SV,%d" CMDEND, HH_VELOCITY);
+	mcuicom_send(buf);
+	#undef HH_VELOCITY
 	
 	// Move motor to the mid-point of points A and B.
 	snprintf(buf, size, "GA,%d" CMDEND, mid_point);
@@ -157,6 +167,10 @@ void hardhome_motor_a(void)
 	mcuicom_send("GA,0" CMDEND);
 	// TODO: Include clearance of the motor desired position register in the KA
 	// command?
+
+	// Restore system velocity
+	snprintf(buf, size, "SV,%d" CMDEND, system_velocity);
+	mcuicom_send(buf);
 }
 
 void hardhome_motor_b(void)
