@@ -1965,9 +1965,14 @@ inline void check_halt_motor_a(void)
 	int count, prev_steps = motor_steps[MOTOR_A], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_A];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }
@@ -1977,9 +1982,14 @@ inline void check_halt_motor_b(void)
 	int count, prev_steps = motor_steps[MOTOR_B], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_B];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }
@@ -1989,9 +1999,14 @@ inline void check_halt_motor_c(void)
 	int count, prev_steps = motor_steps[MOTOR_C], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_C];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }
@@ -2001,9 +2016,14 @@ inline void check_halt_motor_d(void)
 	int count, prev_steps = motor_steps[MOTOR_D], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_D];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }
@@ -2013,9 +2033,14 @@ inline void check_halt_motor_e(void)
 	int count, prev_steps = motor_steps[MOTOR_E], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_E];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }
@@ -2025,9 +2050,14 @@ inline void check_halt_motor_f(void)
 	int count, prev_steps = motor_steps[MOTOR_F], curr_steps;
 	for (count = HALT_COUNT; count > 0;)
 	{
-		delay_us(5);
+		// QEA and QEB change at a rate of 2 KHz (0.5 ms) at maximum velocity.
+		// Thus, in order to detect changes in the position, we must wait around
+		// 1 second for greater safety.
+		delay_s(1);
+		// Compare the previous and current state of the motor step counter
+		// register to see if there have been any changes in motor position.
 		curr_steps = motor_steps[MOTOR_F];
-		count -= 1 - (curr_steps - prev_steps > 0);
+		count -= 1 - (curr_steps == prev_steps);
 	}
 	mcuicom_send(CMDEND);
 }

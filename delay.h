@@ -10,4 +10,14 @@ void delay_us(unsigned int duration)
 	for (count = 0; count < limit; ++count);
 }
 
+void delay_ms(unsigned int duration)
+{
+	delay_us(duration * 1000);
+}
+
+void delay_s(unsigned int duration)
+{
+	delay_us(duration * 1000000);
+}
+
 #endif
