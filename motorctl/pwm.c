@@ -168,17 +168,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel1 < pwmduty.channel1)
 		{
-			PWM1 = 1;
+			PWM1 = PWM_ON;
 			++pwmcount.channel1;
 		}
 		else if (pwmcount.channel1 < PWMRESOL)
 		{
-			PWM1 = 0;
+			PWM1 = PWM_OFF;
 			++pwmcount.channel1;
 		}
 		else
 		{
-			PWM1 = 1;
+			PWM1 = PWM_ON;
 			pwmcount.channel1 = 0;
 		}
 	}
@@ -188,17 +188,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel2 < pwmduty.channel2)
 		{
-			PWM2 = 1;
+			PWM2 = PWM_ON;
 			++pwmcount.channel2;
 		}
 		else if (pwmcount.channel2 < PWMRESOL)
 		{
-			PWM2 = 0;
+			PWM2 = PWM_OFF;
 			++pwmcount.channel2;
 		}
 		else
 		{
-			PWM2 = 1;
+			PWM2 = PWM_ON;
 			pwmcount.channel2 = 0;
 		}
 	}
@@ -208,17 +208,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel3 < pwmduty.channel3)
 		{
-			PWM3 = 1;
+			PWM3 = PWM_ON;
 			++pwmcount.channel3;
 		}
 		else if (pwmcount.channel3 < PWMRESOL)
 		{
-			PWM3 = 0;
+			PWM3 = PWM_OFF;
 			++pwmcount.channel3;
 		}
 		else
 		{
-			PWM3 = 1;
+			PWM3 = PWM_ON;
 			pwmcount.channel3 = 0;
 		}
 	}
@@ -228,17 +228,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel4 < pwmduty.channel4)
 		{
-			PWM4 = 1;
+			PWM4 = PWM_ON;
 			++pwmcount.channel4;
 		}
 		else if (pwmcount.channel4 < PWMRESOL)
 		{
-			PWM4 = 0;
+			PWM4 = PWM_OFF;
 			++pwmcount.channel4;
 		}
 		else
 		{
-			PWM4 = 1;
+			PWM4 = PWM_ON;
 			pwmcount.channel4 = 0;
 		}
 	}
@@ -248,17 +248,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel5 < pwmduty.channel5)
 		{
-			PWM5 = 1;
+			PWM5 = PWM_ON;
 			++pwmcount.channel5;
 		}
 		else if (pwmcount.channel5 < PWMRESOL)
 		{
-			PWM5 = 0;
+			PWM5 = PWM_OFF;
 			++pwmcount.channel5;
 		}
 		else
 		{
-			PWM5 = 1;
+			PWM5 = PWM_ON;
 			pwmcount.channel5 = 0;
 		}
 	}
@@ -268,17 +268,17 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	{
 		if (pwmcount.channel6 < pwmduty.channel6)
 		{
-			PWM6 = 1;
+			PWM6 = PWM_ON;
 			++pwmcount.channel6;
 		}
 		else if (pwmcount.channel6 < PWMRESOL)
 		{
-			PWM6 = 0;
+			PWM6 = PWM_OFF;
 			++pwmcount.channel6;
 		}
 		else
 		{
-			PWM6 = 1;
+			PWM6 = PWM_ON;
 			pwmcount.channel6 = 0;
 		}
 	}

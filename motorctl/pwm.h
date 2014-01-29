@@ -12,6 +12,9 @@
 #define PWMPRESCALER    64                                /* PWM prescaler 1:64 */
 #define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for the PTPER register */
 
+#define PWM_ON          0 /* Logic value of the ON state */
+#define PWM_OFF         1 /* Logic value of the OFF state */
+
 #define PWM1            LATEbits.LATE0 /* 1st Hardware PWM channel */
 #define PWM2            LATEbits.LATE2 /* 2nd Hardware PWM channel */
 #define PWM3            LATEbits.LATE4 /* 3rd Hardware PWM channel */
