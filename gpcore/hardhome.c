@@ -13,6 +13,12 @@
 #define MOTOR_E_CHAR    'E'
 #define MOTOR_F_CHAR    'F'
 
+#undef NDEBUG
+
+#ifndef NDEBUG
+#include "hostcom.h"
+#endif
+
 inline void lmtswitch_setup(void)
 {
 	/*********************************************
@@ -86,6 +92,10 @@ void hardhome_motor_a(void)
 	int size = 64;
 	char buf[size];
 
+	#ifndef NDEBUG
+	hostcom_send("Start HH\n" CMDEND);
+	#endif
+
 	// Disable PID control on motor A, to be able to change the PWM duty cycle manually
 	mcuicom_send("DA" CMDEND);
 	
@@ -97,6 +107,10 @@ void hardhome_motor_a(void)
 	// Change Notification interrupt is triggered.
 	if (!LMT_MA)
 	{
+		#ifndef NDEBUG
+		hostcom_send("!LMT_MA\n" CMDEND);
+		#endif
+
 		// Enable Change Notification interrupts
 		IEC0bits.CNIE = 1;
 		
@@ -120,11 +134,19 @@ void hardhome_motor_a(void)
 		switch_found = false;
 	}
 	
+	#ifndef NDEBUG
+	hostcom_send("Switch found, clear position\n" CMDEND);
+	#endif
+
 	// Clear position register to make PID take the current position as its reference (zero) position
 	mcuicom_send("KA" CMDEND);
 	
 	// Re-enable PID control on motor A to be able to increment position by a given amount of motor steps
 	mcuicom_send("EA" CMDEND);
+	
+	#ifndef NDEBUG
+	hostcom_send("Find mid-point\n" CMDEND);
+	#endif
 	
 	// Tune position of the limit switch more finely. To do this, keep moving in the same direction by a few steps
 	// at a time until the switch goes off. The move backwards in the same way until the switch goes on and off again.
@@ -142,7 +164,11 @@ void hardhome_motor_a(void)
 	int pointB = get_motor_pos(MOTOR_A_CHAR);       // The other end of the limit switch has been reached. Save position.
 	int mid_point = (pointA + pointB) / 2;
 	#undef STEP_INC
-
+	
+	#ifndef NDEBUG
+	hostcom_send("Mid-point found, move to mid-point\n" CMDEND);
+	#endif
+	
 	// Back up system velocity to be able to restore it later
 	mcuicom_send("GV" CMDEND);
 	size = mctlcom_get_response(buf, size);
@@ -153,12 +179,24 @@ void hardhome_motor_a(void)
 	mcuicom_send(buf);
 	#undef HH_VELOCITY
 	
+	#ifndef NDEBUG
+	hostcom_send("Start move to mid-point\n" CMDEND);
+	#endif
+	
 	// Move motor to the mid-point of points A and B.
 	snprintf(buf, size, "GA,%d" CMDEND, mid_point);
 	mcuicom_send(buf);
-
+	
+	#ifndef NDEBUG
+	hostcom_send("Wait until mid-point is reached\n" CMDEND);
+	#endif
+	
 	// Wait until motor A stops
 	while (get_motor_pos(MOTOR_A_CHAR) != mid_point);
+	
+	#ifndef NDEBUG
+	hostcom_send("Mid-point reached, clear position\n" CMDEND);
+	#endif
 	
 	// Clear position register to make PID take the current position as its reference (zero) position
 	mcuicom_send("KA" CMDEND);
@@ -167,10 +205,14 @@ void hardhome_motor_a(void)
 	mcuicom_send("GA,0" CMDEND);
 	// TODO: Include clearance of the motor desired position register in the KA
 	// command?
-
+	
 	// Restore system velocity
 	snprintf(buf, size, "SV,%d" CMDEND, system_velocity);
 	mcuicom_send(buf);
+	
+	#ifndef NDEBUG
+	hostcom_send("HH finished\n" CMDEND);
+	#endif
 }
 
 void hardhome_motor_b(void)
@@ -197,3 +239,5 @@ void hardhome_motor_f(void)
 {
 	
 }
+
+#define NDEBUG
