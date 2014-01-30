@@ -148,7 +148,7 @@ void hardhome_motor_a(void)
 	size = mctlcom_get_response(buf, size);
 	char system_velocity = atoi(buf);
 	// Reduce system velocity, to make the movement to the hard home position smoother
-	#define HH_VELOCITY 50                                // Hard home velocity = 50% of the duty cycle
+	#define HH_VELOCITY 80                                // Hard home velocity = 80% of the duty cycle
 	snprintf(buf, size, "SV,%d" CMDEND, HH_VELOCITY);
 	mcuicom_send(buf);
 	#undef HH_VELOCITY
