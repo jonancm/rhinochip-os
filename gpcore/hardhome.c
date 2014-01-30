@@ -129,7 +129,7 @@ void hardhome_motor_a(void)
 	// Tune position of the limit switch more finely. To do this, keep moving in the same direction by a few steps
 	// at a time until the switch goes off. The move backwards in the same way until the switch goes on and off again.
 	// At this point, we have reach both ends of the limit switch and can now compute the mid-point.
-	#define STEP_INC 4                              // Increment 4 motor steps at a time
+	#define STEP_INC 15                             // Increment 15 motor steps at a time
 	snprintf(buf, size, "IA,%d" CMDEND, STEP_INC);
 	while (LMT_MA)
 		mcuicom_send(buf);
