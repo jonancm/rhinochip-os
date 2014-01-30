@@ -143,8 +143,10 @@ void hardhome_motor_a(void)
 	int mid_point = (pointA + pointB) / 2;
 	// Move motor to the mid-point of points A and B
 	snprintf(buf, size, "IA,%d" CMDEND, STEP_INC);
-	while (get_motor_pos(MOTOR_A_CHAR) != mid_point)
+	#define HH_TOL 10
+	while (abs(get_motor_pos(MOTOR_A_CHAR) - mid_point) > HH_TOL)
 		mcuicom_send(buf);
+	#undef HH_TOL
 	#undef STEP_INC
 	
 	// Set destination position of motor A to the mid-point of points A and B.
