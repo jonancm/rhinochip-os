@@ -141,14 +141,15 @@ void hardhome_motor_a(void)
 		mcuicom_send(buf);
 	int pointB = get_motor_pos(MOTOR_A_CHAR);       // The other end of the limit switch has been reached. Save position.
 	int mid_point = (pointA + pointB) / 2;
+	// Move motor to the mid-point of points A and B
+	snprintf(buf, size, "IA,%d" CMDEND, STEP_INC);
+	while (get_motor_pos(MOTOR_A_CHAR) != mid_point)
+		mcuicom_send(buf);
 	#undef STEP_INC
 	
-	// Move motor to the mid-point of points A and B.
+	// Set destination position of motor A to the mid-point of points A and B.
 	snprintf(buf, size, "GA,%d" CMDEND, mid_point);
 	mcuicom_send(buf);
-
-	// Wait until motor A stops
-	while (get_motor_pos(MOTOR_A_CHAR) != mid_point);
 	
 	// Clear position register to make PID take the current position as its reference (zero) position
 	mcuicom_send("KA" CMDEND);
