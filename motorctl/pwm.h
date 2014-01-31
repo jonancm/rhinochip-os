@@ -21,6 +21,10 @@
 
 #undef HARDWARE_PWM
 
+/* Logic value definitions for software PWM. These values are inverted, i.e.
+ * the PWM logic is active low (ON=0, OFF=1).
+ */
+
 #define PWM_ON          0 /* Logic value of the ON state */
 #define PWM_OFF         1 /* Logic value of the OFF state */
 
