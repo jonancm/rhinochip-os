@@ -83,7 +83,8 @@ typedef struct {
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
 
-#define SYSTEM_VELOCITY    100
+#define SYSTEM_VELOCITY        100
+#define SYSTEM_ACCELERATION    25
 
 void setup_trapezoidal_movement(void)
 {
@@ -93,10 +94,10 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].velocity_saturated = false;
 	motorctl_info[MOTOR_A].flatcount = 0;
 	motorctl_info[MOTOR_A].velocity = 0;
-	motorctl_info[MOTOR_A].acceleration = 50; // Motor acceleration expressed as percentage of maximum motor velocity (default: SYSTEM_ACCELERATION)
 	motorctl_info[MOTOR_A].phase1displacement = 0;
 	motorctl_info[MOTOR_A].halfcount = motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A];
-	motorctl_info[MOTOR_A].max_velocity = SYSTEM_VELOCITY * motor_desired_velocity[MOTOR_A]; // Maximum motor velocity
+	motorctl_info[MOTOR_A].max_velocity = (motor_desired_velocity[MOTOR_A] * SYSTEM_VELOCITY) / 100.0;
+	motorctl_info[MOTOR_A].acceleration = (SYSTEM_ACCELERATION / 100.) * motorctl_info[MOTOR_A].max_velocity;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
 
