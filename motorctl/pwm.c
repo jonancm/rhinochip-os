@@ -9,9 +9,11 @@ unsigned int pwmperiod = 0;
  * PWM count register.
  */
 struct {
+	#ifndef HARDWARE_PWM
 	unsigned int channel1;
 	unsigned int channel2;
 	unsigned int channel3;
+	#endif
 	unsigned int channel4;
 	unsigned int channel5;
 	unsigned int channel6;
@@ -21,9 +23,11 @@ struct {
  * PWM duty cycle register.
  */
 struct {
+	#ifndef HARDWARE_PWM
 	unsigned int channel1;
 	unsigned int channel2;
 	unsigned int channel3;
+	#endif
 	unsigned int channel4;
 	unsigned int channel5;
 	unsigned int channel6;
@@ -34,8 +38,8 @@ inline void pwm_setup(void)
 	/******************************
 	 * Set up hardware PWM module *
 	 ******************************/
-
-	/*
+	
+	#ifdef HARDWARE_PWM
 
 	// Set PWM output pins for independent output mode
 	
@@ -67,7 +71,7 @@ inline void pwm_setup(void)
 	
 	PTCONbits.PTEN = 1;
 
-	*/
+	#endif
 	
 	/**********************************************
 	 * Set up digital I/O pins for digital output *
@@ -75,23 +79,30 @@ inline void pwm_setup(void)
 	
 	TRISB &= 0xFE3F; // RB6, RB7, RB8 are outputs (3 for DIR)
 	TRISC  = 0;      // RC13, RC14 are outputs (2 for DIR)
-	//TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs (3 for software PWM, 1 for DIR)
+	#ifdef HARDWARE_PWM
+	TRISE &= 0xFED5; // RE1, RE3, RE5, RE8 are outputs (3 for software PWM, 1 for DIR)
+	#else
 	TRISE &= 0xFEC0; // RE0-RE5, RE8 are outputs (6 for software PWM, 1 for DIR)
+	#endif
 	
 	/*************************************
 	 * Initialize software PWM registers *
 	 *************************************/
 	
+	#ifndef HARDWARE_PWM
 	pwmcount.channel1 = 0;
 	pwmcount.channel2 = 0;
 	pwmcount.channel3 = 0;
+	#endif
 	pwmcount.channel4 = 0;
 	pwmcount.channel5 = 0;
 	pwmcount.channel6 = 0;
 	
+	#ifndef HARDWARE_PWM
 	pwmduty.channel1 = 0;
 	pwmduty.channel2 = 0;
 	pwmduty.channel3 = 0;
+	#endif
 	pwmduty.channel4 = 0;
 	pwmduty.channel5 = 0;
 	pwmduty.channel6 = 0;
@@ -127,20 +138,29 @@ inline void pwm_setup(void)
 
 inline void pwm_set_duty1(int duty)
 {
-	//PDC1 = (duty / 100.0) * 2 * PTPER;
+	#ifdef HARDWARE_PWM
+	PDC1 = (duty / 100.0) * 2 * PTPER;
+	#else
 	pwmduty.channel1 = duty;
+	#endif
 }
 
 inline void pwm_set_duty2(int duty)
 {
-	//PDC2 = (duty / 100.0) * 2 * PTPER;
+	#ifdef HARDWARE_PWM
+	PDC2 = (duty / 100.0) * 2 * PTPER;
+	#else
 	pwmduty.channel2 = duty;
+	#endif
 }
 
 inline void pwm_set_duty3(int duty)
 {
-	//PDC3 = (duty / 100.0) * 2 * PTPER;
+	#ifdef HARDWARE_PWM
+	PDC3 = (duty / 100.0) * 2 * PTPER;
+	#else
 	pwmduty.channel3 = duty;
+	#endif
 }
 
 inline void pwm_set_duty4(int duty)
@@ -163,6 +183,8 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 	// Disable Timer 1 interrupts while executing ISR
 	IEC0bits.T1IE = 0;
 	
+	#ifndef HARDWARE_PWM
+
 	// Generate PWM signal on PWM channel 1
 	if (pwmduty.channel1)
 	{
@@ -222,6 +244,8 @@ void __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 			pwmcount.channel3 = 0;
 		}
 	}
+
+	#endif /* not defined HARDWARE_PWM */
 	
 	// Generate PWM signal on PWM channel 4
 	if (pwmduty.channel4)

@@ -12,6 +12,15 @@
 #define PWMPRESCALER    64                                /* PWM prescaler 1:64 */
 #define PWMPER          (FCY / (FPWM * PWMPRESCALER) - 1) /* Value for the PTPER register */
 
+/* If the macro HARDWARE_PWM is defined, hardware PWM is enabled for PWM
+ * channels 1, 2 and 3, while PWM channels 4, 5 and 6 are implemented in
+ * software; whereas, if the macro is not defined, all PWM channels 1 through 6
+ * are implemented in software, which is useful, for example, when the PWM
+ * signal needs to be inverted (because the logic is active low).
+ */
+
+#undef HARDWARE_PWM
+
 #define PWM_ON          0 /* Logic value of the ON state */
 #define PWM_OFF         1 /* Logic value of the OFF state */
 
