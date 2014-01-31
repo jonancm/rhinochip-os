@@ -293,49 +293,89 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 	IEC0bits.T3IE = 1;
 }
 
+inline void motorctl_move_motor_a(void)
+{
+	// Re-calculate PWM duty cycle using the PID controller
+	// TODO: this code is duplicated (has been copied from motorctl), although call to pid_loop has different parameters;
+	//       create a separate function to elliminate duplication
+	int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motorctl_info[MOTOR_A].position);
+	// Translate the PWM duty cycle into a PWM level and a PWM direction
+	// and update the corresponding registers
+	unsigned char direction;
+	duty = abs_neg(duty, &direction);
+	direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
+	// Perform the movement
+	pwm_set_duty1(duty);
+	DIR1 = direction;
+}
+
+inline void motorctl_move_motor_b(void) {}
+inline void motorctl_move_motor_c(void) {}
+inline void motorctl_move_motor_d(void) {}
+inline void motorctl_move_motor_e(void) {}
+inline void motorctl_move_motor_f(void) {}
+
+void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
+{
+	// Disable Timer 4 interrupts
+	IEC1bits.T4IE = 0;
+	
+	// Declare flag to check if all the motors have finished moving
+	bool_t move_finished = false;
+	
+	// Calculate next motor position in order to achieve a trapezoidal velocity profile
+	generate_trapezoidal_profile();
+	
+	motorctl_move_motor_a();
+	motorctl_move_motor_b();
+	motorctl_move_motor_c();
+	motorctl_move_motor_d();
+	motorctl_move_motor_e();
+	motorctl_move_motor_f();
+	
+	// Check if all motors have finished moving and set flag accordingly
+	move_finished = !(motorctl_info[MOTOR_A].enabled
+	               || motorctl_info[MOTOR_B].enabled
+	               || motorctl_info[MOTOR_C].enabled
+	               || motorctl_info[MOTOR_D].enabled
+	               || motorctl_info[MOTOR_E].enabled
+	               || motorctl_info[MOTOR_F].enabled);
+	
+	if (move_finished)
+	{
+		// Stop Timer 4
+		T4CONbits.TON = 0;
+		
+		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
+		
+		// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
+		motorctl_enable_pid(MOTOR_ALL);
+	}
+	
+	// Clear Timer 4 interrupt flag
+	IFS1bits.T4IF = 0;
+	// Re-enable Timer 4 interrupt flag
+	IEC1bits.T4IE = 1;
+}
+
 void motorctl_move(void)
 {
 	// Disable PID on all motors, so that no position correction is performed while executing a trapezoidal move
 	motorctl_disable_pid(MOTOR_ALL);
 	
-	// Declare flag to check if all the motors have finished moving
-	bool_t move_not_finished = false;
 	// Set up the data structure for the trapezoidal velocity profile generation
 	setup_trapezoidal_movement();
 	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
 	motorctl_info[MOTOR_A].enabled = true;
-	// Perform the trapezoidal move. The microcontroller blocks until the movement has finished.
-	do {
-		// Calculate next motor position in order to achieve a trapezoidal velocity profile
-		generate_trapezoidal_profile();
-		
-		// Re-calculate PWM duty cycle using the PID controller
-		// TODO: this code is duplicated (has been copied from motorctl), although call to pid_loop has different parameters;
-		//       create a separate function to elliminate duplication
-		int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motorctl_info[MOTOR_A].position);
-		// Translate the PWM duty cycle into a PWM level and a PWM direction
-		// and update the corresponding registers
-		unsigned char direction;
-		duty = abs_sign(duty, &direction);
-		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
-		// Perform the movement
-		pwm_set_duty1(duty);
-		DIR1 = direction;
-		
-		// Check if all motors have finished moving and set flag accordingly
-		move_not_finished = motorctl_info[MOTOR_A].enabled
-		                  | motorctl_info[MOTOR_B].enabled
-		                  | motorctl_info[MOTOR_C].enabled
-		                  | motorctl_info[MOTOR_D].enabled
-		                  | motorctl_info[MOTOR_E].enabled
-		                  | motorctl_info[MOTOR_F].enabled;
-	} while (move_not_finished);
-	
-	// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
-	motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
-	
-	// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
-	motorctl_enable_pid(MOTOR_ALL);
+	motorctl_info[MOTOR_B].enabled = true;
+	motorctl_info[MOTOR_C].enabled = true;
+	motorctl_info[MOTOR_D].enabled = true;
+	motorctl_info[MOTOR_E].enabled = true;
+	motorctl_info[MOTOR_F].enabled = true;
+	// Activate Timer 4 to perform the trapezoidal move
+	IFS1bits.T4IF = 1; // Set Timer 4 interrupt flag, for ISR to be called upon Timer 4 start
+	T4CONbits.TON = 1; // Start Timer 4
 }
 
 void motorctl_enable_pid(unsigned char motors)
