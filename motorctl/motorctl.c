@@ -100,7 +100,7 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
 
-void generate_trapezoidal_profile(void)
+inline void generate_trapezoidal_profile_motor_a(void)
 {
 	if (motorctl_info[MOTOR_A].enabled)
 	{
@@ -161,6 +161,11 @@ void generate_trapezoidal_profile(void)
 		// Calculate next position
 		motorctl_info[MOTOR_A].position = motorctl_info[MOTOR_A].position + motorctl_info[MOTOR_A].velocity;
 	}
+}
+
+void generate_trapezoidal_profile(void)
+{
+	generate_trapezoidal_profile_motor_a();
 }
 
 /********************
