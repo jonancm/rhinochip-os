@@ -254,9 +254,10 @@ inline void motorctl_setup(void)
 
 	// Set up Timer 4 to implement Trapezoidal Velocity Profile Generation
 
-	IFS1bits.T4IF = 0; // Clear the timer 4 interrupt flag
-	IEC1bits.T4IE = 1; // Enable timer 3 interrupts
-	PR4 = PR4VAL;      // Set the timer period
+	IFS1bits.T4IF = 0;   // Clear the Timer 4 interrupt flag
+	IEC1bits.T4IE = 1;   // Enable Timer 4 interrupts
+	T4CONbits.TCKPS = 3; // Set prescale value (0=1:1, 1=1:8, 2=1:64, 3=1:256)
+	PR4 = PR4VAL;        // Set the timer period
 }
 
 inline void motorctl(void)

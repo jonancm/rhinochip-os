@@ -10,7 +10,7 @@
 
 #define T4FREQ                10                             /* Timer 4 frequency: 10 Hz */
 #define T4PERIOD              (1. / T4FREQ)                  /* Timer 4 period: 0.1 s */
-#define T4PRESCALER           64                             /* Timer 4 prescale value of 1:64 */
+#define T4PRESCALER           256                            /* Timer 4 prescale value of 1:256 */
 #define PR4VAL                (FCY / (T4FREQ * T4PRESCALER)) /* Value for the PR4 register of Timer 4 */
 
 inline void motorctl_setup(void);
