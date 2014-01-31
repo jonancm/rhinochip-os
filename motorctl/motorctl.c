@@ -69,16 +69,16 @@ int abs_sign(int num, int *sig)
  *********************************************/
 
 typedef struct {
-	unsigned int enabled            : 1;
-	unsigned int phase              : 1;
-	unsigned int velocity_saturated : 1;
-	unsigned int flatcount;
-	unsigned int velocity;
-	unsigned int acceleration;
-	unsigned int phase1displacement;
-	unsigned int midpoint;
-	unsigned int max_velocity;
-	int          position;
+	int enabled            : 1;
+	int phase              : 1;
+	int velocity_saturated : 1;
+	int flatcount;
+	int velocity;
+	int acceleration;
+	int phase1displacement;
+	int halfcount;
+	int max_velocity;
+	int position;
 } motorctl_info_t;
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
@@ -95,7 +95,7 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].velocity = 0;
 	motorctl_info[MOTOR_A].acceleration = 50; // Motor acceleration expressed as percentage of maximum motor velocity (default: SYSTEM_ACCELERATION)
 	motorctl_info[MOTOR_A].phase1displacement = 0;
-	motorctl_info[MOTOR_A].midpoint = (motor_steps[MOTOR_A] + motor_commanded_pos[MOTOR_A]) / 2;
+	motorctl_info[MOTOR_A].halfcount = motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].max_velocity = SYSTEM_VELOCITY * motor_desired_velocity[MOTOR_A]; // Maximum motor velocity
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
@@ -151,7 +151,7 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			
 			// If the motor position has reached the mid-point of the trajectory, the rise phase
 			// has finished
-			if (motor_steps[MOTOR_A] >= motorctl_info[MOTOR_A].midpoint)
+			if (motorctl_info[MOTOR_A].phase1displacement >= motorctl_info[MOTOR_A].halfcount)
 				motorctl_info[MOTOR_A].phase = 1;
 			// If the rise phase has not finished yet, increment the displacement counter
 			else
