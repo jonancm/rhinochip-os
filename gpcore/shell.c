@@ -6,7 +6,7 @@
 #include "self_test.h"
 #include "../mcuicom.h"
 #include "mctlcom.h"
-#include "../macros.h"
+#include "hardhome.h"
 
 #include "../debug.h"
 //#ifndef NDEBUG
@@ -955,7 +955,6 @@ void interpret_cmd(void)
  ******************************************************************************/
 
 #include <stdio.h> // snprintf
-#include <string.h> // strlen
 
 /**
  * Read Motor Status.
@@ -971,7 +970,7 @@ inline void hostcmd_sa(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.motor_status);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1020,7 +1019,7 @@ inline void hostcmd_sc(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_config);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1076,7 +1075,7 @@ inline void hostcmd_se(void)
 	char buf[64];
 	unsigned char error_code = 0;
 	snprintf(buf, 64, "%u\n", error_code);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1129,7 +1128,7 @@ inline void hostcmd_sm(void)
 			if (!error)
 			{
 				snprintf(buf, 64, "%u\n", motor_mode);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -1159,7 +1158,7 @@ inline void hostcmd_sp(void)
 	char buf[64];
 	char pendant_error = 0;
 	snprintf(buf, 64, "%u", pendant_error);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1193,7 +1192,7 @@ inline void hostcmd_ss(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_status);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1223,7 +1222,7 @@ inline void hostcmd_su(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%lu\n", controller.usage_time);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1237,7 +1236,7 @@ inline void hostcmd_su(void)
 inline void hostcmd_sv(void)
 {
 	#define CONTROLLER_VERSION "Copyright (C) 2013 by Jonan Cruz-Martin V 0.1.0 SN XXXX.\n"
-	hostcom_send(CONTROLLER_VERSION, STRLEN(CONTROLLER_VERSION));
+	hostcom_send(CONTROLLER_VERSION);
 }
 
 /**
@@ -1265,14 +1264,14 @@ inline void hostcmd_sx(void)
 		snprintf(buf, 64, TEACH_PENDANT_ONLINE);
 	else
 		snprintf(buf, 64, TEACH_PENDANT_OFFLINE);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 	
 	test_passed = test_ram(&last_addr, &bytes_ok);
 	if (test_passed)
 		snprintf(buf, 64, RAM_TEST_PASSED, last_addr, bytes_ok);
 	else
 		snprintf(buf, 64, RAM_TEST_FAILED, last_addr, bytes_ok);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1286,7 +1285,7 @@ inline void hostcmd_sz(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d\n", controller.delay_timer);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1572,7 +1571,7 @@ inline void hostcmd_ar(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_acceleration);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1636,7 +1635,7 @@ inline void hostcmd_dr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", (direction ? -pwm_level : pwm_level));
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -1660,7 +1659,7 @@ inline void hostcmd_gs(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.gripper_status);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -1719,7 +1718,7 @@ inline void hostcmd_hr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", soft_home_pos);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -1754,10 +1753,12 @@ inline void hostcmd_pa(void)
 				buf[0] = 'R';
 				buf[1] = param1.value.letter;
 				buf[2] = *CMDEND;
-				mcuicom_send(buf, 3);
+				buf[3] = '\0';
+				mcuicom_send(buf);
 				// Get response (motor steps) and re-send it to the host PC
 				size = mctlcom_get_response(buf, size);
-				hostcom_send(buf, size);
+				buf[size] = '\0'; // no need to check size, this is always < 64
+				hostcom_send(buf);
 			}
 			else
 			{
@@ -1844,7 +1845,7 @@ inline void hostcmd_pw(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%d\n", dest_pos);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -1904,7 +1905,7 @@ inline void hostcmd_pz(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%.2f\n", (double) dest_val);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -1970,7 +1971,7 @@ inline void hostcmd_rl(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.limit_switches);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -2152,7 +2153,7 @@ inline void hostcmd_va(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%u\n", velocity);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -2227,7 +2228,7 @@ inline void hostcmd_vr(void)
 			{
 				char buf[64];
 				snprintf(buf, 64, "%u\n", velocity);
-				hostcom_send(buf, strlen(buf));
+				hostcom_send(buf);
 			}
 		}
 		else
@@ -2251,7 +2252,7 @@ inline void hostcmd_vx(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%u\n", controller.system_velocity);
-	hostcom_send(buf, strlen(buf));
+	hostcom_send(buf);
 }
 
 /**
@@ -2766,7 +2767,7 @@ inline void hostcmd_hh(void)
 		}
 		else
 		{
-			// proceed
+			hardhome();
 		}
 	}
 }
@@ -2965,7 +2966,7 @@ inline void hostcmd_mc(void)
 	}
 	else
 	{
-		mcuicom_send("MC" CMDEND, STRLEN("MC" CMDEND));
+		mcuicom_send("MC" CMDEND);
 	}
 }
 
@@ -3007,7 +3008,7 @@ inline void hostcmd_mi(void)
 	}
 	else
 	{
-		mcuicom_send("MI" CMDEND, STRLEN("MI" CMDEND));
+		mcuicom_send("MI" CMDEND);
 	}
 }
 
@@ -3040,7 +3041,7 @@ inline void hostcmd_mm(void)
 					buf[0] = 'S';
 					buf[1] = param1.value.letter;
 					buf[2] = *CMDEND;
-					mcuicom_send(buf, 3);
+					mcuicom_send(buf);
 				}
 				else
 				{
@@ -3258,7 +3259,7 @@ inline void hostcmd_pd(void)
 									
 									// Send MCUICOM command AA, AB, ..., AF depending on motor letter (param 1)
 									snprintf(buf, size, "A%c,%d%c", param1.value.letter, intparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3345,7 +3346,7 @@ inline void hostcmd_pr(void)
 									
 									// Send MCUICOM command BA, BB, ..., BF depending on motor letter (param 1)
 									snprintf(buf, size, "B%c,%d%c", param1.value.letter, intparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3444,7 +3445,7 @@ inline void hostcmd_px(void)
 									const int size = 64;
 									char buf[size];
 									snprintf(buf, size, "C%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{
@@ -3545,7 +3546,7 @@ inline void hostcmd_py(void)
 									const int size = 64;
 									char buf[size];
 									snprintf(buf, size, "D%c,%.2f%c", param1.value.letter, (double) floatparam2, *CMDEND);
-									mcuicom_send(buf, strlen(buf));
+									mcuicom_send(buf);
 								}
 								else
 								{

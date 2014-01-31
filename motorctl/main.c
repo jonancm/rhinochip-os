@@ -9,6 +9,7 @@ _FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up ti
 #include "qei.h"
 #include "../mcuicom.h"
 #include "gpcorecom.h"
+#include "motorctl.h"
 
 #include "../debug.h"
 
@@ -17,13 +18,7 @@ int main(void)
 	pwm_setup();
 	qei_setup();
 	mcuicom_setup();
-	
-	pwm_set_duty1(75);
-	pwm_set_duty2(75);
-	pwm_set_duty3(75);
-	pwm_set_duty4(75);
-	pwm_set_duty5(75);
-	pwm_set_duty6(75);
+	motorctl_setup();
 	
 	// Code for debugging. Send a message over RS232 notifying that the UART 1
 	// is ready and working fine.
@@ -38,7 +33,7 @@ int main(void)
 		// 2) Perform the interpretation of commands as single task in a loop and
 		//    perform motor control on a timely basis using interrupts, so that it
 		//    has greater priority over command interpretation (which can actually
-		//    be less efficiente).
+		//    be less efficient).
 		gpcorecom_interpret_next();
 	}
 	

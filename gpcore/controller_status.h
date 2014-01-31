@@ -26,7 +26,7 @@ typedef enum {XR3, SCARA, GENERIC} controller_mode_t;
 #define MOTOR_ALL    0xFF
 
 typedef enum {MOTOR_IDLE, MOTOR_TRAPEZOIDAL, MOTOR_VELOCITY, MOTOR_OPEN_LOOP} motor_mode_t;
-typedef enum {HARDHOME_EXECUTED, HARDHOME_IN_PROGRESS} hardhome_status_t;
+typedef enum {HARDHOME_NEEDED, HARDHOME_EXECUTED, HARDHOME_IN_PROGRESS} hardhome_status_t;
 typedef enum {GRIPPER_OPEN, GRIPPER_CLOSED} gripper_status_t;
 
 typedef struct {

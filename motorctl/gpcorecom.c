@@ -3,6 +3,9 @@
 #include "../mcuicom.h"
 #include "motor_status.h"
 #include "../hostcmdset.h"
+#include "pwm.h"
+#include "motorctl.h"
+#include "../delay.h"
 
 #include "../debug.h"
 
@@ -110,6 +113,7 @@ inline void stop_motor_c(void);
 inline void stop_motor_d(void);
 inline void stop_motor_e(void);
 inline void stop_motor_f(void);
+inline void stop_all_motors(void);
 
 inline void set_joint_abs_a(void);
 inline void set_joint_abs_b(void);
@@ -135,6 +139,53 @@ inline void set_cartesian_rel_z(void);
 
 inline void move_independent(void);
 inline void move_coordinated(void);
+inline void move_pwm(void);
+
+inline void set_pwm_dir_a(void);
+inline void set_pwm_dir_b(void);
+inline void set_pwm_dir_c(void);
+inline void set_pwm_dir_d(void);
+inline void set_pwm_dir_e(void);
+inline void set_pwm_dir_f(void);
+
+inline void restore_pwm_eeprom(void);
+
+inline void enable_pid_control_a(void);
+inline void enable_pid_control_b(void);
+inline void enable_pid_control_c(void);
+inline void enable_pid_control_d(void);
+inline void enable_pid_control_e(void);
+inline void enable_pid_control_f(void);
+
+inline void disable_pid_control_a(void);
+inline void disable_pid_control_b(void);
+inline void disable_pid_control_c(void);
+inline void disable_pid_control_d(void);
+inline void disable_pid_control_e(void);
+inline void disable_pid_control_f(void);
+
+inline void hard_home(void);
+
+inline void clear_pos_motor_a(void);
+inline void clear_pos_motor_b(void);
+inline void clear_pos_motor_c(void);
+inline void clear_pos_motor_d(void);
+inline void clear_pos_motor_e(void);
+inline void clear_pos_motor_f(void);
+
+inline void inc_pos_motor_a(void);
+inline void inc_pos_motor_b(void);
+inline void inc_pos_motor_c(void);
+inline void inc_pos_motor_d(void);
+inline void inc_pos_motor_e(void);
+inline void inc_pos_motor_f(void);
+
+inline void set_pos_motor_a(void);
+inline void set_pos_motor_b(void);
+inline void set_pos_motor_c(void);
+inline void set_pos_motor_d(void);
+inline void set_pos_motor_e(void);
+inline void set_pos_motor_f(void);
 
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
@@ -481,6 +532,24 @@ void interpret_cmd(void)
 		case 'D':
 			switch (cmd_name[1])
 			{
+				// DA: Disable PID control for motor A
+				case 'A':
+					disable_pid_control_a(); break;
+				// DB: Disable PID control for motor B
+				case 'B':
+					disable_pid_control_b(); break;
+				// DC: Disable PID control for motor C
+				case 'C':
+					disable_pid_control_c(); break;
+				// DD: Disable PID control for motor D
+				case 'D':
+					disable_pid_control_d(); break;
+				// DE: Disable PID control for motor E
+				case 'E':
+					disable_pid_control_e(); break;
+				// DF: Disable PID control for motor F
+				case 'F':
+					disable_pid_control_f(); break;
 				// DX: Set cartesian relative position of motor X
 				case 'X':
 					set_cartesian_rel_x(); break;
@@ -495,6 +564,110 @@ void interpret_cmd(void)
 					break;
 			}
 			break;
+		case 'E':
+			switch (cmd_name[1])
+			{
+				// EA: Enable PID control for motor A
+				case 'A':
+					enable_pid_control_a(); break;
+				// EB: Enable PID control for motor B
+				case 'B':
+					enable_pid_control_b(); break;
+				// EC: Enable PID control for motor C
+				case 'C':
+					enable_pid_control_c(); break;
+				// ED: Enable PID control for motor D
+				case 'D':
+					enable_pid_control_d(); break;
+				// EE: Enable PID control for motor E
+				case 'E':
+					enable_pid_control_e(); break;
+				// EF: Enable PID control for motor F
+				case 'F':
+					enable_pid_control_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'G':
+			switch (cmd_name[1])
+			{
+				// GA: Set desired position register of motor A
+				case 'A':
+					set_pos_motor_a(); break;
+				// GB: Set desired position register of motor B
+				case 'B':
+					set_pos_motor_b(); break;
+				// GC: Set desired position register of motor C
+				case 'C':
+					set_pos_motor_c(); break;
+				// GD: Set desired position register of motor D
+				case 'D':
+					set_pos_motor_d(); break;
+				// GE: Set desired position register of motor E
+				case 'E':
+					set_pos_motor_e(); break;
+				// GF: Set desired position register of motor F
+				case 'F':
+					set_pos_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'I':
+			switch (cmd_name[1])
+			{
+				// IA: Increment desired position register of motor A by X steps
+				case 'A':
+					inc_pos_motor_a(); break;
+				// IB: Increment desired position register of motor B by X steps
+				case 'B':
+					inc_pos_motor_b(); break;
+				// IC: Increment desired position register of motor C by X steps
+				case 'C':
+					inc_pos_motor_c(); break;
+				// ID: Increment desired position register of motor D by X steps
+				case 'D':
+					inc_pos_motor_d(); break;
+				// IE: Increment desired position register of motor E by X steps
+				case 'E':
+					inc_pos_motor_e(); break;
+				// IF: Increment desired position register of motor F by X steps
+				case 'F':
+					inc_pos_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'K':
+			switch (cmd_name[1])
+			{
+				// KA: Clear position register of motor A
+				case 'A':
+					clear_pos_motor_a(); break;
+				// KB: Clear position register of motor B
+				case 'B':
+					clear_pos_motor_b(); break;
+				// KC: Clear position register of motor C
+				case 'C':
+					clear_pos_motor_c(); break;
+				// KD: Clear position register of motor D
+				case 'D':
+					clear_pos_motor_d(); break;
+				// KE: Clear position register of motor E
+				case 'E':
+					clear_pos_motor_e(); break;
+				// KF: Clear position register of motor F
+				case 'F':
+					clear_pos_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
 		case 'M':
 			switch (cmd_name[1])
 			{
@@ -504,6 +677,35 @@ void interpret_cmd(void)
 				// MI: Move independent
 				case 'I':
 					move_independent(); break;
+				// MP: Move motors according to PWM and direction registers (never stop)
+				case 'P':
+					move_pwm(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'P':
+			switch (cmd_name[1])
+			{
+				// PA: Set PWM level and direction for motor A
+				case 'A':
+					set_pwm_dir_a(); break;
+				// PB: Set PWM level and direction for motor B
+				case 'B':
+					set_pwm_dir_b(); break;
+				// PC: Set PWM level and direction for motor C
+				case 'C':
+					set_pwm_dir_c(); break;
+				// PD: Set PWM level and direction for motor D
+				case 'D':
+					set_pwm_dir_d(); break;
+				// PE: Set PWM level and direction for motor E
+				case 'E':
+					set_pwm_dir_e(); break;
+				// PF: Set PWM level and direction for motor F
+				case 'F':
+					set_pwm_dir_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -530,6 +732,9 @@ void interpret_cmd(void)
 				// RF: Read encoder of motor F
 				case 'F':
 					read_encoder_f(); break;
+				// RP: Restore PWM settings from EEPROM
+				case 'P':
+					restore_pwm_eeprom(); break;
 				default:
 					// error: unknown command
 					break;
@@ -556,6 +761,9 @@ void interpret_cmd(void)
 				// SF: Stop motor F
 				case 'F':
 					stop_motor_f(); break;
+				// SS: Stop all motors
+				case 'S':
+					stop_all_motors(); break;
 				default:
 					// error: unknown command
 					break;
@@ -572,48 +780,47 @@ void interpret_cmd(void)
  ******************************************************************************/
 
 #include <stdio.h>
-#include <string.h>
 
 inline void read_encoder_a(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_A], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_b(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_B], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_c(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_C], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_d(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_D], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_e(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_E], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void read_encoder_f(void)
 {
 	char buf[64];
 	snprintf(buf, 64, "%d%c", motor_steps[MOTOR_F], *CMDEND);
-	mcuicom_send(buf, strlen(buf));
+	mcuicom_send(buf);
 }
 
 inline void stop_motor_a(void)
@@ -621,6 +828,7 @@ inline void stop_motor_a(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty1(0);
 	
 	// Set destination position to current position
 }
@@ -630,6 +838,7 @@ inline void stop_motor_b(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty2(0);
 	
 	// Set destination position to current position
 }
@@ -639,6 +848,7 @@ inline void stop_motor_c(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty3(0);
 	
 	// Set destination position to current position
 }
@@ -648,6 +858,7 @@ inline void stop_motor_d(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty4(0);
 	
 	// Set destination position to current position
 }
@@ -657,6 +868,7 @@ inline void stop_motor_e(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty5(0);
 	
 	// Set destination position to current position
 }
@@ -666,8 +878,19 @@ inline void stop_motor_f(void)
 	// TODO: implement
 	
 	// Set PWM level to zero, so that motor doesn't move
+	pwm_set_duty6(0);
 	
 	// Set destination position to current position
+}
+
+inline void stop_all_motors(void)
+{
+	pwm_set_duty1(0);
+	pwm_set_duty2(0);
+	pwm_set_duty3(0);
+	pwm_set_duty4(0);
+	pwm_set_duty5(0);
+	pwm_set_duty6(0);
 }
 
 inline void set_joint_abs_a(void)
@@ -678,6 +901,7 @@ inline void set_joint_abs_a(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_A] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -704,6 +928,7 @@ inline void set_joint_abs_b(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_B] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -730,6 +955,7 @@ inline void set_joint_abs_c(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_C] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -756,6 +982,7 @@ inline void set_joint_abs_d(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_D] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -782,6 +1009,7 @@ inline void set_joint_abs_e(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_E] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -808,6 +1036,7 @@ inline void set_joint_abs_f(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			motor_desired_pos[MOTOR_F] = intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -835,6 +1064,7 @@ inline void set_joint_rel_a(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -862,6 +1092,7 @@ inline void set_joint_rel_b(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -889,6 +1120,7 @@ inline void set_joint_rel_c(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -916,6 +1148,7 @@ inline void set_joint_rel_d(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -943,6 +1176,7 @@ inline void set_joint_rel_e(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -970,6 +1204,7 @@ inline void set_joint_rel_f(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
 			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
+			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
 			
 			#ifndef NDEBUG
 			char buf[64];
@@ -991,49 +1226,61 @@ inline void set_joint_rel_f(void)
 inline void set_cartesian_abs_x(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_abs_y(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_abs_z(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_abs_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_x(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_x: %f\n", (double) cartesian_desired_pos[COORD_X]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_y(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_y: %f\n", (double) cartesian_desired_pos[COORD_Y]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void set_cartesian_rel_z(void)
 {
 	// TODO: implement
+	#ifndef NDEBUG
 	char buf[64];
 	snprintf(buf, 64, "set_cartesian_rel_z: %f\n", (double) cartesian_desired_pos[COORD_Z]);
-	mcuicom_send(buf, strlen(buf));
+	dbgmsg_uart1(buf);
+	#endif
 }
 
 inline void move_independent(void)
@@ -1058,4 +1305,622 @@ inline void move_coordinated(void)
 	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
 	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_coordinated\n");
+}
+
+inline void move_pwm(void)
+{
+	dbgmsg_uart1("move_pwm\n");
+	
+	DIR1 = motor_direction[MOTOR_A];
+	pwm_set_duty1(motor_pwm_level[MOTOR_A]);
+	
+	DIR2 = motor_direction[MOTOR_B];
+	pwm_set_duty2(motor_pwm_level[MOTOR_B]);
+	
+	DIR3 = motor_direction[MOTOR_C];
+	pwm_set_duty3(motor_pwm_level[MOTOR_C]);
+	
+	DIR4 = motor_direction[MOTOR_D];
+	pwm_set_duty4(motor_pwm_level[MOTOR_D]);
+	
+	DIR5 = motor_direction[MOTOR_E];
+	pwm_set_duty5(motor_pwm_level[MOTOR_E]);
+	
+	DIR6 = motor_direction[MOTOR_F];
+	pwm_set_duty6(motor_pwm_level[MOTOR_F]);
+}
+
+inline void set_pwm_dir_a(void)
+{
+	dbgmsg_uart1("set_pwm_dir_a\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_A] = pwm_level;
+				motor_direction[MOTOR_A] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_b(void)
+{
+	dbgmsg_uart1("set_pwm_dir_b\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_B] = pwm_level;
+				motor_direction[MOTOR_B] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_c(void)
+{
+	dbgmsg_uart1("set_pwm_dir_c\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_C] = pwm_level;
+				motor_direction[MOTOR_C] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_d(void)
+{
+	dbgmsg_uart1("set_pwm_dir_d\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_D] = pwm_level;
+				motor_direction[MOTOR_D] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_e(void)
+{
+	dbgmsg_uart1("set_pwm_dir_e\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_E] = pwm_level;
+				motor_direction[MOTOR_E] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pwm_dir_f(void)
+{
+	dbgmsg_uart1("set_pwm_dir_f\n");
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			char pwm_level = param1.value.integer.abs_value;
+			if (0 <= pwm_level && pwm_level <= 100)
+			{
+				motor_pwm_level[MOTOR_F] = pwm_level;
+				motor_direction[MOTOR_F] = param1.value.integer.sign < 0;
+			}
+			else
+			{
+				// error: parameter out of range
+			}
+		}
+		else
+		{
+			// error: wrong parameter type (must be an integer)
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void restore_pwm_eeprom(void)
+{
+	// TODO: implement properly (this is a temporary implementation to test the hard home routine)
+	
+	motor_pwm_level[MOTOR_A] = 100;
+	motor_pwm_level[MOTOR_B] = 100;
+	motor_pwm_level[MOTOR_C] = 100;
+	motor_pwm_level[MOTOR_D] = 100;
+	motor_pwm_level[MOTOR_E] = 100;
+	motor_pwm_level[MOTOR_F] = 100;
+	
+	motor_direction[MOTOR_A] = 0;
+	motor_direction[MOTOR_B] = 0;
+	motor_direction[MOTOR_C] = 0;
+	motor_direction[MOTOR_D] = 0;
+	motor_direction[MOTOR_E] = 0;
+	motor_direction[MOTOR_F] = 0;
+}
+
+inline void enable_pid_control_a(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_A);
+}
+
+inline void enable_pid_control_b(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_B);
+}
+
+inline void enable_pid_control_c(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_C);
+}
+
+inline void enable_pid_control_d(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_D);
+}
+
+inline void enable_pid_control_e(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_E);
+}
+
+inline void enable_pid_control_f(void)
+{
+	motorctl_enable_pid(MOTOR_BIT_F);
+}
+
+inline void disable_pid_control_a(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_A);
+}
+
+inline void disable_pid_control_b(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_B);
+}
+
+inline void disable_pid_control_c(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_C);
+}
+
+inline void disable_pid_control_d(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_D);
+}
+
+inline void disable_pid_control_e(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_E);
+}
+
+inline void disable_pid_control_f(void)
+{
+	motorctl_disable_pid(MOTOR_BIT_F);
+}
+
+inline void clear_pos_motor_a(void)
+{
+	motor_steps[MOTOR_A] = 0;
+}
+
+inline void clear_pos_motor_b(void)
+{
+	motor_steps[MOTOR_B] = 0;
+}
+
+inline void clear_pos_motor_c(void)
+{
+	motor_steps[MOTOR_C] = 0;
+}
+
+inline void clear_pos_motor_d(void)
+{
+	motor_steps[MOTOR_D] = 0;
+}
+
+inline void clear_pos_motor_e(void)
+{
+	motor_steps[MOTOR_E] = 0;
+}
+
+inline void clear_pos_motor_f(void)
+{
+	motor_steps[MOTOR_F] = 0;
+}
+
+inline void inc_pos_motor_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_a: %d\n", motor_desired_pos[MOTOR_A]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_b: %d\n", motor_desired_pos[MOTOR_B]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_c: %d\n", motor_desired_pos[MOTOR_C]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_d: %d\n", motor_desired_pos[MOTOR_D]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_e: %d\n", motor_desired_pos[MOTOR_E]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void inc_pos_motor_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "inc_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_A] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_a: %d\n", motor_desired_pos[MOTOR_A]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_B] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_b: %d\n", motor_desired_pos[MOTOR_B]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_C] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_c: %d\n", motor_desired_pos[MOTOR_C]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_D] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_d: %d\n", motor_desired_pos[MOTOR_D]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_E] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_e: %d\n", motor_desired_pos[MOTOR_E]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
+}
+
+inline void set_pos_motor_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			motor_desired_pos[MOTOR_F] = intparam1;
+
+			#ifndef NDEBUG
+			char buf[64];
+			snprintf(buf, 64, "set_pos_motor_f: %d\n", motor_desired_pos[MOTOR_F]);
+			dbgmsg_uart1(buf);
+			#endif
+		}
+		else
+		{
+			// error: parameter must be an integer number
+		}
+	}
+	else
+	{
+		// error: parameter must be specified
+	}
 }
