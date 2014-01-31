@@ -26,12 +26,16 @@ inline void lmtswitch_setup(void)
 
 inline void hardhome(void)
 {
+	// FIXME: for each motor, only do hard home if a motor is actually connected.
+	// Otherwise, the program would block, waiting for a limit switch to be triggered.
 	hardhome_motor_a();
+	/*
 	hardhome_motor_b();
 	hardhome_motor_c();
 	hardhome_motor_d();
 	hardhome_motor_e();
 	hardhome_motor_f();
+	*/
 }
 
 int get_motor_pos(char motor)
