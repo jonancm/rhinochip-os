@@ -294,28 +294,6 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 	IEC0bits.T3IE = 1;
 }
 
-inline void motorctl_move_motor_a(void)
-{
-	// Re-calculate PWM duty cycle using the PID controller
-	// TODO: this code is duplicated (has been copied from motorctl), although call to pid_loop has different parameters;
-	//       create a separate function to elliminate duplication
-	int duty = pid_loop(&pid_info[MOTOR_A], motor_steps[MOTOR_A], motorctl_info[MOTOR_A].position);
-	// Translate the PWM duty cycle into a PWM level and a PWM direction
-	// and update the corresponding registers
-	unsigned char direction;
-	duty = abs_neg(duty, &direction);
-	direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
-	// Perform the movement
-	pwm_set_duty1(duty);
-	DIR1 = direction;
-}
-
-inline void motorctl_move_motor_b(void) {}
-inline void motorctl_move_motor_c(void) {}
-inline void motorctl_move_motor_d(void) {}
-inline void motorctl_move_motor_e(void) {}
-inline void motorctl_move_motor_f(void) {}
-
 void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 {
 	// Disable Timer 4 interrupts
@@ -326,13 +304,15 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	
 	// Calculate next motor position in order to achieve a trapezoidal velocity profile
 	generate_trapezoidal_profile();
-	
-	motorctl_move_motor_a();
-	motorctl_move_motor_b();
-	motorctl_move_motor_c();
-	motorctl_move_motor_d();
-	motorctl_move_motor_e();
-	motorctl_move_motor_f();
+	// Command PID loop to go to the new position
+	motor_desired_pos[MOTOR_A] = motorctl_info[MOTOR_A].position;
+	/*
+	motor_desired_pos[MOTOR_B] = motorctl_info[MOTOR_B].position;
+	motor_desired_pos[MOTOR_C] = motorctl_info[MOTOR_C].position;
+	motor_desired_pos[MOTOR_D] = motorctl_info[MOTOR_D].position;
+	motor_desired_pos[MOTOR_E] = motorctl_info[MOTOR_E].position;
+	motor_desired_pos[MOTOR_F] = motorctl_info[MOTOR_F].position;
+	*/
 	
 	// Check if all motors have finished moving and set flag accordingly
 	move_finished = !(motorctl_info[MOTOR_A].enabled
@@ -362,9 +342,6 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 
 void motorctl_move(void)
 {
-	// Disable PID on all motors, so that no position correction is performed while executing a trapezoidal move
-	motorctl_disable_pid(MOTOR_ALL);
-	
 	// Set up the data structure for the trapezoidal velocity profile generation
 	setup_trapezoidal_movement();
 	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
