@@ -4,6 +4,7 @@
 #include "motor_status.h"
 
 #include <string.h> // memset
+#include <stdlib.h> // abs
 
 #include "../debug.h"
 
@@ -79,6 +80,7 @@ typedef struct {
 	int halfcount;
 	int max_velocity;
 	int position;
+	int start_pos;
 } motorctl_info_t;
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
@@ -95,10 +97,11 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].flatcount = 0;
 	motorctl_info[MOTOR_A].velocity = 0;
 	motorctl_info[MOTOR_A].phase1displacement = 0;
-	motorctl_info[MOTOR_A].halfcount = motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A];
+	motorctl_info[MOTOR_A].halfcount = abs(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A]);
 	motorctl_info[MOTOR_A].max_velocity = (motor_desired_velocity[MOTOR_A] * SYSTEM_VELOCITY) / 100.0;
 	motorctl_info[MOTOR_A].acceleration = (SYSTEM_ACCELERATION / 100.) * motorctl_info[MOTOR_A].max_velocity;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
+	motorctl_info[MOTOR_A].start_pos = motor_steps[MOTOR_A];
 }
 
 inline void generate_trapezoidal_profile_motor_a(void)
@@ -152,7 +155,7 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			
 			// If the motor position has reached the mid-point of the trajectory, the rise phase
 			// has finished
-			if (motorctl_info[MOTOR_A].phase1displacement >= motorctl_info[MOTOR_A].halfcount)
+			if (abs(motor_steps[MOTOR_A] - motorctl_info[MOTOR_A].start_pos) >= motorctl_info[MOTOR_A].halfcount)
 				motorctl_info[MOTOR_A].phase = 1;
 			// If the rise phase has not finished yet, increment the displacement counter
 			else
