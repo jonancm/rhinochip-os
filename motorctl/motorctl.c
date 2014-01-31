@@ -108,6 +108,11 @@ inline void generate_trapezoidal_profile_motor_a(void)
 		// Fall phase (motorctl_info[MOTOR_A].phase = 1)
 		if (motorctl_info[MOTOR_A].phase)
 		{
+			// If segment S3 has finished, unset the saturation flag for the velocity to start
+			// decreasing (to enter S4)
+			if (motorctl_info[MOTOR_A].flatcount <= 0)
+				motorctl_info[MOTOR_A].velocity_saturated = false;
+			
 			// If the motor velocity IS saturated, keep moving at maximum velocity until duration
 			// of segment S2 has been matched
 			if (motorctl_info[MOTOR_A].velocity_saturated)
@@ -116,11 +121,6 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			// (given by system acceleration) until zero velocity is reached
 			else
 				motorctl_info[MOTOR_A].velocity -= motorctl_info[MOTOR_A].acceleration;
-			
-			// If segment S3 has finished, unset the saturation flag for the velocity to start
-			// decreasing (to enter S4)
-			if (motorctl_info[MOTOR_A].flatcount <= 0)
-				motorctl_info[MOTOR_A].velocity_saturated = false;
 			
 			// If the total displacement of the fall phase has been reached (i.e. the end-point
 			// of the trajectory has been reached), the fall phase (and the movement) has finished
@@ -133,6 +133,14 @@ inline void generate_trapezoidal_profile_motor_a(void)
 		// Rise phase (motorctl_info[MOTOR_A].phase = 0)
 		else
 		{
+			// If the maximum velocity has been reached, limit velocity to its maximum value
+			// and set saturation flag
+			if (motorctl_info[MOTOR_A].velocity >= motorctl_info[MOTOR_A].max_velocity)
+			{
+				motorctl_info[MOTOR_A].velocity = motorctl_info[MOTOR_A].max_velocity;
+				motorctl_info[MOTOR_A].velocity_saturated = true;
+			}
+
 			// If the motor velocity IS saturated, keep moving at maximum velocity and count
 			// duration of segment S2
 			if (motorctl_info[MOTOR_A].velocity_saturated)
@@ -141,14 +149,6 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			// (given by system acceleration) until maximum velocity is reached
 			else
 				motorctl_info[MOTOR_A].velocity += motorctl_info[MOTOR_A].acceleration;
-			
-			// If the maximum velocity has been reached, limit velocity to its maximum value
-			// and set saturation flag
-			if (motorctl_info[MOTOR_A].velocity >= motorctl_info[MOTOR_A].max_velocity)
-			{
-				motorctl_info[MOTOR_A].velocity = motorctl_info[MOTOR_A].max_velocity;
-				motorctl_info[MOTOR_A].velocity_saturated = true;
-			}
 			
 			// If the motor position has reached the mid-point of the trajectory, the rise phase
 			// has finished
