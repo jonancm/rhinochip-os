@@ -250,11 +250,6 @@ inline void motorctl_setup(void)
 	IEC0bits.T3IE = 1; // Enable timer 3 interrupts
 	PR3 = PR3VAL;      // Set the timer period
 	T3CONbits.TON = 1; // Start the timer
-	
-	// Set up data structures for trapezoidal velocity profile generation
-	
-	// TODO: implement
-	// setup_trapezoidal_movement();
 }
 
 inline void motorctl(void)
@@ -270,11 +265,7 @@ inline void motorctl(void)
 		unsigned char direction;
 		duty = abs_neg(duty, &direction);
 		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
-		/*
-		motor_pwm_level[MOTOR_A] = duty;
-		motor_direction[MOTOR_A] = direction;
-		// These registers are for open-loop mode only
-		*/
+		// Perform the movement
 		pwm_set_duty1(duty);
 		DIR1 = direction;
 	}
@@ -321,11 +312,7 @@ void motorctl_move(void)
 		unsigned char direction;
 		duty = abs_sign(duty, &direction);
 		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
-		/*
-		motor_pwm_level[MOTOR_A] = duty;
-		motor_direction[MOTOR_A] = direction;
-		// These registers are for open-loop mode only
-		*/
+		// Perform the movement
 		pwm_set_duty1(duty);
 		DIR1 = direction;
 		
