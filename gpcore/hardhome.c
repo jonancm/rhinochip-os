@@ -331,7 +331,71 @@ void hardhome_motor_d(void)
 
 void hardhome_motor_e(void)
 {
+	int size = 64;
+	char buf[size];
 	
+	// Disable PID control on motor E, to be able to change the PWM duty cycle manually
+	mcuicom_send("DE" CMDEND);
+	
+	// Stop all motors
+	mcuicom_send("SS" CMDEND);
+	
+	// If the limit switch is not active, search it.
+	// To do this, move motor at high speed until the
+	// Change Notification interrupt is triggered.
+	if (!LMT_ME)
+	{
+		// Set PWM level of motor E to 100% duty cycle
+		mcuicom_send("PE,100" CMDEND);
+		
+		// Move motor at the specified velocity
+		mcuicom_send("MP" CMDEND);
+		
+		// Wait until the switch is found
+		while (!LMT_ME);
+		
+		// Stop motor
+		mcuicom_send("SE" CMDEND);
+	}
+	
+	// Clear position register to make PID take the current position as its reference (zero) position
+	mcuicom_send("KE" CMDEND);
+	
+	// Re-enable PID control on motor E to be able to increment position by a given amount of motor steps
+	mcuicom_send("EE" CMDEND);
+	
+	// Tune position of the limit switch more finely. To do this, keep moving in the same direction by a few steps
+	// at a time until the switch goes off. The move backwards in the same way until the switch goes on and off again.
+	// At this point, we have reach both ends of the limit switch and can now compute the mid-point.
+	#define STEP_INC 15                             // Increment 15 motor steps at a time
+	snprintf(buf, size, "IE,%d" CMDEND, STEP_INC);
+	while (LMT_ME)
+		mcuicom_send(buf);
+	int pointA = get_motor_pos(MOTOR_E_CHAR);       // The one end of the limit switch has been reached. Save position.
+	snprintf(buf, size, "IE,%d" CMDEND, -STEP_INC); // Minus sign inverts direction
+	while (!LMT_ME)
+		mcuicom_send(buf);
+	while (LMT_ME)
+		mcuicom_send(buf);
+	int pointB = get_motor_pos(MOTOR_E_CHAR);       // The other end of the limit switch has been reached. Save position.
+	int mid_point = (pointA + pointB) / 2;
+	// Move motor to the mid-point of points A and B
+	snprintf(buf, size, "IE,%d" CMDEND, STEP_INC);
+	#define HH_TOL 10
+	while (abs(get_motor_pos(MOTOR_E_CHAR) - mid_point) > HH_TOL)
+		mcuicom_send(buf);
+	#undef HH_TOL
+	#undef STEP_INC
+	
+	// Set destination position of motor E to the mid-point of points A and B.
+	snprintf(buf, size, "GE,%d" CMDEND, mid_point);
+	mcuicom_send(buf);
+	
+	// Clear position register to make PID take the current position as its reference (zero) position
+	mcuicom_send("KE" CMDEND);
+	
+	// Move motor to the hard home position.
+	mcuicom_send("GE,0" CMDEND);
 }
 
 void hardhome_motor_f(void)
