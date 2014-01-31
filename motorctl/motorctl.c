@@ -7,6 +7,63 @@
 
 #include "../debug.h"
 
+/***********************
+ * Auxiliary functions *
+ ***********************/
+
+/**
+ * Return the absolute value and the sign of a given integer quantity.
+ * 
+ * The absolute value of the quantity is returned by means of the function's return value,
+ * while the sign is returned using an input/output parameter (pointer to a variable) which
+ * represents a flag that indicates whether the number is negative (flag = 1) or positive
+ * (flag = 0).
+ * 
+ * @param num         integer quantity
+ * @param negative    pointer to the variable where the sign flag should be returned
+ *                    (1 = the quantity is negative, 0 = the quantity is positive)
+ * 
+ * @returns           absolute value of the given integer quantity
+ */
+int abs_neg(int num, unsigned char *negative)
+{
+	if (num < 0)
+	{
+		*negative = 1;
+		return -num;
+	}
+	else
+	{
+		*negative = 0;
+		return num;
+	}
+}
+
+/**
+ * Return the absolute value and the sign of a given integer quantity.
+ * 
+ * The absolute value of the quantity is returned by means of the function's return value,
+ * while the sign is returned using an input/output parameter (pointer to a variable).
+ * 
+ * @param num    integer quantity
+ * @param sig    pointer to the variable where the sign should be returned (-1 or 1)
+ * 
+ * @returns      absolute value of the given integer quantity
+ */
+int abs_sign(int num, int *sig)
+{
+	if (num < 0)
+	{
+		*sig = -1;
+		return -num;
+	}
+	else
+	{
+		*sig = 1;
+		return num;
+	}
+}
+
 /*********************************************
  * Velocity profile generation (trapezoidal) *
  *********************************************/
@@ -110,7 +167,7 @@ void generate_trapezoidal_profile(void)
  * PID control loop *
  ********************/
 
-#define PWM_MIN_DUTY    0
+#define PWM_MIN_DUTY    10
 #define PWM_MAX_DUTY    100
 
 typedef struct {
@@ -128,7 +185,7 @@ bool_t        pid_enabled[NUM_MOTORS];
 int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 {
 	float    error_diff;
-	int      pid_output;
+	int      pid_output, pid_abs, pid_sig;
 	
 	pid_info->curr_error = desired_pos - current_pos;
 	pid_info->error_sum += pid_info->curr_error * T3PERIOD; // Sum error * dt
@@ -144,48 +201,15 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 		pid_info->error_sum = tmpi;
 	else
 	*/
-	if (pid_output < PWM_MIN_DUTY)
-		pid_output = PWM_MIN_DUTY;
-	else if (PWM_MAX_DUTY < pid_output)
-		pid_output = PWM_MAX_DUTY;
+	pid_abs = abs_sign(pid_output, &pid_sig);
+	if (0 < pid_abs && pid_abs < PWM_MIN_DUTY)
+		pid_output = pid_sig * PWM_MIN_DUTY;
+	else if (PWM_MAX_DUTY < pid_abs)
+		pid_output = pid_sig * PWM_MAX_DUTY;
 	
 	pid_info->prev_error = pid_info->curr_error;
 	
-	// Adjust sign according to sense of movement
-	if (pid_info->curr_error > 0 && pid_output < 0)
-		pid_output = -pid_output;
-	else if (pid_info->curr_error < 0 && pid_output > 0)
-		pid_output = -pid_output;
-	
 	return pid_output;
-}
-
-/**
- * Return the absolute value and the sign of a given integer quantity.
- * 
- * The absolute value of the quantity is returned by means of the function's return value,
- * while the sign is returned using an input/output parameter (pointer to a variable) which
- * represents a flag that indicates whether the number is negative (flag = 1) or positive
- * (flag = 0).
- * 
- * @param num         integer quantity
- * @param negative    pointer to the variable where the sign flag should be returned
- *                    (1 = the quantity is negative, 0 = the quantity is positive)
- * 
- * @returns           absolute value of the given integer quantity
- */
-int abs_sign(int num, unsigned char *negative)
-{
-	if (num < 0)
-	{
-		*negative = 1;
-		return -num;
-	}
-	else
-	{
-		*negative = 0;
-		return num;
-	}
 }
 
 void setup_pid_info(void)
@@ -197,9 +221,12 @@ void setup_pid_info(void)
 	// TODO: Enable/disable PID control according to motor mode
 	motorctl_enable_pid(MOTOR_ALL);
 	// TODO: Set PID gains to the values stored in the EEPROM
-	pid_info[MOTOR_A].KP = 46;
-	pid_info[MOTOR_A].KI = 40;
-	pid_info[MOTOR_A].KD = 110;
+	//pid_info[MOTOR_A].KP = 46;
+	pid_info[MOTOR_A].KP = 1;
+	//pid_info[MOTOR_A].KI = 40;
+	pid_info[MOTOR_A].KI = 0;
+	//pid_info[MOTOR_A].KD = 110;
+	pid_info[MOTOR_A].KD = 0;
 }
 
 /***************************
@@ -236,7 +263,7 @@ inline void motorctl(void)
 		// Translate the PWM duty cycle into a PWM level and a PWM direction
 		// and update the corresponding registers
 		unsigned char direction;
-		duty = abs_sign(duty, &direction);
+		duty = abs_neg(duty, &direction);
 		direction = 1 - direction; // Uncomment only if 'direction' needs to be inverted
 		/*
 		motor_pwm_level[MOTOR_A] = duty;
