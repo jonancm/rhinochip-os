@@ -244,7 +244,7 @@ inline void motorctl_setup(void)
 	
 	setup_pid_info();
 	
-	// Set up Timer 2 to implement a custom multi-channel QEI
+	// Set up Timer 3 to implement PID control
 	
 	IFS0bits.T3IF = 0; // Clear the timer 3 interrupt flag
 	IEC0bits.T3IE = 1; // Enable timer 3 interrupts
@@ -298,7 +298,7 @@ void motorctl_move(void)
 	setup_trapezoidal_movement();
 	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
 	motorctl_info[MOTOR_A].enabled = true;
-	// Perform the trapezoidal move. The microcontrollers blocks until the movement has finished.
+	// Perform the trapezoidal move. The microcontroller blocks until the movement has finished.
 	do {
 		// Calculate next motor position in order to achieve a trapezoidal velocity profile
 		generate_trapezoidal_profile();
