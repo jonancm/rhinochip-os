@@ -211,7 +211,9 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	else
 	*/
 	pid_abs = abs_sign(pid_output, &pid_sig);
-	if (0 < pid_abs && pid_abs < PWM_MIN_DUTY)
+	if (pid_abs == 0)
+		pid_info->error_sum = 0;
+	else if (0 < pid_abs && pid_abs < PWM_MIN_DUTY)
 		pid_output = pid_sig * PWM_MIN_DUTY;
 	else if (PWM_MAX_DUTY < pid_abs)
 		pid_output = pid_sig * PWM_MAX_DUTY;
