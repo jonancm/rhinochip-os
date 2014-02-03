@@ -234,8 +234,8 @@ void setup_pid_info(void)
 	//pid_info[MOTOR_A].KI = 40;
 	//pid_info[MOTOR_A].KD = 110;
 	pid_info[MOTOR_A].KP = 1;
-	pid_info[MOTOR_A].KI = 0;
-	pid_info[MOTOR_A].KD = 1;
+	pid_info[MOTOR_A].KI = 1;
+	pid_info[MOTOR_A].KD = 0;
 }
 
 /***************************
