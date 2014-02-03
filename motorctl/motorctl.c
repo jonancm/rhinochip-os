@@ -679,10 +679,21 @@ int pid_loop(pid_info_t *pid_info, int current_pos, int desired_pos)
 	
 	error_diff = pid_info->curr_error - pid_info->prev_error;
 	
+	// If the motor has arrived at its desired position (i.e. the error is zero),
+	// eliminate the integral and derivative terms by making them zero.
+	// Since the error is zero, the proportional term will also be zero.
+	// This is intended to eliminate any PWM pulse after the motor has arrived
+	// its desired position.
+	if (pid_info->curr_error == 0)
+	{
+		pid_info->error_sum = 0; // make integral term become zero
+		error_diff = 0;          // make derivative term become zero
+	}
+	
 	pid_output = pid_info->KP * pid_info->curr_error
 	           + pid_info->KI * pid_info->error_sum
 	           + pid_info->KD * error_diff * T3FREQ; // d(error) / dt
-	
+
 	/*
 	if (PWM_MIN_DUTY <= pid_output && pid_output <= PWM_MAX_DUTY)
 		pid_info->error_sum = tmpi;
