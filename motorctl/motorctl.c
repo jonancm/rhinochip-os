@@ -340,7 +340,7 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	
 	// Clear Timer 4 interrupt flag
 	IFS1bits.T4IF = 0;
-	// Re-enable Timer 4 interrupt flag
+	// Re-enable Timer 4 interrupt
 	IEC1bits.T4IE = 1;
 }
 
