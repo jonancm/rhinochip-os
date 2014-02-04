@@ -98,7 +98,7 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].velocity = 0;
 	motorctl_info[MOTOR_A].phase1displacement = 0;
 	motorctl_info[MOTOR_A].halfcount = abs(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A]) / 2;
-	motorctl_info[MOTOR_A].max_velocity = (motor_desired_velocity[MOTOR_A] * SYSTEM_VELOCITY) / 100.0;
+	motorctl_info[MOTOR_A].max_velocity = (motor_max_velocity[MOTOR_A] * motor_desired_velocity[MOTOR_A] * SYSTEM_VELOCITY) / (100.0 * 100.0);
 	motorctl_info[MOTOR_A].acceleration = (SYSTEM_ACCELERATION / 100.) * motorctl_info[MOTOR_A].max_velocity;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].start_pos = motor_steps[MOTOR_A];
