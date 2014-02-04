@@ -64,6 +64,11 @@ extern char motor_pwm_level[NUM_MOTORS];
 extern char motor_direction[NUM_MOTORS];
 extern char motor_desired_velocity[NUM_MOTORS];
 
+/**
+ * Maximum velocity of each motor expressed in encoder steps per second
+ */
+extern float motor_max_velocity[NUM_MOTORS];
+
 extern float cartesian_desired_pos[NUM_COORDS];
 
 #endif /* MOTOR_STATUS_C */
