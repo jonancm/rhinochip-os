@@ -107,6 +107,21 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].start_pos = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].motion_dir = sig;
+
+	// Initialize motor control data structure for motor B
+	absval = abs_sign(motor_commanded_pos[MOTOR_B] - motor_steps[MOTOR_B], &sig);
+	motorctl_info[MOTOR_B].enabled = false;
+	motorctl_info[MOTOR_B].phase = 0;
+	motorctl_info[MOTOR_B].velocity_saturated = false;
+	motorctl_info[MOTOR_B].flatcount = 0;
+	motorctl_info[MOTOR_B].velocity = 0;
+	motorctl_info[MOTOR_B].phase1displacement = 0;
+	motorctl_info[MOTOR_B].halfcount = absval / 2;
+	motorctl_info[MOTOR_B].max_velocity = (motor_desired_velocity[MOTOR_B] * system_velocity) / 100.0;
+	motorctl_info[MOTOR_B].acceleration = (system_acceleration / 100.) * motorctl_info[MOTOR_B].max_velocity;
+	motorctl_info[MOTOR_B].position = motor_steps[MOTOR_B];
+	motorctl_info[MOTOR_B].start_pos = motor_steps[MOTOR_B];
+	motorctl_info[MOTOR_B].motion_dir = sig;
 }
 
 inline void generate_trapezoidal_profile_motor_a(void)
@@ -185,9 +200,86 @@ inline void generate_trapezoidal_profile_motor_a(void)
 	}
 }
 
+inline void generate_trapezoidal_profile_motor_b(void)
+{
+	if (motorctl_info[MOTOR_B].enabled)
+	{
+		// Fall phase (motorctl_info[MOTOR_B].phase = 1)
+		if (motorctl_info[MOTOR_B].phase)
+		{
+			// If segment S3 has finished, unset the saturation flag for the velocity to start
+			// decreasing (to enter S4)
+			if (motorctl_info[MOTOR_B].flatcount <= 0)
+				motorctl_info[MOTOR_B].velocity_saturated = false;
+			
+			// If the motor velocity IS saturated, keep moving at maximum velocity until duration
+			// of segment S2 has been matched
+			if (motorctl_info[MOTOR_B].velocity_saturated)
+				 --motorctl_info[MOTOR_B].flatcount;
+			// If the motor velocity is NOT saturated, decrease velocity at a constant rate
+			// (given by system acceleration) until zero velocity is reached
+			else
+				motorctl_info[MOTOR_B].velocity -= motorctl_info[MOTOR_B].acceleration;
+			
+			// If the total displacement of the fall phase has been reached (i.e. the end-point
+			// of the trajectory has been reached), the fall phase (and the movement) has finished
+			if (motorctl_info[MOTOR_B].phase1displacement <= 0 || abs(motor_steps[MOTOR_B] - motor_commanded_pos[MOTOR_B]) < TOL_MOVING)
+			//if (motorctl_info[MOTOR_B].phase1displacement <= 0 || abs(motor_desired_pos[MOTOR_B] - motor_commanded_pos[MOTOR_B]) < TOL_MOVING)
+			// This fixes the final position offset
+				motorctl_info[MOTOR_B].enabled = false;
+			// If the fall phase has not finished yet, decrease the displacement counter
+			else
+				--motorctl_info[MOTOR_B].phase1displacement;
+		}
+		// Rise phase (motorctl_info[MOTOR_B].phase = 0)
+		else
+		{
+			// If the maximum velocity has been reached, limit velocity to its maximum value
+			// and set saturation flag
+			if (motorctl_info[MOTOR_B].velocity >= motorctl_info[MOTOR_B].max_velocity)
+			{
+				motorctl_info[MOTOR_B].velocity = motorctl_info[MOTOR_B].max_velocity;
+				motorctl_info[MOTOR_B].velocity_saturated = true;
+			}
+
+			// If the motor velocity IS saturated, keep moving at maximum velocity and count
+			// duration of segment S2
+			if (motorctl_info[MOTOR_B].velocity_saturated)
+				 ++motorctl_info[MOTOR_B].flatcount;
+			// If the motor velocity is NOT saturated, increase velocity at a constant rate
+			// (given by system acceleration) until maximum velocity is reached
+			else
+				motorctl_info[MOTOR_B].velocity += motorctl_info[MOTOR_B].acceleration;
+			
+			// If the motor position has reached the mid-point of the trajectory, the rise phase
+			// has finished
+			if (abs(motor_steps[MOTOR_B] - motorctl_info[MOTOR_B].start_pos) >= motorctl_info[MOTOR_B].halfcount)
+				motorctl_info[MOTOR_B].phase = 1;
+			// If the rise phase has not finished yet, increment the displacement counter
+			else
+				++motorctl_info[MOTOR_B].phase1displacement;
+			
+			// This fixes the final position offset
+			/*
+			if (abs(motor_steps[MOTOR_B] - motor_commanded_pos[MOTOR_B]) < TOL_MOVING)
+				motorctl_info[MOTOR_B].enabled = false;
+			*/
+			/*
+			if (abs(motor_desired_pos[MOTOR_B] - motor_commanded_pos[MOTOR_B]) < TOL_MOVING)
+				motorctl_info[MOTOR_B].enabled = false;
+			*/
+		}
+		
+		// Calculate next position
+		motorctl_info[MOTOR_B].position = motorctl_info[MOTOR_B].position
+		                                + motorctl_info[MOTOR_B].motion_dir * motorctl_info[MOTOR_B].velocity;
+	}
+}
+
 void generate_trapezoidal_profile(void)
 {
 	generate_trapezoidal_profile_motor_a();
+	generate_trapezoidal_profile_motor_b();
 }
 
 /********************
@@ -319,14 +411,19 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 {
 	// Disable Timer 4 interrupts
+
 	IEC1bits.T4IE = 0;
 	
 	// Declare flag to check if all the motors have finished moving
+
 	bool_t move_finished = false;
 	
 	// Calculate next motor position in order to achieve a trapezoidal velocity profile
+
 	generate_trapezoidal_profile();
+
 	// Command PID loop to go to the new position
+
 	if (motorctl_info[MOTOR_A].enabled)
 	{
 		// TODO: Maybe this (i.e. setting the desired pos only if the motor is
@@ -339,15 +436,22 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
 		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
 	}
-	/*
-	motor_desired_pos[MOTOR_B] = motorctl_info[MOTOR_B].position;
-	motor_desired_pos[MOTOR_C] = motorctl_info[MOTOR_C].position;
-	motor_desired_pos[MOTOR_D] = motorctl_info[MOTOR_D].position;
-	motor_desired_pos[MOTOR_E] = motorctl_info[MOTOR_E].position;
-	motor_desired_pos[MOTOR_F] = motorctl_info[MOTOR_F].position;
-	*/
+
+	if (motorctl_info[MOTOR_B].enabled)
+	{
+		// TODO: Maybe this (i.e. setting the desired pos only if the motor is
+		// enabled) solves the problem of the position offset at the end of the
+		// move that was solved above using TOL_MOVING.
+		motor_desired_pos[MOTOR_B] = motorctl_info[MOTOR_B].position;
+	}
+	else
+	{
+		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+		motor_desired_pos[MOTOR_B] = motor_commanded_pos[MOTOR_B];
+	}
 	
 	// Check if all motors have finished moving and set flag accordingly
+
 	move_finished = !(motorctl_info[MOTOR_A].enabled
 	               || motorctl_info[MOTOR_B].enabled
 	               || motorctl_info[MOTOR_C].enabled
@@ -366,28 +470,31 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	}
 	
 	// Clear Timer 4 interrupt flag
+
 	IFS1bits.T4IF = 0;
+
 	// Re-enable Timer 4 interrupt
+
 	IEC1bits.T4IE = 1;
 }
 
 void motorctl_move(void)
 {
 	// Set up the data structure for the trapezoidal velocity profile generation
+
 	setup_trapezoidal_movement();
+
 	// Enable trapezoidal velocity generation for each motor whose commanded
 	// position register has changed with respect to its actual position register.
 	// This makes the motors start moving.
+
 	if (abs(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A]) > TOL_STEADY)
 		motorctl_info[MOTOR_A].enabled = true;
-	/*
-	motorctl_info[MOTOR_B].enabled = true;
-	motorctl_info[MOTOR_C].enabled = true;
-	motorctl_info[MOTOR_D].enabled = true;
-	motorctl_info[MOTOR_E].enabled = true;
-	motorctl_info[MOTOR_F].enabled = true;
-	*/
+
+	if (abs(motor_commanded_pos[MOTOR_B] - motor_steps[MOTOR_B]) > TOL_STEADY)
+		motorctl_info[MOTOR_B].enabled = true;
 	// Activate Timer 4 to perform the trapezoidal move
+
 	IFS1bits.T4IF = 1; // Set Timer 4 interrupt flag, for ISR to be called upon Timer 4 start
 	T4CONbits.TON = 1; // Start Timer 4
 }
