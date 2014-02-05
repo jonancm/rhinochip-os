@@ -900,12 +900,11 @@ inline void set_joint_abs_a(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_A] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_A] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_a: %d\n", motor_desired_pos[MOTOR_A]);
+			snprintf(buf, 64, "set_joint_abs_a: %d\n", motor_commanded_pos[MOTOR_A]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -927,12 +926,11 @@ inline void set_joint_abs_b(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_B] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_B] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_b: %d\n", motor_desired_pos[MOTOR_B]);
+			snprintf(buf, 64, "set_joint_abs_b: %d\n", motor_commanded_pos[MOTOR_B]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -954,12 +952,11 @@ inline void set_joint_abs_c(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_C] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_C] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_c: %d\n", motor_desired_pos[MOTOR_C]);
+			snprintf(buf, 64, "set_joint_abs_c: %d\n", motor_commanded_pos[MOTOR_C]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -981,12 +978,11 @@ inline void set_joint_abs_d(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_D] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_D] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_d: %d\n", motor_desired_pos[MOTOR_D]);
+			snprintf(buf, 64, "set_joint_abs_d: %d\n", motor_commanded_pos[MOTOR_D]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1008,12 +1004,11 @@ inline void set_joint_abs_e(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_E] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_E] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_e: %d\n", motor_desired_pos[MOTOR_E]);
+			snprintf(buf, 64, "set_joint_abs_e: %d\n", motor_commanded_pos[MOTOR_E]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1035,12 +1030,11 @@ inline void set_joint_abs_f(void)
 		if (param1.type == TOKEN_INT)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			motor_desired_pos[MOTOR_F] = intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_F] = intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_abs_f: %d\n", motor_desired_pos[MOTOR_F]);
+			snprintf(buf, 64, "set_joint_abs_f: %d\n", motor_commanded_pos[MOTOR_F]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1063,12 +1057,11 @@ inline void set_joint_rel_a(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_A] = motor_steps[MOTOR_A] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_a: %d\n", motor_desired_pos[MOTOR_A]);
+			snprintf(buf, 64, "set_joint_rel_a: %d\n", motor_commanded_pos[MOTOR_A]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1091,12 +1084,11 @@ inline void set_joint_rel_b(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_B] = motor_steps[MOTOR_B] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_b: %d\n", motor_desired_pos[MOTOR_B]);
+			snprintf(buf, 64, "set_joint_rel_b: %d\n", motor_commanded_pos[MOTOR_B]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1119,12 +1111,11 @@ inline void set_joint_rel_c(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_C] = motor_steps[MOTOR_C] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_c: %d\n", motor_desired_pos[MOTOR_C]);
+			snprintf(buf, 64, "set_joint_rel_c: %d\n", motor_commanded_pos[MOTOR_C]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1147,12 +1138,11 @@ inline void set_joint_rel_d(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_D] = motor_steps[MOTOR_D] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_d: %d\n", motor_desired_pos[MOTOR_D]);
+			snprintf(buf, 64, "set_joint_rel_d: %d\n", motor_commanded_pos[MOTOR_D]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1175,12 +1165,11 @@ inline void set_joint_rel_e(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_E] = motor_steps[MOTOR_E] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_e: %d\n", motor_desired_pos[MOTOR_E]);
+			snprintf(buf, 64, "set_joint_rel_e: %d\n", motor_commanded_pos[MOTOR_E]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1203,12 +1192,11 @@ inline void set_joint_rel_f(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			// A relative position increment means: desired position = current position + increment
-			motor_desired_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
-			// FIXME: replace `motor_desired_pos` with `motor_commanded_pos`
+			motor_commanded_pos[MOTOR_F] = motor_steps[MOTOR_F] + intparam1;
 			
 			#ifndef NDEBUG
 			char buf[64];
-			snprintf(buf, 64, "set_joint_rel_f: %d\n", motor_desired_pos[MOTOR_F]);
+			snprintf(buf, 64, "set_joint_rel_f: %d\n", motor_commanded_pos[MOTOR_F]);
 			dbgmsg_uart1(buf);
 			#endif
 		}
@@ -1285,14 +1273,14 @@ inline void set_cartesian_rel_z(void)
 
 inline void move_independent(void)
 {
-	// TODO: implement properly (the code below is just for testing PD and PR)
-	motor_steps[MOTOR_A] = motor_desired_pos[MOTOR_A];
-	motor_steps[MOTOR_B] = motor_desired_pos[MOTOR_B];
-	motor_steps[MOTOR_C] = motor_desired_pos[MOTOR_C];
-	motor_steps[MOTOR_D] = motor_desired_pos[MOTOR_D];
-	motor_steps[MOTOR_E] = motor_desired_pos[MOTOR_E];
-	motor_steps[MOTOR_F] = motor_desired_pos[MOTOR_F];
 	dbgmsg_uart1("move_independent\n");
+	
+	// The 'motorctl_move' function does everything that needs to be done:
+	// 1) Disable the PID loop
+	// 2) Execute the trapezoidal movement control
+	// 3) Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+	// 4) Re-enable the PID loop after the trapezoidal move has finished
+	motorctl_move();
 }
 
 inline void move_coordinated(void)
