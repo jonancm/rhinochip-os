@@ -88,6 +88,7 @@ motorctl_info_t    motorctl_info[NUM_MOTORS];
 
 #define SYSTEM_VELOCITY        100
 #define SYSTEM_ACCELERATION    25
+#define ENCODER_TOL            100
 
 void setup_trapezoidal_movement(void)
 {
@@ -132,7 +133,9 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			
 			// If the total displacement of the fall phase has been reached (i.e. the end-point
 			// of the trajectory has been reached), the fall phase (and the movement) has finished
-			if (motorctl_info[MOTOR_A].phase1displacement <= 0)
+			if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+			//if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+			// This fixes the final position offset
 				motorctl_info[MOTOR_A].enabled = false;
 			// If the fall phase has not finished yet, decrease the displacement counter
 			else
@@ -165,6 +168,16 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			// If the rise phase has not finished yet, increment the displacement counter
 			else
 				++motorctl_info[MOTOR_A].phase1displacement;
+			
+			// This fixes the final position offset
+			/*
+			if (abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+				motorctl_info[MOTOR_A].enabled = false;
+			*/
+			/*
+			if (abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+				motorctl_info[MOTOR_A].enabled = false;
+			*/
 		}
 		
 		// Calculate next position
