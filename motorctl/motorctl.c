@@ -81,6 +81,7 @@ typedef struct {
 	int max_velocity;
 	int position;
 	int start_pos;
+	int motion_dir;
 } motorctl_info_t;
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
@@ -90,18 +91,22 @@ motorctl_info_t    motorctl_info[NUM_MOTORS];
 
 void setup_trapezoidal_movement(void)
 {
+	int absval, sig;
+
 	// Initialize motor control data structure for motor A
+	absval = abs_sign(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A], &sig);
 	motorctl_info[MOTOR_A].enabled = false;
 	motorctl_info[MOTOR_A].phase = 0;
 	motorctl_info[MOTOR_A].velocity_saturated = false;
 	motorctl_info[MOTOR_A].flatcount = 0;
 	motorctl_info[MOTOR_A].velocity = 0;
 	motorctl_info[MOTOR_A].phase1displacement = 0;
-	motorctl_info[MOTOR_A].halfcount = abs(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A]) / 2;
+	motorctl_info[MOTOR_A].halfcount = absval / 2;
 	motorctl_info[MOTOR_A].max_velocity = (motor_desired_velocity[MOTOR_A] * SYSTEM_VELOCITY) / 100.0;
 	motorctl_info[MOTOR_A].acceleration = (SYSTEM_ACCELERATION / 100.) * motorctl_info[MOTOR_A].max_velocity;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].start_pos = motor_steps[MOTOR_A];
+	motorctl_info[MOTOR_A].motion_dir = sig;
 }
 
 inline void generate_trapezoidal_profile_motor_a(void)
@@ -163,7 +168,8 @@ inline void generate_trapezoidal_profile_motor_a(void)
 		}
 		
 		// Calculate next position
-		motorctl_info[MOTOR_A].position = motorctl_info[MOTOR_A].position + motorctl_info[MOTOR_A].velocity;
+		motorctl_info[MOTOR_A].position = motorctl_info[MOTOR_A].position
+		                                + motorctl_info[MOTOR_A].motion_dir * motorctl_info[MOTOR_A].velocity;
 	}
 }
 
