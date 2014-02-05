@@ -940,10 +940,6 @@ void motorctl_move(void)
 
 	IFS1bits.T4IF = 1; // Set Timer 4 interrupt flag, for ISR to be called upon Timer 4 start
 	T4CONbits.TON = 1; // Start Timer 4
-
-	// Wait until trapezoidal move finishes
-
-	while (!move_finished);
 }
 
 inline bool_t executing_trapezoidal_move(void)
