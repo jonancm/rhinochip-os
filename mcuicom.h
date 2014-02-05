@@ -36,7 +36,7 @@ extern buffer_t mcuicom_rcv_buf;
  */
 inline void mcuicom_setup(void);
 
-int mcuicom_send(const char * const data, const int size);
+int mcuicom_send(const char * const data);
 
 /**
  * Copy the first fully received GPMCU command from the receive buffer to the

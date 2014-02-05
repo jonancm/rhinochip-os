@@ -112,10 +112,10 @@ int hostcom_read_cmd(char buf[], int size, bool_t *full)
 	return copied;
 }
 
-int hostcom_send(const char * const data, const int size)
+int hostcom_send(const char * const data)
 {
 	int sent;
-	for (sent = 0; sent < size; ++sent)
+	for (sent = 0; data[sent] != '\0'; ++sent)
 	{
 		while (U2STAbits.UTXBF); // Wait while the transmit buffer is full
 		U2TXREG = data[sent];

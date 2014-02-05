@@ -32,7 +32,7 @@
 #define MOTOR_F_MAX_RANGE     300
 #define MOTOR_F_MIN_RANGE    -300
 
-#define T2FREQ                100000                         /* Timer 2 frequency: 100 kHz */
+#define T2FREQ                10000                          /* Timer 2 frequency: 10 kHz */
 #define T2PRESCALER           1                              /* Timer 2 prescale value of 1:1 */
 #define PR2VAL                (FCY / (T2FREQ * T2PRESCALER)) /* Value for the PR1 register of Timer 2 */
 
