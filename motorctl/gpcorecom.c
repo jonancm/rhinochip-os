@@ -187,6 +187,14 @@ inline void set_pos_motor_d(void);
 inline void set_pos_motor_e(void);
 inline void set_pos_motor_f(void);
 
+inline void check_motor_a_executing_trapezoidal_move(void);
+inline void check_motor_b_executing_trapezoidal_move(void);
+inline void check_motor_c_executing_trapezoidal_move(void);
+inline void check_motor_d_executing_trapezoidal_move(void);
+inline void check_motor_e_executing_trapezoidal_move(void);
+inline void check_motor_f_executing_trapezoidal_move(void);
+inline void check_any_motor_executing_trapezoidal_move(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -764,6 +772,35 @@ void interpret_cmd(void)
 				// SS: Stop all motors
 				case 'S':
 					stop_all_motors(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'X':
+			switch (cmd_name[1])
+			{
+				// XA: Check if motor A is executing a trapezoidal move
+				case 'A':
+					check_motor_a_executing_trapezoidal_move(); break;
+				// XB: Check if motor B is executing a trapezoidal move
+				case 'B':
+					check_motor_b_executing_trapezoidal_move(); break;
+				// XC: Check if motor C is executing a trapezoidal move
+				case 'C':
+					check_motor_c_executing_trapezoidal_move(); break;
+				// XD: Check if motor D is executing a trapezoidal move
+				case 'D':
+					check_motor_d_executing_trapezoidal_move(); break;
+				// XE: Check if motor E is executing a trapezoidal move
+				case 'E':
+					check_motor_e_executing_trapezoidal_move(); break;
+				// XF: Check if motor F is executing a trapezoidal move
+				case 'F':
+					check_motor_f_executing_trapezoidal_move(); break;
+				// XS: Check if any motor is executing a trapezoidal move
+				case 'X':
+					check_any_motor_executing_trapezoidal_move(); break;
 				default:
 					// error: unknown command
 					break;
@@ -1911,4 +1948,74 @@ inline void set_pos_motor_f(void)
 	{
 		// error: parameter must be specified
 	}
+}
+
+inline void check_motor_a_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_a_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_motor_b_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_b_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_motor_c_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_c_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_motor_d_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_d_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_motor_e_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_e_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_motor_f_executing_trapezoidal_move(void)
+{
+	bool_t answer = motor_f_executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
+}
+
+inline void check_any_motor_executing_trapezoidal_move(void)
+{
+	bool_t answer = executing_trapezoidal_move();
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, answer);
+	mcuicom_send(buf);
 }

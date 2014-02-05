@@ -2,6 +2,7 @@
 #define MOTORCTL_H
 
 #include "../clock.h"
+#include "../types.h"
 
 #define T3FREQ                5000                           /* Timer 3 frequency: 5 kHz */
 #define T3PERIOD              (1. / T3FREQ)                  /* Timer 3 period: 0.2 ms (0.002 seconds) */
@@ -41,5 +42,13 @@ void motorctl_enable_pid(unsigned char motors);
  * Disable PID control on the specified motors.
  */
 void motorctl_disable_pid(unsigned char motors);
+
+inline bool_t executing_trapezoidal_move(void);
+inline bool_t motor_a_executing_trapezoidal_move(void);
+inline bool_t motor_b_executing_trapezoidal_move(void);
+inline bool_t motor_c_executing_trapezoidal_move(void);
+inline bool_t motor_d_executing_trapezoidal_move(void);
+inline bool_t motor_e_executing_trapezoidal_move(void);
+inline bool_t motor_f_executing_trapezoidal_move(void);
 
 #endif

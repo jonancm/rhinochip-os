@@ -787,15 +787,13 @@ void __attribute__((interrupt, auto_psv)) _T3Interrupt(void)
 	IEC0bits.T3IE = 1;
 }
 
+bool_t move_finished = true;
+
 void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 {
 	// Disable Timer 4 interrupts
 
 	IEC1bits.T4IE = 0;
-	
-	// Declare flag to check if all the motors have finished moving
-
-	bool_t move_finished = false;
 	
 	// Calculate next motor position in order to achieve a trapezoidal velocity profile
 
@@ -914,6 +912,7 @@ void motorctl_move(void)
 	// Set up the data structure for the trapezoidal velocity profile generation
 
 	setup_trapezoidal_movement();
+	move_finished = false;
 
 	// Enable trapezoidal velocity generation for each motor whose commanded
 	// position register has changed with respect to its actual position register.
@@ -941,6 +940,45 @@ void motorctl_move(void)
 
 	IFS1bits.T4IF = 1; // Set Timer 4 interrupt flag, for ISR to be called upon Timer 4 start
 	T4CONbits.TON = 1; // Start Timer 4
+
+	// Wait until trapezoidal move finishes
+
+	while (!move_finished);
+}
+
+inline bool_t executing_trapezoidal_move(void)
+{
+	return !move_finished;
+}
+
+inline bool_t motor_a_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_A].enabled;
+}
+
+inline bool_t motor_b_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_B].enabled;
+}
+
+inline bool_t motor_c_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_C].enabled;
+}
+
+inline bool_t motor_d_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_D].enabled;
+}
+
+inline bool_t motor_e_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_E].enabled;
+}
+
+inline bool_t motor_f_executing_trapezoidal_move(void)
+{
+	return motorctl_info[MOTOR_F].enabled;
 }
 
 void motorctl_enable_pid(unsigned char motors)
