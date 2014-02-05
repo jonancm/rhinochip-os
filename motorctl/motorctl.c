@@ -86,7 +86,8 @@ typedef struct {
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
 
-#define ENCODER_TOL    100
+#define TOL_MOVING    100 /* Tolerance to detect changes in position when the motor is moving */
+#define TOL_STEADY    100 /* Tolerance to detect changes in position when the motor is steady */
 
 void setup_trapezoidal_movement(void)
 {
@@ -131,8 +132,8 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			
 			// If the total displacement of the fall phase has been reached (i.e. the end-point
 			// of the trajectory has been reached), the fall phase (and the movement) has finished
-			if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
-			//if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+			if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
+			//if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
 			// This fixes the final position offset
 				motorctl_info[MOTOR_A].enabled = false;
 			// If the fall phase has not finished yet, decrease the displacement counter
@@ -169,11 +170,11 @@ inline void generate_trapezoidal_profile_motor_a(void)
 			
 			// This fixes the final position offset
 			/*
-			if (abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+			if (abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
 				motorctl_info[MOTOR_A].enabled = false;
 			*/
 			/*
-			if (abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < ENCODER_TOL)
+			if (abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
 				motorctl_info[MOTOR_A].enabled = false;
 			*/
 		}
