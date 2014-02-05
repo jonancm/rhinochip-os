@@ -30,8 +30,12 @@
 #define COORD_Z        2
 
 typedef enum {MOTOR_IDLE, MOTOR_TRAPEZOIDAL, MOTOR_VELOCITY, MOTOR_OPEN_LOOP} motor_mode_t;
+typedef enum {MOVING_TRAPEZOIDAL, MOVING_PID, STOPPED} motor_status_t;
 
 #ifndef MOTOR_STATUS_C
+
+extern motor_mode_t motor_mode[NUM_MOTORS];
+extern motor_status_t motor_status[NUM_MOTORS];
 
 /**
  * 16-bit count registers to count motor steps. Being 16-bit wide, they can
@@ -59,7 +63,6 @@ extern int motor_commanded_pos[NUM_MOTORS];
  */
 extern int motor_desired_pos[NUM_MOTORS];
 
-extern motor_mode_t motor_mode[NUM_MOTORS];
 extern char motor_pwm_level[NUM_MOTORS];
 extern char motor_direction[NUM_MOTORS];
 extern char motor_desired_velocity[NUM_MOTORS];
