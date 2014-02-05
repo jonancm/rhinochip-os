@@ -221,6 +221,8 @@ void controller_status_setup(void);
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor);
 
+void update_motor_status(void);
+
 /**
  * Check if any of the given motors is executing a trapezoidal move.
  * 

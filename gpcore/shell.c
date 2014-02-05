@@ -969,6 +969,7 @@ void interpret_cmd(void)
 inline void hostcmd_sa(void)
 {
 	char buf[64];
+	update_motor_status();
 	snprintf(buf, 64, "%u\n", controller.motor_status);
 	hostcom_send(buf);
 }
