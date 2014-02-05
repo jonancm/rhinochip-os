@@ -370,9 +370,11 @@ void motorctl_move(void)
 {
 	// Set up the data structure for the trapezoidal velocity profile generation
 	setup_trapezoidal_movement();
-	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
-	// FIXME: Only enable those motors whose commanded position register and actual position register have different values
-	motorctl_info[MOTOR_A].enabled = true;
+	// Enable trapezoidal velocity generation for each motor whose commanded
+	// position register has changed with respect to its actual position register.
+	// This makes the motors start moving.
+	if (abs(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A]) > TOL_STEADY)
+		motorctl_info[MOTOR_A].enabled = true;
 	/*
 	motorctl_info[MOTOR_B].enabled = true;
 	motorctl_info[MOTOR_C].enabled = true;
