@@ -66,6 +66,9 @@ extern char motor_desired_velocity[NUM_MOTORS];
 
 extern float cartesian_desired_pos[NUM_COORDS];
 
+extern char system_velocity;
+extern char system_acceleration;
+
 #endif /* MOTOR_STATUS_C */
 
 #endif /* MOTOR_STATUS_H */
