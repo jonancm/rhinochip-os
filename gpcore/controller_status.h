@@ -42,7 +42,7 @@ typedef struct {
 	 * Bit 1:    1 = Motor B in Trapezoidal move    0 = Motor B not in Trapezoidal move
 	 * Bit 0:    1 = Motor A in Trapezoidal move    0 = Motor A not in Trapezoidal move
 	 */
-	char motor_status;
+	unsigned char motor_status;
 	
 	/**
 	 * System Configuration.

@@ -3,6 +3,9 @@
 #endif
 
 #include "controller_status.h"
+#include "mctlcom.h"
+
+#include <stdlib.h> // atoi
 
 controller_status_t    controller;
 
@@ -52,8 +55,70 @@ bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
 	return condition;
 }
 
+void update_motor_status(void)
+{
+	const int size = 64;
+	char buf[size];
+	int recvd, status_bit;
+	
+	mcuicom_send("XA" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_A;
+	else
+		controller.motor_status &= ~MOTOR_A;
+
+	mcuicom_send("XB" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_B;
+	else
+		controller.motor_status &= ~MOTOR_B;
+
+	mcuicom_send("XC" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_C;
+	else
+		controller.motor_status &= ~MOTOR_C;
+
+	mcuicom_send("XD" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_D;
+	else
+		controller.motor_status &= ~MOTOR_D;
+
+	mcuicom_send("XE" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_E;
+	else
+		controller.motor_status &= ~MOTOR_E;
+
+	mcuicom_send("XF" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	status_bit = atoi(buf);
+	if (status_bit)
+		controller.motor_status |= MOTOR_F;
+	else
+		controller.motor_status &= ~MOTOR_F;
+}
+
 bool_t any_motor_executing_trapezoidal_move(unsigned char motor_flags)
 {
+	update_motor_status();
 	return controller.motor_status & motor_flags;
 }
 
