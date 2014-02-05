@@ -332,13 +332,16 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	               || motorctl_info[MOTOR_E].enabled
 	               || motorctl_info[MOTOR_F].enabled);
 	
+	if (!motorctl_info[MOTOR_A].enabled)
+	{
+		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
+	}
+
 	if (move_finished)
 	{
 		// Stop Timer 4
 		T4CONbits.TON = 0;
-		
-		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
-		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
 		
 		// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
 		// motorctl_enable_pid(MOTOR_ALL);
@@ -356,12 +359,15 @@ void motorctl_move(void)
 	// Set up the data structure for the trapezoidal velocity profile generation
 	setup_trapezoidal_movement();
 	// Enable trapezoidal velocity generation for each motor. This makes the motors start moving.
+	// FIXME: Only enable those motors whose commanded position register and actual position register have different values
 	motorctl_info[MOTOR_A].enabled = true;
+	/*
 	motorctl_info[MOTOR_B].enabled = true;
 	motorctl_info[MOTOR_C].enabled = true;
 	motorctl_info[MOTOR_D].enabled = true;
 	motorctl_info[MOTOR_E].enabled = true;
 	motorctl_info[MOTOR_F].enabled = true;
+	*/
 	// Activate Timer 4 to perform the trapezoidal move
 	IFS1bits.T4IF = 1; // Set Timer 4 interrupt flag, for ISR to be called upon Timer 4 start
 	T4CONbits.TON = 1; // Start Timer 4
