@@ -327,7 +327,18 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	// Calculate next motor position in order to achieve a trapezoidal velocity profile
 	generate_trapezoidal_profile();
 	// Command PID loop to go to the new position
-	motor_desired_pos[MOTOR_A] = motorctl_info[MOTOR_A].position;
+	if (motorctl_info[MOTOR_A].enabled)
+	{
+		// TODO: Maybe this (i.e. setting the desired pos only if the motor is
+		// enabled) solves the problem of the position offset at the end of the
+		// move that was solved above using TOL_MOVING.
+		motor_desired_pos[MOTOR_A] = motorctl_info[MOTOR_A].position;
+	}
+	else
+	{
+		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
+		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
+	}
 	/*
 	motor_desired_pos[MOTOR_B] = motorctl_info[MOTOR_B].position;
 	motor_desired_pos[MOTOR_C] = motorctl_info[MOTOR_C].position;
@@ -344,12 +355,6 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 	               || motorctl_info[MOTOR_E].enabled
 	               || motorctl_info[MOTOR_F].enabled);
 	
-	if (!motorctl_info[MOTOR_A].enabled)
-	{
-		// Move the contents of 'motor_commanded_pos' to 'motor_desired_pos'
-		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
-	}
-
 	if (move_finished)
 	{
 		// Stop Timer 4
