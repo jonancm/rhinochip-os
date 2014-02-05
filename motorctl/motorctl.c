@@ -341,7 +341,8 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void)
 		motor_desired_pos[MOTOR_A] = motor_commanded_pos[MOTOR_A];
 		
 		// Enable PID on all motors again, for position correction to be performed automatically on a timely basis
-		motorctl_enable_pid(MOTOR_ALL);
+		// motorctl_enable_pid(MOTOR_ALL);
+		// TODO: remove
 	}
 	
 	// Clear Timer 4 interrupt flag
