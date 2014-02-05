@@ -8,8 +8,8 @@
 #define T3PRESCALER           1                              /* Timer 3 prescale value of 1:1 */
 #define PR3VAL                (FCY / (T3FREQ * T3PRESCALER)) /* Value for the PR3 register of Timer 3 */
 
-#define T4FREQ                10                             /* Timer 4 frequency: 10 Hz */
-#define T4PERIOD              (1. / T4FREQ)                  /* Timer 4 period: 0.1 s */
+#define T4PERIOD              0.070                          /* Timer 4 period: 28 ms */
+#define T4FREQ                (1. / T4PERIOD)                /* Timer 4 frequency */
 #define T4PRESCALER           256                            /* Timer 4 prescale value of 1:256 */
 #define PR4VAL                (FCY / (T4FREQ * T4PRESCALER)) /* Value for the PR4 register of Timer 4 */
 
