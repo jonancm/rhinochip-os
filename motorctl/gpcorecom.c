@@ -214,6 +214,13 @@ inline void set_system_acceleration(void);
 inline void read_system_velocity(void);
 inline void set_system_velocity(void);
 
+inline void read_pwm_dir_motor_a(void);
+inline void read_pwm_dir_motor_b(void);
+inline void read_pwm_dir_motor_c(void);
+inline void read_pwm_dir_motor_d(void);
+inline void read_pwm_dir_motor_e(void);
+inline void read_pwm_dir_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -548,6 +555,24 @@ void interpret_cmd(void)
 		case 'C':
 			switch (cmd_name[1])
 			{
+				// CA: Read PWM level and direction of motor A
+				case 'A':
+					read_pwm_dir_motor_a(); break;
+				// CB: Read PWM level and direction of motor B
+				case 'B':
+					read_pwm_dir_motor_b(); break;
+				// CC: Read PWM level and direction of motor C
+				case 'C':
+					read_pwm_dir_motor_c(); break;
+				// CD: Read PWM level and direction of motor D
+				case 'D':
+					read_pwm_dir_motor_d(); break;
+				// CE: Read PWM level and direction of motor E
+				case 'E':
+					read_pwm_dir_motor_e(); break;
+				// CF: Read PWM level and direction of motor F
+				case 'F':
+					read_pwm_dir_motor_f(); break;
 				// CX: Set cartesian absolute position of motor X
 				case 'X':
 					set_cartesian_abs_x(); break;
@@ -2287,4 +2312,65 @@ inline void set_system_velocity(void)
 				system_velocity = intparam1;
 		}
 	}
+}
+
+inline void read_pwm_dir_motor_a(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_A] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_A] * direction);
+	mcuicom_send(buf);
+}
+inline void read_pwm_dir_motor_b(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_B] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_B] * direction);
+	mcuicom_send(buf);
+}
+inline void read_pwm_dir_motor_c(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_C] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_C] * direction);
+	mcuicom_send(buf);
+}
+inline void read_pwm_dir_motor_d(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_D] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_D] * direction);
+	mcuicom_send(buf);
+}
+inline void read_pwm_dir_motor_e(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_E] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_E] * direction);
+	mcuicom_send(buf);
+}
+inline void read_pwm_dir_motor_f(void)
+{
+	const int size = 64;
+	char buf[size];
+	int direction;
+
+	direction = (motor_direction[MOTOR_F] ? -1 : 1);
+	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_F] * direction);
+	mcuicom_send(buf);
 }
