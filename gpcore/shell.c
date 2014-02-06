@@ -1587,6 +1587,7 @@ inline void hostcmd_cr(void)
 inline void hostcmd_ar(void)
 {
 	char buf[64];
+	update_system_acceleration();
 	snprintf(buf, 64, "%u\n", controller.system_acceleration);
 	hostcom_send(buf);
 }

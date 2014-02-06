@@ -268,4 +268,6 @@ void set_controller_generic_mode(void);
 void set_controller_xr3_mode(void);
 void set_controller_scara_mode(void);
 
+void update_system_acceleration(void);
+
 #endif

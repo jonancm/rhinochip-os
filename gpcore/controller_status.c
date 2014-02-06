@@ -335,3 +335,15 @@ void update_motor_mode(void)
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_f = motor_mode;
 }
+
+void update_system_acceleration(void)
+{
+	const int size = 64;
+	char buf[size];
+	int recvd;
+
+	mcuicom_send("AR" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	controller.system_acceleration = atoi(buf);
+}
