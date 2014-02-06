@@ -14,9 +14,18 @@ void controller_status_setup(void)
 	// At startup, the system configuration is read from the EEPROM.
 	// TODO: implement this
 	
-	// The RhinoChip platform doesn't allow a teach pendant to be connect.
+	// The RhinoChip platform doesn't allow a teach pendant to be connected.
 	// Thus, bit 3 of the system status register must be set.
 	// At system startup, the other bits are cleared.
+	// 
+	// Bit 7: 0 = No motor is performing a trapezoidal move.
+	// Bit 6: 0 = No system error has occurred.
+	// Bit 5: 0 = The general purpose delay timer is inactive.
+	// Bit 4: 0 = No wait on input or wait on switch is still pending.
+	// Bit 3: 1 = No teach pendant is connected.
+	// Bit 2: 0 = The teach pendant ENTER key has not been pressed.
+	// Bit 1: 0 = The teach pendant ESCAPE key has not been pressed.
+	// Bit 0: 0 = No teach pendant error has occurred.
 	controller.system_status = BIT_3;
 }
 
