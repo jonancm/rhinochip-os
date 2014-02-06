@@ -201,6 +201,13 @@ inline void set_motor_mode_d(void);
 inline void set_motor_mode_e(void);
 inline void set_motor_mode_f(void);
 
+inline void read_motor_mode_a(void);
+inline void read_motor_mode_b(void);
+inline void read_motor_mode_c(void);
+inline void read_motor_mode_d(void);
+inline void read_motor_mode_e(void);
+inline void read_motor_mode_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -746,6 +753,32 @@ void interpret_cmd(void)
 				// PF: Set PWM level and direction for motor F
 				case 'F':
 					set_pwm_dir_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'Q':
+			switch (cmd_name[1])
+			{
+				// QA: Read motor mode of motor A (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'A':
+					read_motor_mode_a(); break;
+				// QB: Read motor mode of motor B (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'B':
+					read_motor_mode_b(); break;
+				// QC: Read motor mode of motor C (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'C':
+					read_motor_mode_c(); break;
+				// QD: Read motor mode of motor D (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'D':
+					read_motor_mode_d(); break;
+				// QE: Read motor mode of motor E (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'E':
+					read_motor_mode_e(); break;
+				// QF: Read motor mode of motor F (0=idle, 1=trapezoidal, 2=velocity, 3=open-loop)
+				case 'F':
+					read_motor_mode_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2128,4 +2161,52 @@ inline void set_motor_mode_f(void)
 				motor_mode[MOTOR_F] = intparam1;
 		}
 	}
+}
+
+void read_motor_mode_a(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_A]);
+	mcuicom_send(buf);
+}
+
+void read_motor_mode_b(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_B]);
+	mcuicom_send(buf);
+}
+
+void read_motor_mode_c(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_C]);
+	mcuicom_send(buf);
+}
+
+void read_motor_mode_d(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_D]);
+	mcuicom_send(buf);
+}
+
+void read_motor_mode_e(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_E]);
+	mcuicom_send(buf);
+}
+
+void read_motor_mode_f(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_F]);
+	mcuicom_send(buf);
 }
