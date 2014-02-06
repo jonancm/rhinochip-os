@@ -93,6 +93,9 @@ void controller_status_setup(void)
 	// TODO: read settings from EEPROM rather than hardcoding them into the program
 	set_motor_mode(MOTOR_ALL, MOTOR_IDLE);
 	set_motor_mode(MOTOR_A, MOTOR_TRAPEZOIDAL);
+
+	// Indicate that a hard home has not been executed
+	controller.hardhome_status = HARDHOME_NEEDED;
 }
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)

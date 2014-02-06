@@ -245,7 +245,7 @@ bool_t hard_home_executed(void);
 bool_t controller_in_robot_mode(void);
 
 /**
- * Check if a hard home is in progres..
+ * Check if a hard home is in progress.
  */
 bool_t hard_home_in_progress(void);
 
