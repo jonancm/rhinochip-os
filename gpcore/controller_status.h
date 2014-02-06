@@ -149,7 +149,7 @@ typedef struct {
 		float t;
 	} xyz_destination;
 	
-	char system_acceleration;
+	char system_acceleration; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	struct {
 		char motor_a;
@@ -201,7 +201,7 @@ typedef struct {
 		char motor_h;
 	} motor_desired_velocity;
 	
-	char system_velocity;
+	char system_velocity; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	char input_ports;
 	

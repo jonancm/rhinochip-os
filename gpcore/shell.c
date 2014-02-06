@@ -2407,39 +2407,51 @@ inline void hostcmd_ac(void)
  */
 inline void hostcmd_as(void)
 {
-	if (param1.present)
+	if (controller_is_in_teach_pendant_mode())
 	{
-		if (param1.type == TOKEN_INT)
+		// error: command cannot be used while under teach pendant mode
+		dbgmsg_uart2(ERR_TEACH_PENDANT_MODE);
+	}
+	else
+	{
+		if (param1.present)
 		{
-			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-			if (0 <= intparam1 && intparam1 <= 100)
+			if (param1.type == TOKEN_INT)
 			{
-				if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+				if (0 <= intparam1 && intparam1 <= 100)
 				{
-					// error: motors in trapezoidal mode must not be executing a trapezoidal move
-					dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+					if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+					{
+						// error: motors in trapezoidal mode must not be executing a trapezoidal move
+						dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+					}
+					else
+					{
+						const int size = 64;
+						char buf[size];
+						snprintf(buf, size, "AS,%d" CMDEND, intparam1);
+						mcuicom_send(buf);
+						controller.system_acceleration = intparam1;
+					}
 				}
 				else
 				{
-					controller.system_acceleration = intparam1;
+					// error: value of paramter 1 out of range
+					dbgmsg_uart2(ERR_OUT_OF_RANGE);
 				}
 			}
 			else
 			{
-				// error: value of paramter 1 out of range
-				dbgmsg_uart2(ERR_OUT_OF_RANGE);
+				// error: parameter 1 must be an integer number
+				dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 			}
 		}
 		else
 		{
-			// error: parameter 1 must be an integer number
-			dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+			// error: parameter 1 must be specified
+			dbgmsg_uart2(ERR_MISSING_PARAMS);
 		}
-	}
-	else
-	{
-		// error: parameter 1 must be specified
-		dbgmsg_uart2(ERR_MISSING_PARAMS);
 	}
 }
 
