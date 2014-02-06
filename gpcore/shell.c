@@ -1535,10 +1535,10 @@ inline void hostcmd_cr(void)
 				switch (intparam1)
 				{
 					case 0:
-						set_controller_scara_mode();
+						set_controller_xr3_mode();
 						break;
 					case 1:
-						set_controller_xr3_mode();
+						set_controller_scara_mode();
 						break;
 					case 2:
 						set_controller_generic_mode();
