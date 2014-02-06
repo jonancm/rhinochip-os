@@ -194,6 +194,13 @@ inline void check_motor_e_executing_trapezoidal_move(void);
 inline void check_motor_f_executing_trapezoidal_move(void);
 inline void check_any_motor_executing_trapezoidal_move(void);
 
+inline void set_motor_mode_a(void);
+inline void set_motor_mode_b(void);
+inline void set_motor_mode_c(void);
+inline void set_motor_mode_d(void);
+inline void set_motor_mode_e(void);
+inline void set_motor_mode_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -687,6 +694,32 @@ void interpret_cmd(void)
 				// MP: Move motors according to PWM and direction registers (never stop)
 				case 'P':
 					move_pwm(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'N':
+			switch (cmd_name[1])
+			{
+				// NA: Set motor mode of motor A to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'A':
+					set_motor_mode_a(); break;
+				// NB: Set motor mode of motor B to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'B':
+					set_motor_mode_b(); break;
+				// NC: Set motor mode of motor C to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'C':
+					set_motor_mode_c(); break;
+				// ND: Set motor mode of motor D to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'D':
+					set_motor_mode_d(); break;
+				// NE: Set motor mode of motor E to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'E':
+					set_motor_mode_e(); break;
+				// NF: Set motor mode of motor F to 0=idle, 1=trapezoidal, 2=velocity, 3=open-loop
+				case 'F':
+					set_motor_mode_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2017,4 +2050,82 @@ inline void check_any_motor_executing_trapezoidal_move(void)
 
 	snprintf(buf, size, "%d" CMDEND, answer);
 	mcuicom_send(buf);
+}
+
+inline void set_motor_mode_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_A] = intparam1;
+		}
+	}
+}
+
+inline void set_motor_mode_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_B] = intparam1;
+		}
+	}
+}
+
+inline void set_motor_mode_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_C] = intparam1;
+		}
+	}
+}
+
+inline void set_motor_mode_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_D] = intparam1;
+		}
+	}
+}
+
+inline void set_motor_mode_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_E] = intparam1;
+		}
+	}
+}
+
+inline void set_motor_mode_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+				motor_mode[MOTOR_F] = intparam1;
+		}
+	}
 }
