@@ -208,6 +208,9 @@ inline void read_motor_mode_d(void);
 inline void read_motor_mode_e(void);
 inline void read_motor_mode_f(void);
 
+inline void read_system_acceleration(void);
+inline void set_system_acceleration(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -502,6 +505,12 @@ void interpret_cmd(void)
 				// AF: Set joint absolute position of motor F
 				case 'F':
 					set_joint_abs_f(); break;
+				// AR: Read system acceleration
+				case 'R':
+					read_system_acceleration(); break;
+				// AS: Set system acceleration
+				case 'S':
+					set_system_acceleration(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2227,4 +2236,25 @@ void read_motor_mode_f(void)
 	char buf[size];
 	snprintf(buf, size, "%u" CMDEND, motor_mode[MOTOR_F]);
 	mcuicom_send(buf);
+}
+
+inline void read_system_acceleration(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, system_acceleration);
+	mcuicom_send(buf);
+}
+
+inline void set_system_acceleration(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100)
+				system_acceleration = intparam1;
+		}
+	}
 }
