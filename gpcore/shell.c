@@ -1782,63 +1782,18 @@ inline void hostcmd_pw(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			int       dest_pos;
-			bool_t    error = false;
-			
-			switch (param1.value.letter)
-			{
-				case 'A':
-					dest_pos = controller.absolute_destination.motor_a;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_a;
-					break;
-				case 'B':
-					dest_pos = controller.absolute_destination.motor_b;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_b;
-					break;
-				case 'C':
-					dest_pos = controller.absolute_destination.motor_c;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_c;
-					break;
-				case 'D':
-					dest_pos = controller.absolute_destination.motor_d;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_d;
-					break;
-				case 'E':
-					dest_pos = controller.absolute_destination.motor_e;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_e;
-					break;
-				case 'F':
-					dest_pos = controller.absolute_destination.motor_f;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_f;
-					break;
-				case 'G':
-					dest_pos = controller.absolute_destination.motor_g;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_g;
-					break;
-				case 'H':
-					dest_pos = controller.absolute_destination.motor_h;
-					if (!dest_pos)
-						dest_pos = controller.relative_destination.motor_h;
-					break;
-				default:
-					// error
-					dbgmsg_uart2(ERR_OUT_OF_RANGE);
-					error = true;
-			}
-			
-			if (!error)
-			{
-				char buf[64];
-				snprintf(buf, 64, "%d\n", dest_pos);
-				hostcom_send(buf);
-			}
+			const int size = 64;
+			char buf[size];
+			int recvd;
+
+			buf[0] = 'F';
+			buf[1] = param1.value.letter;
+			buf[2] = *CMDEND;
+			buf[3] = '\0';
+			mcuicom_send(buf);
+
+			recvd = mctlcom_get_response(buf, size);
+			hostcom_send(buf);
 		}
 		else
 		{
