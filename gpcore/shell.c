@@ -1535,20 +1535,13 @@ inline void hostcmd_cr(void)
 				switch (intparam1)
 				{
 					case 0:
-						// Clear bit 5: set controller mode to robot mode
-						controller.system_config &= ~BIT_5;
-						// Set bit 5: set robot type to SCARA
-						controller.system_config |= BIT_4;
+						set_controller_scara_mode();
 						break;
 					case 1:
-						// Clear bit 5: set controller mode to robot mode
-						controller.system_config &= ~BIT_5;
-						// Clear bit 5: set robot type to XR-3
-						controller.system_config &= ~BIT_4;
+						set_controller_xr3_mode();
 						break;
 					case 2:
-						// Set bit 5: set controller mode to generic mode
-						controller.system_config |= BIT_5;
+						set_controller_generic_mode();
 						break;
 					default:
 						// error: parameter 1 out of range

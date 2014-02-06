@@ -262,4 +262,8 @@ bool_t gripper_is_enabled(void);
 inline void disable_gripper(void);
 inline void enable_gripper(void);
 
+void set_controller_generic_mode(void);
+void set_controller_xr3_mode(void);
+void set_controller_scara_mode(void);
+
 #endif

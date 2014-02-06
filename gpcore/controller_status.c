@@ -260,3 +260,31 @@ void update_system_status(void)
 	else
 		controller.system_status &= ~BIT_7;
 }
+
+void set_controller_generic_mode(void)
+{
+	// Set bit 5: set controller mode to generic mode
+	controller.system_config |= BIT_5;
+	// Automatically disable the gripper
+	disable_gripper();
+}
+
+void set_controller_xr3_mode(void)
+{
+	// Clear bit 5: set controller mode to robot mode
+	controller.system_config &= ~BIT_5;
+	// Clear bit 5: set robot type to XR-3
+	controller.system_config &= ~BIT_4;
+	// Automatically enable the gripper
+	enable_gripper();
+}
+
+void set_controller_scara_mode(void)
+{
+	// Clear bit 5: set controller mode to robot mode
+	controller.system_config &= ~BIT_5;
+	// Set bit 5: set robot type to SCARA
+	controller.system_config |= BIT_4;
+	// Automatically enable the gripper
+	enable_gripper();
+}
