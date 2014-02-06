@@ -1192,6 +1192,7 @@ inline void hostcmd_sr(void)
 inline void hostcmd_ss(void)
 {
 	char buf[64];
+	update_system_status();
 	snprintf(buf, 64, "%u\n", controller.system_status);
 	hostcom_send(buf);
 }

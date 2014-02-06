@@ -238,3 +238,12 @@ bool_t gripper_is_enabled(void)
 {
 	return !(controller.system_config & BIT_3);
 }
+
+void update_system_status(void)
+{
+	bool_t flag = any_motor_executing_trapezoidal_move(MOTOR_ALL);
+	if (flag)
+		controller.system_status |= BIT_7;
+	else
+		controller.system_status &= ~BIT_7;
+}
