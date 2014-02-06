@@ -221,6 +221,13 @@ inline void read_pwm_dir_motor_d(void);
 inline void read_pwm_dir_motor_e(void);
 inline void read_pwm_dir_motor_f(void);
 
+inline void read_commanded_pos_motor_a(void);
+inline void read_commanded_pos_motor_b(void);
+inline void read_commanded_pos_motor_c(void);
+inline void read_commanded_pos_motor_d(void);
+inline void read_commanded_pos_motor_e(void);
+inline void read_commanded_pos_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -643,6 +650,32 @@ void interpret_cmd(void)
 				// EF: Enable PID control for motor F
 				case 'F':
 					enable_pid_control_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'F':
+			switch (cmd_name[1])
+			{
+				// FA: Read commanded position for motor A
+				case 'A':
+					read_commanded_pos_motor_a(); break;
+				// FB: Read commanded position for motor B
+				case 'B':
+					read_commanded_pos_motor_b(); break;
+				// FC: Read commanded position for motor C
+				case 'C':
+					read_commanded_pos_motor_c(); break;
+				// FD: Read commanded position for motor D
+				case 'D':
+					read_commanded_pos_motor_d(); break;
+				// FE: Read commanded position for motor E
+				case 'E':
+					read_commanded_pos_motor_e(); break;
+				// FF: Read commanded position for motor F
+				case 'F':
+					read_commanded_pos_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2372,5 +2405,59 @@ inline void read_pwm_dir_motor_f(void)
 
 	direction = (motor_direction[MOTOR_F] ? -1 : 1);
 	snprintf(buf, size, "%d" CMDEND, motor_pwm_level[MOTOR_F] * direction);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_a(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_A]);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_b(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_B]);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_c(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_C]);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_d(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_D]);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_e(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_E]);
+	mcuicom_send(buf);
+}
+
+inline void read_commanded_pos_motor_f(void)
+{
+	const int size = 64;
+	char buf[size];
+
+	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_F]);
 	mcuicom_send(buf);
 }
