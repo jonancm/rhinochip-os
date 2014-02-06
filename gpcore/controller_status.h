@@ -220,6 +220,7 @@ extern controller_status_t    controller;
 void controller_status_setup(void);
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor);
+void set_motor_mode(unsigned char motor_flags, motor_mode_t motor_mode);
 
 void update_motor_status(void);
 void update_system_status(void);

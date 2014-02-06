@@ -1417,93 +1417,84 @@ inline void hostcmd_cg(void)
  */
 inline void hostcmd_cm(void)
 {
-	if (param1.present)
+	if (hard_home_in_progress())
 	{
-		if (param1.type == TOKEN_LETTER)
+		// error: hard home in progress
+		dbgmsg_uart2(ERR_EXECUTING_HARD_HOME);
+	}
+	else
+	{
+		if (param1.present)
 		{
-			if (param2.present)
+			if (param1.type == TOKEN_LETTER)
 			{
-				if (param2.type == TOKEN_INT)
+				if (param2.present)
 				{
-					int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
-					if (0 <= intparam2 && intparam2 <= 3)
+					if (param2.type == TOKEN_INT)
 					{
-						motor_mode_t *motor_mode_reg;
-						bool_t error = false;
-						int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-						switch (intparam1)
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 3)
 						{
-							case 'A':
-								motor_mode_reg = &controller.motor_mode.motor_a;
-								break;
-							case 'B':
-								motor_mode_reg = &controller.motor_mode.motor_b;
-								break;
-							case 'C':
-								motor_mode_reg = &controller.motor_mode.motor_c;
-								break;
-							case 'D':
-								motor_mode_reg = &controller.motor_mode.motor_d;
-								break;
-							case 'E':
-								motor_mode_reg = &controller.motor_mode.motor_e;
-								break;
-							case 'F':
-								motor_mode_reg = &controller.motor_mode.motor_f;
-								break;
-							case 'G':
-								motor_mode_reg = &controller.motor_mode.motor_g;
-								break;
-							case 'H':
-								motor_mode_reg = &controller.motor_mode.motor_h;
-								break;
-							default:
-								// error : parameter 1 out of range
-								dbgmsg_uart2(ERR_OUT_OF_RANGE);
-								error = true;
+							switch (param1.value.letter)
+							{
+								case 'A':
+									set_motor_mode(MOTOR_A, intparam2);
+									break;
+								case 'B':
+									set_motor_mode(MOTOR_B, intparam2);
+									break;
+								case 'C':
+									set_motor_mode(MOTOR_C, intparam2);
+									break;
+								case 'D':
+									set_motor_mode(MOTOR_D, intparam2);
+									break;
+								case 'E':
+									set_motor_mode(MOTOR_E, intparam2);
+									break;
+								case 'F':
+									set_motor_mode(MOTOR_F, intparam2);
+									break;
+								case 'G':
+									set_motor_mode(MOTOR_G, intparam2);
+									break;
+								case 'H':
+									set_motor_mode(MOTOR_H, intparam2);
+									break;
+								default:
+									// error : parameter 1 out of range
+									dbgmsg_uart2(ERR_OUT_OF_RANGE);
+							}
 						}
-						
-						if (!error)
+						else
 						{
-							if (hard_home_in_progress())
-							{
-								// error: hard home in progress
-								dbgmsg_uart2(ERR_EXECUTING_HARD_HOME);
-							}
-							else
-							{
-								*motor_mode_reg = intparam2;
-							}
+							// error: parameter 2 out of range
+							dbgmsg_uart2(ERR_OUT_OF_RANGE);
 						}
 					}
 					else
 					{
-						// error: parameter 2 out of range
-						dbgmsg_uart2(ERR_OUT_OF_RANGE);
+						// error: parameter 2 must be an integer number
+						dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 					}
 				}
 				else
 				{
-					// error: parameter 2 must be an integer number
-					dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+					// error: parameter 2 must be specified
+					dbgmsg_uart2(ERR_MISSING_PARAMS);
 				}
 			}
 			else
 			{
-				// error: parameter 2 must be specified
-				dbgmsg_uart2(ERR_MISSING_PARAMS);
+				// error: parameter 1 must be an integer number
+				dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 			}
 		}
 		else
 		{
-			// error: parameter 1 must be an integer number
-			dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+			// error: parameter 1 must be specified
+			dbgmsg_uart2(ERR_MISSING_PARAMS);
 		}
-	}
-	else
-	{
-		// error: parameter 1 must be specified
-		dbgmsg_uart2(ERR_MISSING_PARAMS);
 	}
 }
 
