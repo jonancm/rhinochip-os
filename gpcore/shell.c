@@ -1520,45 +1520,53 @@ inline void hostcmd_cm(void)
  */
 inline void hostcmd_cr(void)
 {
-	if (param1.present)
+	if (controller_is_in_teach_pendant_mode())
 	{
-		if (param1.type == TOKEN_INT)
+		// error: command cannot be used while under teach pendant mode
+		dbgmsg_uart2(ERR_TEACH_PENDANT_MODE);
+	}
+	else
+	{
+		if (param1.present)
 		{
-			if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+			if (param1.type == TOKEN_INT)
 			{
-				// error: some motor is still executing a trapezoidal move
-				dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+				if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+				{
+					// error: some motor is still executing a trapezoidal move
+					dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+				}
+				else
+				{
+					int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+					switch (intparam1)
+					{
+						case 0:
+							set_controller_xr3_mode();
+							break;
+						case 1:
+							set_controller_scara_mode();
+							break;
+						case 2:
+							set_controller_generic_mode();
+							break;
+						default:
+							// error: parameter 1 out of range
+							dbgmsg_uart2(ERR_OUT_OF_RANGE);
+					}
+				}
 			}
 			else
 			{
-				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-				switch (intparam1)
-				{
-					case 0:
-						set_controller_xr3_mode();
-						break;
-					case 1:
-						set_controller_scara_mode();
-						break;
-					case 2:
-						set_controller_generic_mode();
-						break;
-					default:
-						// error: parameter 1 out of range
-						dbgmsg_uart2(ERR_OUT_OF_RANGE);
-				}
+				// error: parameter 1 must be an integer number
+				dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 			}
 		}
 		else
 		{
-			// error: parameter 1 must be an integer number
-			dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+			// error: parameter 1 must be specified
+			dbgmsg_uart2(ERR_MISSING_PARAMS);
 		}
-	}
-	else
-	{
-		// error: parameter 1 must be specified
-		dbgmsg_uart2(ERR_MISSING_PARAMS);
 	}
 }
 
