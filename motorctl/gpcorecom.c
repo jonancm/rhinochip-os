@@ -211,6 +211,9 @@ inline void read_motor_mode_f(void);
 inline void read_system_acceleration(void);
 inline void set_system_acceleration(void);
 
+inline void read_system_velocity(void);
+inline void set_system_velocity(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -817,6 +820,9 @@ void interpret_cmd(void)
 				// RP: Restore PWM settings from EEPROM
 				case 'P':
 					restore_pwm_eeprom(); break;
+				// RV: Read system velocity
+				case 'V':
+					read_system_velocity(); break;
 				default:
 					// error: unknown command
 					break;
@@ -846,6 +852,9 @@ void interpret_cmd(void)
 				// SS: Stop all motors
 				case 'S':
 					stop_all_motors(); break;
+				// SV: Set system velocity
+				case 'V':
+					set_system_velocity(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2255,6 +2264,27 @@ inline void set_system_acceleration(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (0 <= intparam1 && intparam1 <= 100)
 				system_acceleration = intparam1;
+		}
+	}
+}
+
+inline void read_system_velocity(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%u" CMDEND, system_velocity);
+	mcuicom_send(buf);
+}
+
+inline void set_system_velocity(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100)
+				system_velocity = intparam1;
 		}
 	}
 }
