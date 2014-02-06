@@ -257,4 +257,6 @@ void set_controller_scara_mode(void);
 
 void update_system_acceleration(void);
 
+void reset_soft_home(void);
+
 #endif

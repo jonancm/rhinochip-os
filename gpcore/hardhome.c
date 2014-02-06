@@ -2,6 +2,7 @@
 
 #include "mctlcom.h"
 #include "../hostcmdset.h"
+#include "controller_status.h"
 
 #include <stdlib.h> // atoi
 #include <stdio.h>  // snprintf
@@ -36,6 +37,7 @@ inline void hardhome(void)
 	hardhome_motor_e();
 	hardhome_motor_f();
 	*/
+	reset_soft_home();
 }
 
 int get_motor_pos(char motor)

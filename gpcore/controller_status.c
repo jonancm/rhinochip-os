@@ -96,6 +96,9 @@ void controller_status_setup(void)
 
 	// Indicate that a hard home has not been executed
 	controller.hardhome_status = HARDHOME_NEEDED;
+
+	// Reset soft home position (all motors to zero)
+	reset_soft_home();
 }
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
@@ -346,4 +349,16 @@ void update_system_acceleration(void)
 	recvd = mctlcom_get_response(buf, size);
 	buf[recvd] = '\0';
 	controller.system_acceleration = atoi(buf);
+}
+
+void reset_soft_home(void)
+{
+	controller.soft_home_position.motor_a = 0;
+	controller.soft_home_position.motor_b = 0;
+	controller.soft_home_position.motor_c = 0;
+	controller.soft_home_position.motor_d = 0;
+	controller.soft_home_position.motor_e = 0;
+	controller.soft_home_position.motor_f = 0;
+	controller.soft_home_position.motor_g = 0;
+	controller.soft_home_position.motor_h = 0;
 }
