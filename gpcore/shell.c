@@ -1617,6 +1617,10 @@ inline void hostcmd_dr(void)
 				buf[3] = '\0';
 				mcuicom_send(buf);
 				recvd = mctlcom_get_response(buf, size);
+				buf[recvd] = '\0';
+				// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+				// Another possible solution may be to enable 'hostcom_send' to
+				// accept a 'size' parameter that tells the size of the buffer.
 				hostcom_send(buf);
 			}
 			else
@@ -1750,6 +1754,9 @@ inline void hostcmd_pa(void)
 				// Get response (motor steps) and re-send it to the host PC
 				size = mctlcom_get_response(buf, size);
 				buf[size] = '\0'; // no need to check size, this is always < 64
+				// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+				// Another possible solution may be to enable 'hostcom_send' to
+				// accept a 'size' parameter that tells the size of the buffer.
 				hostcom_send(buf);
 			}
 			else
@@ -1793,6 +1800,10 @@ inline void hostcmd_pw(void)
 			mcuicom_send(buf);
 
 			recvd = mctlcom_get_response(buf, size);
+			buf[recvd] = '\0';
+			// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+			// Another possible solution may be to enable 'hostcom_send' to
+			// accept a 'size' parameter that tells the size of the buffer.
 			hostcom_send(buf);
 		}
 		else
