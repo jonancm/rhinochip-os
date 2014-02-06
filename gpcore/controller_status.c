@@ -291,3 +291,47 @@ void set_controller_scara_mode(void)
 	// Automatically enable the gripper
 	enable_gripper();
 }
+
+void update_motor_mode(void)
+{
+	const int size = 64;
+	char buf[size];
+	int recvd;
+	motor_mode_t motor_mode;
+	
+	mcuicom_send("QA" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_a = motor_mode;
+
+	mcuicom_send("QB" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_b = motor_mode;
+
+	mcuicom_send("QC" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_c = motor_mode;
+
+	mcuicom_send("QD" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_d = motor_mode;
+
+	mcuicom_send("QE" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_e = motor_mode;
+
+	mcuicom_send("QF" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	motor_mode = atoi(buf);
+	controller.motor_mode.motor_f = motor_mode;
+}

@@ -224,6 +224,7 @@ void set_motor_mode(unsigned char motor_flags, motor_mode_t motor_mode);
 
 void update_motor_status(void);
 void update_system_status(void);
+void update_motor_mode(void);
 
 /**
  * Check if any of the given motors is executing a trapezoidal move.

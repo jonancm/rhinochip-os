@@ -1087,9 +1087,10 @@ inline void hostcmd_se(void)
 inline void hostcmd_sm(void)
 {
 	char buf[64];
-	char motor_mode = 0;
+	motor_mode_t motor_mode = 0;
 	bool_t error = false;
 
+	update_motor_mode();
 	if (param1.present)
 	{
 		if (param1.type == TOKEN_LETTER)
