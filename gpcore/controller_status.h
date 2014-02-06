@@ -151,19 +151,6 @@ typedef struct {
 	
 	char system_acceleration; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
-	struct {
-		char motor_a;
-		char motor_b;
-		char motor_c;
-		char motor_d;
-		char motor_e;
-		char motor_f;
-		char motor_g;
-		char motor_h;
-	} pwm_level;
-	
-	char pwm_direction;
-	
 	gripper_status_t gripper_status;
 	
 	struct {

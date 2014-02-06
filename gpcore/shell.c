@@ -1605,55 +1605,24 @@ inline void hostcmd_dr(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			char      pwm_level;
-			bool_t    direction;
-			bool_t    error;
-			
-			switch (param1.value.letter)
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				case 'A':
-					pwm_level = controller.pwm_level.motor_a;
-					direction = controller.pwm_direction & MOTOR_A;
-					break;
-				case 'B':
-					pwm_level = controller.pwm_level.motor_b;
-					direction = controller.pwm_direction & MOTOR_B;
-					break;
-				case 'C':
-					pwm_level = controller.pwm_level.motor_c;
-					direction = controller.pwm_direction & MOTOR_C;
-					break;
-				case 'D':
-					pwm_level = controller.pwm_level.motor_d;
-					direction = controller.pwm_direction & MOTOR_D;
-					break;
-				case 'E':
-					pwm_level = controller.pwm_level.motor_e;
-					direction = controller.pwm_direction & MOTOR_E;
-					break;
-				case 'F':
-					pwm_level = controller.pwm_level.motor_f;
-					direction = controller.pwm_direction & MOTOR_F;
-					break;
-				case 'G':
-					pwm_level = controller.pwm_level.motor_g;
-					direction = controller.pwm_direction & MOTOR_G;
-					break;
-				case 'H':
-					pwm_level = controller.pwm_level.motor_h;
-					direction = controller.pwm_direction & MOTOR_H;
-					break;
-				default:
-					// error
-					dbgmsg_uart2(ERR_OUT_OF_RANGE);
-					error = true;
-			}
-			
-			if (!error)
-			{
-				char buf[64];
-				snprintf(buf, 64, "%d\n", (direction ? -pwm_level : pwm_level));
+				const int size = 64;
+				char buf[size];
+				int recvd;
+
+				buf[0] = 'C';
+				buf[1] = param1.value.letter;
+				buf[2] = *CMDEND;
+				buf[3] = '\0';
+				mcuicom_send(buf);
+				recvd = mctlcom_get_response(buf, size);
 				hostcom_send(buf);
+			}
+			else
+			{
+				// error: param 1 out of range
+				dbgmsg_uart2(ERR_OUT_OF_RANGE);
 			}
 		}
 		else
@@ -2486,6 +2455,7 @@ inline void hostcmd_ds(void)
 						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 						if (-100 <= intparam2 && intparam2 <= 100)
 						{
+							/*
 							char     *pwm_level;
 							bool_t    error = false;
 							
@@ -2530,6 +2500,7 @@ inline void hostcmd_ds(void)
 								else
 									controller.pwm_direction &= ~motor; // clear direction bit for the given motor
 							}
+							*/
 						}
 						else
 						{
