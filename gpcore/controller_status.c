@@ -14,6 +14,18 @@ void controller_status_setup(void)
 	// At startup, the system configuration is read from the EEPROM.
 	// TODO: implement this
 	
+	// System configuration
+	// 
+	// Bit 7:    0 = System is in pendant mode    (System Mode)
+	// Bit 6:    1 = The pendant is enabled       (Pendant Configuration)
+	// Bit 5:    0 = Robot controller mode        (Controller Mode)
+	// Bit 4:    0 = XR-3 mode                    (Robot Type)
+	// Bit 3:    0 = The gripper is enabled       (Gripper Configuration)
+	// Bit 2:    0 = Joint mode                   (Coordinate Mode)
+	// Bit 1:    always 0
+	// Bit 0:    always 0
+	controller.system_config = 0b01000000;
+
 	// The RhinoChip platform doesn't allow a teach pendant to be connected.
 	// Thus, bit 3 of the system status register must be set.
 	// At system startup, the other bits are cleared.
