@@ -2455,52 +2455,13 @@ inline void hostcmd_ds(void)
 						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
 						if (-100 <= intparam2 && intparam2 <= 100)
 						{
-							/*
-							char     *pwm_level;
-							bool_t    error = false;
+							// TODO: check if the motor is in open-loop mode?
 							
-							switch (param1.value.letter)
-							{
-								case 'A':
-									pwm_level = &controller.pwm_level.motor_a;
-									break;
-								case 'B':
-									pwm_level = &controller.pwm_level.motor_b;
-									break;
-								case 'C':
-									pwm_level = &controller.pwm_level.motor_c;
-									break;
-								case 'D':
-									pwm_level = &controller.pwm_level.motor_d;
-									break;
-								case 'E':
-									pwm_level = &controller.pwm_level.motor_e;
-									break;
-								case 'F':
-									pwm_level = &controller.pwm_level.motor_f;
-									break;
-								case 'G':
-									pwm_level = &controller.pwm_level.motor_g;
-									break;
-								case 'H':
-									pwm_level = &controller.pwm_level.motor_h;
-									break;
-								default:
-									// error: parameter 1 out of range
-									dbgmsg_uart2(ERR_OUT_OF_RANGE);
-									error = true;
-							}
-							
-							if (!error)
-							{
-								unsigned char motor = 1 << (param1.value.letter - 'A');
-								*pwm_level = param2.value.integer.abs_value;
-								if (param2.value.integer.sign > 0)
-									controller.pwm_direction |= motor; // set direction bit for the given motor
-								else
-									controller.pwm_direction &= ~motor; // clear direction bit for the given motor
-							}
-							*/
+							const int size = 64;
+							char buf[size];
+
+							snprintf(buf, size, "P%c,%d" CMDEND, param1.value.letter, intparam2);
+							mcuicom_send(buf);
 						}
 						else
 						{
