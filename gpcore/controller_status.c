@@ -6,8 +6,57 @@
 #include "mctlcom.h"
 
 #include <stdlib.h> // atoi
+#include <stdio.h>  // snprintf
 
 controller_status_t    controller;
+
+void set_motor_mode(unsigned char motor_flags, motor_mode_t motor_mode)
+{
+	const int size = 64;
+	char buf[size];
+	
+	if (motor_flags & MOTOR_A)
+	{
+		snprintf(buf, size, "NA,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_a = motor_mode;
+	}
+	
+	if (motor_flags & MOTOR_B)
+	{
+		snprintf(buf, size, "NB,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_b = motor_mode;
+	}
+	
+	if (motor_flags & MOTOR_C)
+	{
+		snprintf(buf, size, "NC,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_c = motor_mode;
+	}
+
+	if (motor_flags & MOTOR_D)
+	{
+		snprintf(buf, size, "ND,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_d = motor_mode;
+	}
+	
+	if (motor_flags & MOTOR_E)
+	{
+		snprintf(buf, size, "NE,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_e = motor_mode;
+	}
+	
+	if (motor_flags & MOTOR_F)
+	{
+		snprintf(buf, size, "NF,%d" CMDEND, motor_mode);
+		mcuicom_send(buf);
+		controller.motor_mode.motor_f = motor_mode;
+	}
+}
 
 void controller_status_setup(void)
 {
@@ -39,6 +88,11 @@ void controller_status_setup(void)
 	// Bit 1: 0 = The teach pendant ESCAPE key has not been pressed.
 	// Bit 0: 0 = No teach pendant error has occurred.
 	controller.system_status = BIT_3;
+
+	// Set up motor mode on startup
+	// TODO: read settings from EEPROM rather than hardcoding them into the program
+	set_motor_mode(MOTOR_ALL, MOTOR_IDLE);
+	set_motor_mode(MOTOR_A, MOTOR_TRAPEZOIDAL);
 }
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
