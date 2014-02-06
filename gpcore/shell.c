@@ -1644,8 +1644,13 @@ inline void hostcmd_dr(void)
  */
 inline void hostcmd_gs(void)
 {
-	char buf[64];
-	snprintf(buf, 64, "%u\n", controller.gripper_status);
+	const int size = 64;
+	char buf[size];
+	char gripper_status = 0;
+
+	if (gripper_is_enabled())
+		gripper_status = controller.gripper_status;
+	snprintf(buf, size, "%u\n", gripper_status);
 	hostcom_send(buf);
 }
 
@@ -2456,7 +2461,7 @@ inline void hostcmd_ds(void)
 						if (-100 <= intparam2 && intparam2 <= 100)
 						{
 							// TODO: check if the motor is in open-loop mode?
-							
+
 							const int size = 64;
 							char buf[size];
 
