@@ -1365,42 +1365,50 @@ inline void hostcmd_cc(void)
  */
 inline void hostcmd_cg(void)
 {
-	if (controller_in_robot_mode())
+	if (controller_is_in_teach_pendant_mode())
 	{
-		if (param1.present)
+		// error: command cannot be used while under teach pendant mode
+		dbgmsg_uart2(ERR_TEACH_PENDANT_MODE);
+	}
+	else
+	{
+		if (controller_in_robot_mode())
 		{
-			if (param1.type == TOKEN_INT)
+			if (param1.present)
 			{
-				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
-				switch (intparam1)
+				if (param1.type == TOKEN_INT)
 				{
-					case 0:
-						disable_gripper();
-						break;
-					case 1:
-						enable_gripper();
-						break;
-					default:
-						// error
-						dbgmsg_uart2(ERR_OUT_OF_RANGE);
+					int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+					switch (intparam1)
+					{
+						case 0:
+							disable_gripper();
+							break;
+						case 1:
+							enable_gripper();
+							break;
+						default:
+							// error
+							dbgmsg_uart2(ERR_OUT_OF_RANGE);
+					}
+				}
+				else
+				{
+					// error
+					dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 				}
 			}
 			else
 			{
 				// error
-				dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+				dbgmsg_uart2(ERR_MISSING_PARAMS);
 			}
 		}
 		else
 		{
-			// error
-			dbgmsg_uart2(ERR_MISSING_PARAMS);
+			// error: controller must be in robot mode
+			dbgmsg_uart2(ERR_NOT_ROBOT_MODE);
 		}
-	}
-	else
-	{
-		// error: controller must be in robot mode
-		dbgmsg_uart2(ERR_NOT_ROBOT_MODE);
 	}
 }
 
