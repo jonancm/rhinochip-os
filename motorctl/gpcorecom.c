@@ -2093,7 +2093,10 @@ inline void set_motor_mode_a(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_A] = intparam1;
+			}
 		}
 	}
 }
@@ -2106,7 +2109,10 @@ inline void set_motor_mode_b(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_B] = intparam1;
+			}
 		}
 	}
 }
@@ -2119,7 +2125,10 @@ inline void set_motor_mode_c(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_C] = intparam1;
+			}
 		}
 	}
 }
@@ -2132,7 +2141,10 @@ inline void set_motor_mode_d(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_D] = intparam1;
+			}
 		}
 	}
 }
@@ -2145,7 +2157,10 @@ inline void set_motor_mode_e(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_E] = intparam1;
+			}
 		}
 	}
 }
@@ -2158,7 +2173,10 @@ inline void set_motor_mode_f(void)
 		{
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (MOTOR_IDLE <= intparam1 && intparam1 <= MOTOR_OPEN_LOOP)
+			{
+				// TODO: if the motor is moving, stop it before changing its mode
 				motor_mode[MOTOR_F] = intparam1;
+			}
 		}
 	}
 }
