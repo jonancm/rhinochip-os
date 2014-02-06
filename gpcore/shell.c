@@ -1374,12 +1374,10 @@ inline void hostcmd_cg(void)
 				switch (intparam1)
 				{
 					case 0:
-						// Set bit 3: disable gripper
-						controller.system_config |= BIT_3;
+						disable_gripper();
 						break;
 					case 1:
-						// Clear bit 3: enable gripper
-						controller.system_config &= ~BIT_3;
+						enable_gripper();
 						break;
 					default:
 						// error

@@ -239,6 +239,19 @@ bool_t gripper_is_enabled(void)
 	return !(controller.system_config & BIT_3);
 }
 
+inline void disable_gripper(void)
+{
+	// Set bit 3: disable gripper
+	controller.system_config |= BIT_3;
+}
+
+inline void enable_gripper(void)
+{
+	// Clear bit 3: enable gripper
+	controller.system_config &= ~BIT_3;
+	// TODO: close then open gripper (for compatibility with the Mark IV)
+}
+
 void update_system_status(void)
 {
 	bool_t flag = any_motor_executing_trapezoidal_move(MOTOR_ALL);

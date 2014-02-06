@@ -259,5 +259,7 @@ bool_t controller_is_in_teach_pendant_mode(void);
 controller_mode_t controller_mode(void);
 
 bool_t gripper_is_enabled(void);
+inline void disable_gripper(void);
+inline void enable_gripper(void);
 
 #endif
