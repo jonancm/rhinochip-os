@@ -2594,6 +2594,7 @@ inline void hostcmd_go(void)
  */
 inline void hostcmd_ha(void)
 {
+	// TODO: test command
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
@@ -2601,17 +2602,54 @@ inline void hostcmd_ha(void)
 	}
 	else
 	{
-		if (controller_mode() == XR3)
+		if (hard_home_executed())
 		{
-			//
+			// If the controller is in generic mode, go to hard home position on
+			// motor A, too, unless the gripper is enabled on motor A.
+			if (controller_mode() == GENERIC && !gripper_is_enabled())
+				mcuicom_send("AA,0" CMDEND);
+			// TODO: According to the manual, the gripper motor shouldn't be
+			// affected if it's enabled. By default, if the controller is in
+			// robot mode, the gripper motor (motor A) is never affected. Thus,
+			// it is assumed that the manual refers to the case when the
+			// controller is in generic mode. Being so, it is also assumed that
+			// the gripper motor, if enabled, will always be motor A. This
+			// should be checked in the manual, to make sure that the assumption
+			// is correct.
+
+			mcuicom_send("AB,0" CMDEND);
+			mcuicom_send("AC,0" CMDEND);
+			mcuicom_send("AD,0" CMDEND);
+			mcuicom_send("AE,0" CMDEND);
+
+			if (controller_mode() != SCARA)
+				mcuicom_send("AF,0" CMDEND);
+
+			if (controller_mode() == GENERIC)
+			{
+				// According to the manual, if the controller is under generic
+				// mode, all motors under trapezoidal mode should move according
+				// to their set motor velocities. Since a coordinated movement
+				// would not satisfy this requirement, it is assumed that the
+				// manual refers to an independent movement, even though it is
+				// not mentioned as such.
+				mcuicom_send("MI" CMDEND);
+				// FIXME: From the manual, it is understood that only the motors
+				// in trapezoidal mode should move to the hard home position, but
+				// not any other motor if it is in any other motor mode.
+			}
+			else
+			{
+				// FIXME: According to the manual, the movement should be
+				// coordinated, but the coordinated movement isn't implemented
+				// yet (see 'motorctl' program).
+				mcuicom_send("MI" CMDEND);
+			}
 		}
-		else if (controller_mode() == SCARA)
+		else
 		{
-			//
-		}
-		else if (controller_mode() == GENERIC)
-		{
-			//
+			// error: a hard home must have been executed
+			dbgmsg_uart2(ERR_NO_HARD_HOME);
 		}
 	}
 }
