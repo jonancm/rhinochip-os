@@ -55,4 +55,8 @@ int motorctl_get_proportional_gain(unsigned char motor);
 int motorctl_get_integral_gain(unsigned char motor);
 int motorctl_get_differential_gain(unsigned char motor);
 
+void motorctl_set_proportional_gain(unsigned char motor, int gain);
+void motorctl_set_integral_gain(unsigned char motor, int gain);
+void motorctl_set_differential_gain(unsigned char motor, int gain);
+
 #endif

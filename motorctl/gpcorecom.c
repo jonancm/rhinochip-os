@@ -246,6 +246,10 @@ inline void read_proportional_gain(void);
 inline void read_integral_gain(void);
 inline void read_differential_gain(void);
 
+inline void set_proportional_gain(void);
+inline void set_integral_gain(void);
+inline void set_differential_gain(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -931,6 +935,23 @@ void interpret_cmd(void)
 				// SV: Set system velocity
 				case 'V':
 					set_system_velocity(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'U':
+			switch (cmd_name[1])
+			{
+				// UP: Set the proportional gain of the specified motor
+				case 'P':
+					set_proportional_gain(); break;
+				// UI: Set the integral gain of the specified motor
+				case 'I':
+					set_integral_gain(); break;
+				// UD: Set the differential gain of the specified motor
+				case 'D':
+					set_differential_gain(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2757,6 +2778,81 @@ inline void read_differential_gain(void)
 
 							snprintf(buf, size, "%d" CMDEND, gain);
 							mcuicom_send(buf);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+inline void set_proportional_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							motorctl_set_proportional_gain(motor, intparam2);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+inline void set_integral_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							motorctl_set_integral_gain(motor, intparam2);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+inline void set_differential_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							motorctl_set_differential_gain(motor, intparam2);
 						}
 					}
 				}
