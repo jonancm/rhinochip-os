@@ -3752,52 +3752,53 @@ inline void hostcmd_vs(void)
 		{
 			if (param1.type == TOKEN_LETTER)
 			{
-				if (param2.present)
+				if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 				{
-					if (param2.type == TOKEN_INT)
+					if (param2.present)
 					{
-						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
-						if (-100 <= intparam2 && intparam2 <= 100)
+						if (param2.type == TOKEN_INT)
 						{
-							switch (param1.value.letter)
+							int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+							if (-100 <= intparam2 && intparam2 <= 100)
 							{
-								case 'A':
-									break;
-								case 'B':
-									break;
-								case 'C':
-									break;
-								case 'D':
-									break;
-								case 'E':
-									break;
-								case 'F':
-									break;
-								case 'G':
-									break;
-								case 'H':
-									break;
-								default:
-									// error: parameter 1 out of range
-									dbgmsg_uart2(ERR_OUT_OF_RANGE);
+								unsigned char motor = 1 << (param1.value.letter - 'A');
+
+								if (any_motor_executing_trapezoidal_move(motor))
+								{
+									// error: the given motor must not be executing a trapezoidal move
+									dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+								}
+								else
+								{
+									const int size = 64;
+									char buf[size];
+
+									snprintf(buf, size, "Z%c,%d" CMDEND, param1.value.letter, intparam2);
+									mcuicom_send(buf);
+								}
+							}
+							else
+							{
+								// error: parameter 2 out of range
+								dbgmsg_uart2(ERR_OUT_OF_RANGE);
 							}
 						}
 						else
 						{
-							// error: parameter 2 out of range
-							dbgmsg_uart2(ERR_OUT_OF_RANGE);
+							// error: parameter 2 must be an integer number
+							dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 						}
 					}
 					else
 					{
-						// error: parameter 2 must be an integer number
-						dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+						// error: parameter 2 must be specified
+						dbgmsg_uart2(ERR_MISSING_PARAMS);
 					}
 				}
 				else
 				{
-					// error: parameter 2 must be specified
-					dbgmsg_uart2(ERR_MISSING_PARAMS);
+					// error: parameter 1 out of range
+					dbgmsg_uart2(ERR_OUT_OF_RANGE);
 				}
 			}
 			else
