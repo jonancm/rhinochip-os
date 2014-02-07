@@ -228,6 +228,13 @@ inline void read_commanded_pos_motor_d(void);
 inline void read_commanded_pos_motor_e(void);
 inline void read_commanded_pos_motor_f(void);
 
+inline void read_desired_velocity_motor_a(void);
+inline void read_desired_velocity_motor_b(void);
+inline void read_desired_velocity_motor_c(void);
+inline void read_desired_velocity_motor_d(void);
+inline void read_desired_velocity_motor_e(void);
+inline void read_desired_velocity_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -942,6 +949,32 @@ void interpret_cmd(void)
 				// XS: Check if any motor is executing a trapezoidal move
 				case 'X':
 					check_any_motor_executing_trapezoidal_move(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'Y':
+			switch (cmd_name[1])
+			{
+				// YA: Read desired velocity of motor A
+				case 'A':
+					read_desired_velocity_motor_a(); break;
+				// YB: Read desired velocity of motor B
+				case 'B':
+					read_desired_velocity_motor_b(); break;
+				// YC: Read desired velocity of motor C
+				case 'C':
+					read_desired_velocity_motor_c(); break;
+				// YD: Read desired velocity of motor D
+				case 'D':
+					read_desired_velocity_motor_d(); break;
+				// YE: Read desired velocity of motor E
+				case 'E':
+					read_desired_velocity_motor_e(); break;
+				// YF: Read desired velocity of motor F
+				case 'F':
+					read_desired_velocity_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2459,5 +2492,53 @@ inline void read_commanded_pos_motor_f(void)
 	char buf[size];
 
 	snprintf(buf, size, "%d" CMDEND, motor_commanded_pos[MOTOR_F]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_a(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_A]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_b(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_B]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_c(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_C]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_d(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_D]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_e(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_E]);
+	mcuicom_send(buf);
+}
+
+inline void read_desired_velocity_motor_f(void)
+{
+	const int size = 64;
+	char buf[size];
+	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_F]);
 	mcuicom_send(buf);
 }
