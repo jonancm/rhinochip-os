@@ -970,7 +970,7 @@ inline void hostcmd_sa(void)
 {
 	char buf[64];
 	update_motor_status();
-	snprintf(buf, 64, "%u\n", controller.motor_status);
+	snprintf(buf, 64, "%u" CMDEND, controller.motor_status);
 	hostcom_send(buf);
 }
 
@@ -1019,7 +1019,7 @@ inline void hostcmd_sa(void)
 inline void hostcmd_sc(void)
 {
 	char buf[64];
-	snprintf(buf, 64, "%u\n", controller.system_config);
+	snprintf(buf, 64, "%u" CMDEND, controller.system_config);
 	hostcom_send(buf);
 }
 
@@ -1075,7 +1075,7 @@ inline void hostcmd_se(void)
 {
 	char buf[64];
 	unsigned char error_code = 0;
-	snprintf(buf, 64, "%u\n", error_code);
+	snprintf(buf, 64, "%u" CMDEND, error_code);
 	hostcom_send(buf);
 }
 
@@ -1129,7 +1129,7 @@ inline void hostcmd_sm(void)
 			
 			if (!error)
 			{
-				snprintf(buf, 64, "%u\n", motor_mode);
+				snprintf(buf, 64, "%u" CMDEND, motor_mode);
 				hostcom_send(buf);
 			}
 		}
@@ -1194,7 +1194,7 @@ inline void hostcmd_ss(void)
 {
 	char buf[64];
 	update_system_status();
-	snprintf(buf, 64, "%u\n", controller.system_status);
+	snprintf(buf, 64, "%u" CMDEND, controller.system_status);
 	hostcom_send(buf);
 }
 
@@ -1588,7 +1588,7 @@ inline void hostcmd_ar(void)
 {
 	char buf[64];
 	update_system_acceleration();
-	snprintf(buf, 64, "%u\n", controller.system_acceleration);
+	snprintf(buf, 64, "%u" CMDEND, controller.system_acceleration);
 	hostcom_send(buf);
 }
 
@@ -1654,7 +1654,7 @@ inline void hostcmd_gs(void)
 
 	if (gripper_is_enabled())
 		gripper_status = controller.gripper_status;
-	snprintf(buf, size, "%u\n", gripper_status);
+	snprintf(buf, size, "%u" CMDEND, gripper_status);
 	hostcom_send(buf);
 }
 
@@ -1930,7 +1930,7 @@ inline void hostcmd_rl(void)
 	const int size = 64;
 	char buf[size];
 	update_limit_switches();
-	snprintf(buf, size, "%u\n", controller.limit_switches);
+	snprintf(buf, size, "%u" CMDEND, controller.limit_switches);
 	hostcom_send(buf);
 }
 
@@ -2112,7 +2112,7 @@ inline void hostcmd_va(void)
 			if (!error)
 			{
 				char buf[64];
-				snprintf(buf, 64, "%u\n", velocity);
+				snprintf(buf, 64, "%u" CMDEND, velocity);
 				hostcom_send(buf);
 			}
 		}
@@ -2195,7 +2195,7 @@ inline void hostcmd_vr(void)
 inline void hostcmd_vx(void)
 {
 	char buf[64];
-	snprintf(buf, 64, "%u\n", controller.system_velocity);
+	snprintf(buf, 64, "%u" CMDEND, controller.system_velocity);
 	hostcom_send(buf);
 }
 
