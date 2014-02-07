@@ -235,6 +235,13 @@ inline void read_desired_velocity_motor_d(void);
 inline void read_desired_velocity_motor_e(void);
 inline void read_desired_velocity_motor_f(void);
 
+inline void set_desired_velocity_motor_a(void);
+inline void set_desired_velocity_motor_b(void);
+inline void set_desired_velocity_motor_c(void);
+inline void set_desired_velocity_motor_d(void);
+inline void set_desired_velocity_motor_e(void);
+inline void set_desired_velocity_motor_f(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -975,6 +982,32 @@ void interpret_cmd(void)
 				// YF: Read desired velocity of motor F
 				case 'F':
 					read_desired_velocity_motor_f(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'Z':
+			switch (cmd_name[1])
+			{
+				// YA: Set desired velocity of motor A
+				case 'A':
+					set_desired_velocity_motor_a(); break;
+				// YB: Set desired velocity of motor B
+				case 'B':
+					set_desired_velocity_motor_b(); break;
+				// YC: Set desired velocity of motor C
+				case 'C':
+					set_desired_velocity_motor_c(); break;
+				// YD: Set desired velocity of motor D
+				case 'D':
+					set_desired_velocity_motor_d(); break;
+				// YE: Set desired velocity of motor E
+				case 'E':
+					set_desired_velocity_motor_e(); break;
+				// YF: Set desired velocity of motor F
+				case 'F':
+					set_desired_velocity_motor_f(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2541,4 +2574,82 @@ inline void read_desired_velocity_motor_f(void)
 	char buf[size];
 	snprintf(buf, size, "%d" CMDEND, motor_desired_velocity[MOTOR_F]);
 	mcuicom_send(buf);
+}
+
+inline void set_desired_velocity_motor_a(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_A] = intparam1;
+		}
+	}
+}
+
+inline void set_desired_velocity_motor_b(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_B] = intparam1;
+		}
+	}
+}
+
+inline void set_desired_velocity_motor_c(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_C] = intparam1;
+		}
+	}
+}
+
+inline void set_desired_velocity_motor_d(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_D] = intparam1;
+		}
+	}
+}
+
+inline void set_desired_velocity_motor_e(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_E] = intparam1;
+		}
+	}
+}
+
+inline void set_desired_velocity_motor_f(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_INT)
+		{
+			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
+			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
+				motor_desired_velocity[MOTOR_F] = intparam1;
+		}
+	}
 }
