@@ -145,7 +145,7 @@ void update_motor_status(void)
 	
 	mcuicom_send("XA" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_A;
@@ -154,7 +154,7 @@ void update_motor_status(void)
 
 	mcuicom_send("XB" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_B;
@@ -163,7 +163,7 @@ void update_motor_status(void)
 
 	mcuicom_send("XC" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_C;
@@ -172,7 +172,7 @@ void update_motor_status(void)
 
 	mcuicom_send("XD" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_D;
@@ -181,7 +181,7 @@ void update_motor_status(void)
 
 	mcuicom_send("XE" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_E;
@@ -190,7 +190,7 @@ void update_motor_status(void)
 
 	mcuicom_send("XF" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	status_bit = atoi(buf);
 	if (status_bit)
 		controller.motor_status |= MOTOR_F;
@@ -305,37 +305,37 @@ void update_motor_mode(void)
 	
 	mcuicom_send("QA" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_a = motor_mode;
 
 	mcuicom_send("QB" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_b = motor_mode;
 
 	mcuicom_send("QC" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_c = motor_mode;
 
 	mcuicom_send("QD" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_d = motor_mode;
 
 	mcuicom_send("QE" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_e = motor_mode;
 
 	mcuicom_send("QF" CMDEND);
 	recvd = mctlcom_get_response(buf, size);
-	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefor, must add null terminator
+	buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
 	motor_mode = atoi(buf);
 	controller.motor_mode.motor_f = motor_mode;
 }
