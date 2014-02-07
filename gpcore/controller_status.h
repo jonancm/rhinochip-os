@@ -177,8 +177,6 @@ typedef struct {
 		char motor_h;
 	} motor_actual_velocity;
 	
-	char system_velocity; // TODO: remove? Is this needed? It is stored in the MCMCU!
-	
 	char input_ports;
 	
 	char input_switches;

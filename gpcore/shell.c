@@ -2194,8 +2194,16 @@ inline void hostcmd_vr(void)
  */
 inline void hostcmd_vx(void)
 {
-	char buf[64];
-	snprintf(buf, 64, "%u" CMDEND, controller.system_velocity);
+	const int size = 64;
+	char buf[size];
+	int recvd;
+
+	mcuicom_send("RV" CMDEND);
+	recvd = mctlcom_get_response(buf, size);
+	buf[recvd] = '\0';
+	// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+	// Another possible solution may be to enable 'hostcom_send' to
+	// accept a 'size' parameter that tells the size of the buffer.
 	hostcom_send(buf);
 }
 
