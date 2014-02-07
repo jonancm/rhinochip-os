@@ -2259,70 +2259,81 @@ inline void hostcmd_xr(void)
  */
 inline void hostcmd_ac(void)
 {
-	if (param1.present)
+	if (controller_is_in_teach_pendant_mode())
 	{
-		if (param1.type == TOKEN_LETTER)
+		// error: command cannot be used while under teach pendant mode
+		dbgmsg_uart2(ERR_TEACH_PENDANT_MODE);
+	}
+	else
+	{
+		if (param1.present)
 		{
-			int      *cur_pos;
-			bool_t    error = false;
-			
-			switch (param1.value.letter)
+			if (param1.type == TOKEN_LETTER)
 			{
-				case 'A':
-					cur_pos = &controller.current_position.motor_a;
-					break;
-				case 'B':
-					cur_pos = &controller.current_position.motor_b;
-					break;
-				case 'C':
-					cur_pos = &controller.current_position.motor_c;
-					break;
-				case 'D':
-					cur_pos = &controller.current_position.motor_d;
-					break;
-				case 'E':
-					cur_pos = &controller.current_position.motor_e;
-					break;
-				case 'F':
-					cur_pos = &controller.current_position.motor_f;
-					break;
-				case 'G':
-					cur_pos = &controller.current_position.motor_g;
-					break;
-				case 'H':
-					cur_pos = &controller.current_position.motor_h;
-					break;
-				default:
-					// error: parameter 1 out of range
-					dbgmsg_uart2(ERR_OUT_OF_RANGE);
-					error = true;
-			}
-			
-			if (!error)
-			{
-				unsigned char motor = 1 << (param1.value.letter - 'A');
-				// If motor is in trapezoidal mode and executing a trapezoidal move,
-				// the actual position of the motor cannot be cleared.
-				if (any_motor_executing_trapezoidal_move(motor))
+				if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 				{
+					unsigned char motor = 1 << (param1.value.letter - 'A');
+					// If motor is in trapezoidal mode and executing a trapezoidal move,
+					// the actual position of the motor cannot be cleared.
+					if (any_motor_executing_trapezoidal_move(motor))
+					{
 					// error: motor cannot be executing trapezoidal move
+						dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+					}
+					// If the motor is not in trapezoidal mode or is not executing a trapezoidal move,
+					// the actual position can be cleared safely.
+					else
+					{
+						const int size = 64;
+						char buf[size];
+
+						// Disable PID control on the given motor, to prevent
+						// that motor from moving to correct the position.
+						buf[0] = 'D';
+						buf[1] = param1.value.letter;
+						buf[2] = *CMDEND;
+						buf[3] = '\0';
+						mcuicom_send(buf);
+
+						// Clear the actual position register of the MCMCU for
+						// the given motor.
+						buf[0] = 'K';
+						mcuicom_send(buf);
+
+						// Set the desired position register of the MCMCU to
+						// position 0.
+						// Otherwise, if this register were non-zero, the motor
+						// would move that amount of steps relative to the new
+						// zero position, which is undesired.
+						buf[0] = 'G';
+						buf[2] = ',';
+						buf[3] = '0';
+						buf[4] = *CMDEND;
+						buf[5] = '\0';
+						mcuicom_send(buf);
+
+						// Re-enable PID control on the given motor
+						buf[0] = 'E';
+						buf[2] = *CMDEND;
+						buf[3] = '\0';
+						mcuicom_send(buf);
+					}
 				}
-				// If the motor is not in trapezoidal mode or is not executing a trapezoidal move,
-				// the actual position can be cleared safely.
 				else
 				{
-					*cur_pos = 0;
+					// error: parameter 1 out of range
+					dbgmsg_uart2(ERR_OUT_OF_RANGE);
 				}
+			}
+			else
+			{
+				dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 			}
 		}
 		else
 		{
-			dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
+			dbgmsg_uart2(ERR_MISSING_PARAMS);
 		}
-	}
-	else
-	{
-		dbgmsg_uart2(ERR_MISSING_PARAMS);
 	}
 }
 
