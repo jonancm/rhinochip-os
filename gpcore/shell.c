@@ -3681,7 +3681,21 @@ inline void hostcmd_vg(void)
 				int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 				if (0 <= intparam1 && intparam1 <= 100)
 				{
-					// proceed
+					if (any_motor_executing_trapezoidal_move(MOTOR_ALL))
+					{
+						dbgmsg_uart2(ERR_TRAPEZOIDAL_MOVE);
+					}
+					else
+					{
+						const int size = 64;
+						char buf[size];
+
+						snprintf(buf, size, "SV,%d" CMDEND, intparam1);
+						mcuicom_send(buf);
+
+						// FIXME: the gripper must not be in the process of
+						// closing or opening
+					}
 				}
 				else
 				{
