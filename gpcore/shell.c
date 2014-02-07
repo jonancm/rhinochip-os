@@ -8,6 +8,8 @@
 #include "mctlcom.h"
 #include "hardhome.h"
 
+#include <stdlib.h> // atoi
+
 #include "../debug.h"
 //#ifndef NDEBUG
 #define CMD_RECVD "Command received: "
@@ -2921,6 +2923,7 @@ inline void hostcmd_hl(void)
  */
 inline void hostcmd_hs(void)
 {
+	// TODO: test command
 	if (controller_is_in_teach_pendant_mode())
 	{
 		// error: command cannot be used while under teach pendant mode
@@ -2928,14 +2931,42 @@ inline void hostcmd_hs(void)
 	}
 	else
 	{
-		controller.soft_home_position.motor_a = controller.current_position.motor_a;
-		controller.soft_home_position.motor_b = controller.current_position.motor_b;
-		controller.soft_home_position.motor_c = controller.current_position.motor_c;
-		controller.soft_home_position.motor_d = controller.current_position.motor_d;
-		controller.soft_home_position.motor_e = controller.current_position.motor_e;
-		controller.soft_home_position.motor_f = controller.current_position.motor_f;
-		controller.soft_home_position.motor_g = controller.current_position.motor_g;
-		controller.soft_home_position.motor_h = controller.current_position.motor_h;
+		const int size = 64;
+		char buf[size];
+		int recvd;
+
+		mcuicom_send("RA" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_a = atoi(buf);
+
+		mcuicom_send("RB" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_b = atoi(buf);
+
+		mcuicom_send("RC" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_c = atoi(buf);
+
+		mcuicom_send("RD" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_d = atoi(buf);
+
+		mcuicom_send("RE" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_e = atoi(buf);
+
+		mcuicom_send("RF" CMDEND);
+		recvd = mctlcom_get_response(buf, size);
+		buf[recvd] = '\0'; // 'atoi' expects a C-string, therefore, must add null terminator
+		controller.soft_home_position.motor_f = atoi(buf);
+
+		// TODO: set xyz soft home position
+		// FIXME: motors in trapezoidal move should not be executing a trapezoidal move
 	}
 }
 
