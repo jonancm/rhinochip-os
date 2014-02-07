@@ -242,6 +242,10 @@ inline void set_desired_velocity_motor_d(void);
 inline void set_desired_velocity_motor_e(void);
 inline void set_desired_velocity_motor_f(void);
 
+inline void read_proportional_gain(void);
+inline void read_integral_gain(void);
+inline void read_differential_gain(void);
+
 /******************************************************************************
  *                           FUNCTION DEFINITIONS                             *
  ******************************************************************************/
@@ -927,6 +931,23 @@ void interpret_cmd(void)
 				// SV: Set system velocity
 				case 'V':
 					set_system_velocity(); break;
+				default:
+					// error: unknown command
+					break;
+			}
+			break;
+		case 'W':
+			switch (cmd_name[1])
+			{
+				// WP: Read the proportional gain of the specified motor
+				case 'P':
+					read_proportional_gain(); break;
+				// WI: Read the integral gain of the specified motor
+				case 'I':
+					read_integral_gain(); break;
+				// WD: Read the differential gain of the specified motor
+				case 'D':
+					read_differential_gain(); break;
 				default:
 					// error: unknown command
 					break;
@@ -2650,6 +2671,96 @@ inline void set_desired_velocity_motor_f(void)
 			int intparam1 = param1.value.integer.sign * param1.value.integer.abs_value;
 			if (0 <= intparam1 && intparam1 <= 100) // TODO: allow negative velocities (requires a fix in trapezoidal movements)
 				motor_desired_velocity[MOTOR_F] = intparam1;
+		}
+	}
+}
+
+inline void read_proportional_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							int gain = motorctl_get_proportional_gain(motor);
+							const int size = 64;
+							char buf[size];
+
+							snprintf(buf, size, "%d" CMDEND, gain);
+							mcuicom_send(buf);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+inline void read_integral_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							int gain = motorctl_get_integral_gain(motor);
+							const int size = 64;
+							char buf[size];
+
+							snprintf(buf, size, "%d" CMDEND, gain);
+							mcuicom_send(buf);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+inline void read_differential_gain(void)
+{
+	if (param1.present)
+	{
+		if (param1.type == TOKEN_LETTER)
+		{
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
+			{
+				if (param2.present)
+				{
+					if (param2.type == TOKEN_INT)
+					{
+						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
+						if (0 <= intparam2 && intparam2 <= 255)
+						{
+							unsigned char motor = 1 << (param1.value.letter - 'A');
+							int gain = motorctl_get_differential_gain(motor);
+							const int size = 64;
+							char buf[size];
+
+							snprintf(buf, size, "%d" CMDEND, gain);
+							mcuicom_send(buf);
+						}
+					}
+				}
+			}
 		}
 	}
 }

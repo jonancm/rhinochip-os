@@ -51,4 +51,8 @@ inline bool_t motor_d_executing_trapezoidal_move(void);
 inline bool_t motor_e_executing_trapezoidal_move(void);
 inline bool_t motor_f_executing_trapezoidal_move(void);
 
+int motorctl_get_proportional_gain(unsigned char motor);
+int motorctl_get_integral_gain(unsigned char motor);
+int motorctl_get_differential_gain(unsigned char motor);
+
 #endif

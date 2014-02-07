@@ -727,6 +727,60 @@ void setup_pid_info(void)
 	pid_info[MOTOR_A].KD = 0;
 }
 
+int motorctl_get_proportional_gain(unsigned char motor)
+{
+	int gain = -1;
+
+	switch (motor)
+	{
+		case MOTOR_A: gain = pid_info[MOTOR_A].KP; break;
+		case MOTOR_B: gain = pid_info[MOTOR_B].KP; break;
+		case MOTOR_C: gain = pid_info[MOTOR_C].KP; break;
+		case MOTOR_D: gain = pid_info[MOTOR_D].KP; break;
+		case MOTOR_E: gain = pid_info[MOTOR_E].KP; break;
+		case MOTOR_F: gain = pid_info[MOTOR_F].KP; break;
+		default: break;
+	}
+
+	return gain;
+}
+
+int motorctl_get_integral_gain(unsigned char motor)
+{
+	int gain = -1;
+
+	switch (motor)
+	{
+		case MOTOR_A: gain = pid_info[MOTOR_A].KI; break;
+		case MOTOR_B: gain = pid_info[MOTOR_B].KI; break;
+		case MOTOR_C: gain = pid_info[MOTOR_C].KI; break;
+		case MOTOR_D: gain = pid_info[MOTOR_D].KI; break;
+		case MOTOR_E: gain = pid_info[MOTOR_E].KI; break;
+		case MOTOR_F: gain = pid_info[MOTOR_F].KI; break;
+		default: break;
+	}
+
+	return gain;
+}
+
+int motorctl_get_differential_gain(unsigned char motor)
+{
+	int gain = -1;
+
+	switch (motor)
+	{
+		case MOTOR_A: gain = pid_info[MOTOR_A].KD; break;
+		case MOTOR_B: gain = pid_info[MOTOR_B].KD; break;
+		case MOTOR_C: gain = pid_info[MOTOR_C].KD; break;
+		case MOTOR_D: gain = pid_info[MOTOR_D].KD; break;
+		case MOTOR_E: gain = pid_info[MOTOR_E].KD; break;
+		case MOTOR_F: gain = pid_info[MOTOR_F].KD; break;
+		default: break;
+	}
+
+	return gain;
+}
+
 /***************************
  * Motor control functions *
  ***************************/
