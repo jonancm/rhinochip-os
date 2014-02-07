@@ -164,7 +164,7 @@ typedef struct {
 		int motor_h;
 	} soft_home_position;
 	
-	char limit_switches;
+	unsigned char limit_switches;
 	
 	struct {
 		char motor_a;
@@ -258,5 +258,7 @@ void set_controller_scara_mode(void);
 void update_system_acceleration(void);
 
 void reset_soft_home(void);
+
+void update_limit_switches(void);
 
 #endif

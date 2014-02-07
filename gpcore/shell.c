@@ -1927,8 +1927,10 @@ inline void hostcmd_pz(void)
  */
 inline void hostcmd_rl(void)
 {
-	char buf[64];
-	snprintf(buf, 64, "%u\n", controller.limit_switches);
+	const int size = 64;
+	char buf[size];
+	update_limit_switches();
+	snprintf(buf, size, "%u\n", controller.limit_switches);
 	hostcom_send(buf);
 }
 

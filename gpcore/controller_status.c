@@ -4,6 +4,7 @@
 
 #include "controller_status.h"
 #include "mctlcom.h"
+#include "hardhome.h"
 
 #include <stdlib.h> // atoi
 #include <stdio.h>  // snprintf
@@ -364,4 +365,22 @@ void reset_soft_home(void)
 	controller.soft_home_position.motor_f = 0;
 	controller.soft_home_position.motor_g = 0;
 	controller.soft_home_position.motor_h = 0;
+}
+
+void update_limit_switches(void)
+{
+	// In the limit switch status register, a value of 0 indicates that the
+	// limit switch is closed (on or active), and a value of 1 indicates that
+	// the limit switch is open (off or inactive).
+	// 
+	// However, the readings from the hardware are inverted. Thus, when the
+	// corresponding input port is 0, the switch is open or inactive, and, when
+	// the input port is 1, the switch is closed or active.
+	controller.limit_switches  = 0xFF;
+	controller.limit_switches &= ~(LMT_MF << 5);
+	controller.limit_switches &= ~(LMT_ME << 4);
+	controller.limit_switches &= ~(LMT_MD << 3);
+	controller.limit_switches &= ~(LMT_MC << 2);
+	controller.limit_switches &= ~(LMT_MB << 1);
+	controller.limit_switches &= ~(LMT_MA);
 }
