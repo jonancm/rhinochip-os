@@ -2149,55 +2149,39 @@ inline void hostcmd_vr(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			char      velocity;
-			bool_t    error = false;
-			
-			switch (param1.value.letter)
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				case 'A':
-					velocity = controller.motor_desired_velocity.motor_a;
-					break;
-				case 'B':
-					velocity = controller.motor_desired_velocity.motor_b;
-					break;
-				case 'C':
-					velocity = controller.motor_desired_velocity.motor_c;
-					break;
-				case 'D':
-					velocity = controller.motor_desired_velocity.motor_d;
-					break;
-				case 'E':
-					velocity = controller.motor_desired_velocity.motor_e;
-					break;
-				case 'F':
-					velocity = controller.motor_desired_velocity.motor_f;
-					break;
-				case 'G':
-					velocity = controller.motor_desired_velocity.motor_g;
-					break;
-				case 'H':
-					velocity = controller.motor_desired_velocity.motor_h;
-					break;
-				default:
-					// error
-					dbgmsg_uart2(ERR_OUT_OF_RANGE);
-					error = true;
-			}
-			
-			if (!error)
-			{
-				char buf[64];
-				snprintf(buf, 64, "%u\n", velocity);
+				const int size = 64;
+				char buf[size];
+				int recvd;
+
+				buf[0] = 'Y';
+				buf[1] = param1.value.letter;
+				buf[2] = *CMDEND;
+				buf[3] = '\0';
+				mcuicom_send(buf);
+				recvd = mctlcom_get_response(buf, size);
+				buf[recvd] = '\0';
+				// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+				// Another possible solution may be to enable 'hostcom_send' to
+				// accept a 'size' parameter that tells the size of the buffer.
 				hostcom_send(buf);
+			}
+			else
+			{
+				// error: param 1 out of range
+				dbgmsg_uart2(ERR_OUT_OF_RANGE);
 			}
 		}
 		else
 		{
+			// error: param 1 must be a letter
 			dbgmsg_uart2(ERR_WRONG_TYPE_PARAM);
 		}
 	}
 	else
 	{
+		// error: param 1 must be provided
 		dbgmsg_uart2(ERR_MISSING_PARAMS);
 	}
 }
