@@ -116,79 +116,60 @@ void setup_trapezoidal_movement(void)
 	// Initialize motor control data structure for motor F
 }
 
+inline int h1(float t, float tau1, float th0, float th1)
+{
+	float tmp = t / tau1;
+	return (th1 - th0) * tmp * tmp + th0;
+}
+
+inline int h2(float t, float tau1,  float tau2, float th1, float th2)
+{
+	return (th2 - th1) * ((t - tau1) / (tau2 - tau1)) + th1;
+}
+
+inline int h3(float t, float tau2, float tauf, float th2, float thf)
+{
+	float tmp = (t - tau2) / (tauf - tau2) - 1;
+	return (th2 - thf) * tmp * tmp + thf;
+}
+
 inline void generate_trapezoidal_profile_motor_a(void)
 {
 	if (motorctl_info[MOTOR_A].enabled)
 	{
-		// Fall phase (motorctl_info[MOTOR_A].phase = 1)
-		if (motorctl_info[MOTOR_A].phase)
+		motorctl_info[MOTOR_A].tau += T4PERIOD;
+
+		if (0 <= motorctl_info[MOTOR_A].tau
+		      && motorctl_info[MOTOR_A].tau < motorctl_info[MOTOR_A].tau1)
 		{
-			// If segment S3 has finished, unset the saturation flag for the velocity to start
-			// decreasing (to enter S4)
-			if (motorctl_info[MOTOR_A].flatcount <= 0)
-				motorctl_info[MOTOR_A].velocity_saturated = false;
-			
-			// If the motor velocity IS saturated, keep moving at maximum velocity until duration
-			// of segment S2 has been matched
-			if (motorctl_info[MOTOR_A].velocity_saturated)
-				 --motorctl_info[MOTOR_A].flatcount;
-			// If the motor velocity is NOT saturated, decrease velocity at a constant rate
-			// (given by system acceleration) until zero velocity is reached
-			else
-				motorctl_info[MOTOR_A].velocity -= motorctl_info[MOTOR_A].acceleration;
-			
-			// If the total displacement of the fall phase has been reached (i.e. the end-point
-			// of the trajectory has been reached), the fall phase (and the movement) has finished
-			if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
-			//if (motorctl_info[MOTOR_A].phase1displacement <= 0 || abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
-			// This fixes the final position offset
-				motorctl_info[MOTOR_A].enabled = false;
-			// If the fall phase has not finished yet, decrease the displacement counter
-			else
-				--motorctl_info[MOTOR_A].phase1displacement;
+			motorctl_info[MOTOR_A].position = h1(motorctl_info[MOTOR_A].tau,
+			                                     motorctl_info[MOTOR_A].tau1,
+			                                     motorctl_info[MOTOR_A].theta0,
+			                                     motorctl_info[MOTOR_A].theta1);
 		}
-		// Rise phase (motorctl_info[MOTOR_A].phase = 0)
+		else if (motorctl_info[MOTOR_A].tau1 <= motorctl_info[MOTOR_A].tau
+		      && motorctl_info[MOTOR_A].tau  <  motorctl_info[MOTOR_A].tau2)
+		{
+			motorctl_info[MOTOR_A].position = h2(motorctl_info[MOTOR_A].tau,
+			                                     motorctl_info[MOTOR_A].tau1,
+			                                     motorctl_info[MOTOR_A].tau2,
+			                                     motorctl_info[MOTOR_A].theta1,
+			                                     motorctl_info[MOTOR_A].theta2);
+		}
+		else if (motorctl_info[MOTOR_A].tau2 <  motorctl_info[MOTOR_A].tau
+		      && motorctl_info[MOTOR_A].tau  <= motorctl_info[MOTOR_A].tauf)
+		{
+			motorctl_info[MOTOR_A].position = h3(motorctl_info[MOTOR_A].tau,
+			                                     motorctl_info[MOTOR_A].tau2,
+			                                     motorctl_info[MOTOR_A].tauf,
+			                                     motorctl_info[MOTOR_A].theta2,
+			                                     motorctl_info[MOTOR_A].thetaf);
+		}
 		else
 		{
-			// If the maximum velocity has been reached, limit velocity to its maximum value
-			// and set saturation flag
-			if (motorctl_info[MOTOR_A].velocity >= motorctl_info[MOTOR_A].max_velocity)
-			{
-				motorctl_info[MOTOR_A].velocity = motorctl_info[MOTOR_A].max_velocity;
-				motorctl_info[MOTOR_A].velocity_saturated = true;
-			}
-
-			// If the motor velocity IS saturated, keep moving at maximum velocity and count
-			// duration of segment S2
-			if (motorctl_info[MOTOR_A].velocity_saturated)
-				 ++motorctl_info[MOTOR_A].flatcount;
-			// If the motor velocity is NOT saturated, increase velocity at a constant rate
-			// (given by system acceleration) until maximum velocity is reached
-			else
-				motorctl_info[MOTOR_A].velocity += motorctl_info[MOTOR_A].acceleration;
-			
-			// If the motor position has reached the mid-point of the trajectory, the rise phase
-			// has finished
-			if (abs(motor_steps[MOTOR_A] - motorctl_info[MOTOR_A].start_pos) >= motorctl_info[MOTOR_A].halfcount)
-				motorctl_info[MOTOR_A].phase = 1;
-			// If the rise phase has not finished yet, increment the displacement counter
-			else
-				++motorctl_info[MOTOR_A].phase1displacement;
-			
-			// This fixes the final position offset
-			/*
-			if (abs(motor_steps[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
-				motorctl_info[MOTOR_A].enabled = false;
-			*/
-			/*
-			if (abs(motor_desired_pos[MOTOR_A] - motor_commanded_pos[MOTOR_A]) < TOL_MOVING)
-				motorctl_info[MOTOR_A].enabled = false;
-			*/
+			motorctl_info[MOTOR_A].enabled = false;
+			motorctl_info[MOTOR_A].tau = 0;
 		}
-		
-		// Calculate next position
-		motorctl_info[MOTOR_A].position = motorctl_info[MOTOR_A].position
-		                                + motorctl_info[MOTOR_A].motion_dir * motorctl_info[MOTOR_A].velocity;
 	}
 }
 
