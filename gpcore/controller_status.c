@@ -59,6 +59,19 @@ void set_motor_mode(unsigned char motor_flags, motor_mode_t motor_mode)
 	}
 }
 
+void setup_pid_gains(void)
+{
+	// TODO: Set PID gains to the values stored in the EEPROM
+
+	// Set PID gains for motor A
+	// mcuicom_send("UP,A,46" CMDEND);
+	// mcuicom_send("UI,A,40" CMDEND);
+	// mcuicom_send("UD,A,110" CMDEND);
+	mcuicom_send("UP,A,1" CMDEND);
+	mcuicom_send("UI,A,0" CMDEND);
+	mcuicom_send("UD,A,0" CMDEND);
+}
+
 void controller_status_setup(void)
 {
 	// At startup, the system configuration is read from the EEPROM.
@@ -100,6 +113,9 @@ void controller_status_setup(void)
 
 	// Reset soft home position (all motors to zero)
 	reset_soft_home();
+
+	// Set up PID gains
+	setup_pid_gains();
 }
 
 bool_t motor_is_in_trapezoidal_mode(unsigned char motor)
