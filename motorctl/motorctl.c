@@ -726,12 +726,12 @@ int motorctl_get_proportional_gain(unsigned char motor)
 
 	switch (motor)
 	{
-		case MOTOR_A: gain = pid_info[MOTOR_A].KP; break;
-		case MOTOR_B: gain = pid_info[MOTOR_B].KP; break;
-		case MOTOR_C: gain = pid_info[MOTOR_C].KP; break;
-		case MOTOR_D: gain = pid_info[MOTOR_D].KP; break;
-		case MOTOR_E: gain = pid_info[MOTOR_E].KP; break;
-		case MOTOR_F: gain = pid_info[MOTOR_F].KP; break;
+		case MOTOR_BIT_A: gain = pid_info[MOTOR_A].KP; break;
+		case MOTOR_BIT_B: gain = pid_info[MOTOR_B].KP; break;
+		case MOTOR_BIT_C: gain = pid_info[MOTOR_C].KP; break;
+		case MOTOR_BIT_D: gain = pid_info[MOTOR_D].KP; break;
+		case MOTOR_BIT_E: gain = pid_info[MOTOR_E].KP; break;
+		case MOTOR_BIT_F: gain = pid_info[MOTOR_F].KP; break;
 		default: break;
 	}
 
@@ -744,12 +744,12 @@ int motorctl_get_integral_gain(unsigned char motor)
 
 	switch (motor)
 	{
-		case MOTOR_A: gain = pid_info[MOTOR_A].KI; break;
-		case MOTOR_B: gain = pid_info[MOTOR_B].KI; break;
-		case MOTOR_C: gain = pid_info[MOTOR_C].KI; break;
-		case MOTOR_D: gain = pid_info[MOTOR_D].KI; break;
-		case MOTOR_E: gain = pid_info[MOTOR_E].KI; break;
-		case MOTOR_F: gain = pid_info[MOTOR_F].KI; break;
+		case MOTOR_BIT_A: gain = pid_info[MOTOR_A].KI; break;
+		case MOTOR_BIT_B: gain = pid_info[MOTOR_B].KI; break;
+		case MOTOR_BIT_C: gain = pid_info[MOTOR_C].KI; break;
+		case MOTOR_BIT_D: gain = pid_info[MOTOR_D].KI; break;
+		case MOTOR_BIT_E: gain = pid_info[MOTOR_E].KI; break;
+		case MOTOR_BIT_F: gain = pid_info[MOTOR_F].KI; break;
 		default: break;
 	}
 
@@ -762,12 +762,12 @@ int motorctl_get_differential_gain(unsigned char motor)
 
 	switch (motor)
 	{
-		case MOTOR_A: gain = pid_info[MOTOR_A].KD; break;
-		case MOTOR_B: gain = pid_info[MOTOR_B].KD; break;
-		case MOTOR_C: gain = pid_info[MOTOR_C].KD; break;
-		case MOTOR_D: gain = pid_info[MOTOR_D].KD; break;
-		case MOTOR_E: gain = pid_info[MOTOR_E].KD; break;
-		case MOTOR_F: gain = pid_info[MOTOR_F].KD; break;
+		case MOTOR_BIT_A: gain = pid_info[MOTOR_A].KD; break;
+		case MOTOR_BIT_B: gain = pid_info[MOTOR_B].KD; break;
+		case MOTOR_BIT_C: gain = pid_info[MOTOR_C].KD; break;
+		case MOTOR_BIT_D: gain = pid_info[MOTOR_D].KD; break;
+		case MOTOR_BIT_E: gain = pid_info[MOTOR_E].KD; break;
+		case MOTOR_BIT_F: gain = pid_info[MOTOR_F].KD; break;
 		default: break;
 	}
 
