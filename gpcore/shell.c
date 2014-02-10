@@ -4395,7 +4395,7 @@ inline void hostcmd_tt(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_ka(void)
 {
@@ -4463,7 +4463,7 @@ inline void hostcmd_ka(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_kb(void)
 {
@@ -4531,7 +4531,7 @@ inline void hostcmd_kb(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_kc(void)
 {
@@ -4601,7 +4601,7 @@ inline void hostcmd_kc(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_ra(void)
 {
@@ -4654,7 +4654,7 @@ inline void hostcmd_ra(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_rb(void)
 {
@@ -4707,7 +4707,7 @@ inline void hostcmd_rb(void)
  * 
  * If robot type is changed, the gains will be reset.
  * 
- * This command can be used while udner teach pendant mode.
+ * This command can be used while under teach pendant mode.
  */
 inline void hostcmd_rc(void)
 {
