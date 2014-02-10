@@ -42,7 +42,7 @@ typedef struct {
 	 * Bit 1:    1 = Motor B in Trapezoidal move    0 = Motor B not in Trapezoidal move
 	 * Bit 0:    1 = Motor A in Trapezoidal move    0 = Motor A not in Trapezoidal move
 	 */
-	unsigned char motor_status;
+	unsigned char motor_status; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	/**
 	 * System Configuration.
@@ -104,7 +104,7 @@ typedef struct {
 		motor_mode_t    motor_f;
 		motor_mode_t    motor_g;
 		motor_mode_t    motor_h;
-	} motor_mode;
+	} motor_mode; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	unsigned long int usage_time;
 	
@@ -117,7 +117,7 @@ typedef struct {
 		int motor_f;
 		int motor_g;
 		int motor_h;
-	} current_position;
+	} current_position; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	struct {
 		int motor_a;
@@ -128,7 +128,7 @@ typedef struct {
 		int motor_f;
 		int motor_g;
 		int motor_h;
-	} relative_destination;
+	} relative_destination; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	struct {
 		int motor_a;
@@ -139,7 +139,7 @@ typedef struct {
 		int motor_f;
 		int motor_g;
 		int motor_h;
-	} absolute_destination;
+	} absolute_destination; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	struct {
 		float x;
@@ -147,11 +147,11 @@ typedef struct {
 		float z;
 		float a;
 		float t;
-	} xyz_destination;
+	} xyz_destination; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
 	char system_acceleration; // TODO: remove? Is this needed? It is stored in the MCMCU!
 	
-	gripper_status_t gripper_status;
+	gripper_status_t gripper_status; // TODO: remove? Is this needed? It should be stored in the MCMCU!
 	
 	struct {
 		int motor_a;
@@ -175,7 +175,7 @@ typedef struct {
 		char motor_f;
 		char motor_g;
 		char motor_h;
-	} motor_actual_velocity;
+	} motor_actual_velocity; // TODO: remove? Is this needed? It should be stored in the MCMCU!
 	
 	char input_ports;
 	

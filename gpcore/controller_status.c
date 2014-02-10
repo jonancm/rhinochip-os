@@ -274,6 +274,7 @@ void set_controller_generic_mode(void)
 	controller.system_config |= BIT_5;
 	// Automatically disable the gripper
 	disable_gripper();
+	// TODO: reset PID gains (needs EEPROM support)
 }
 
 void set_controller_xr3_mode(void)
@@ -284,6 +285,7 @@ void set_controller_xr3_mode(void)
 	controller.system_config &= ~BIT_4;
 	// Automatically enable the gripper
 	enable_gripper();
+	// TODO: reset PID gains (needs EEPROM support)
 }
 
 void set_controller_scara_mode(void)
@@ -294,6 +296,7 @@ void set_controller_scara_mode(void)
 	controller.system_config |= BIT_4;
 	// Automatically enable the gripper
 	enable_gripper();
+	// TODO: reset PID gains (needs EEPROM support)
 }
 
 void update_motor_mode(void)
