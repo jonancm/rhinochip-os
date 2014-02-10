@@ -2704,23 +2704,13 @@ inline void read_proportional_gain(void)
 		{
 			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				if (param2.present)
-				{
-					if (param2.type == TOKEN_INT)
-					{
-						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
-						if (0 <= intparam2 && intparam2 <= 255)
-						{
-							unsigned char motor = 1 << (param1.value.letter - 'A');
-							int gain = motorctl_get_proportional_gain(motor);
-							const int size = 64;
-							char buf[size];
+				unsigned char motor = 1 << (param1.value.letter - 'A');
+				int gain = motorctl_get_proportional_gain(motor);
+				const int size = 64;
+				char buf[size];
 
-							snprintf(buf, size, "%d" CMDEND, gain);
-							mcuicom_send(buf);
-						}
-					}
-				}
+				snprintf(buf, size, "%d" CMDEND, gain);
+				mcuicom_send(buf);
 			}
 		}
 	}
@@ -2734,23 +2724,13 @@ inline void read_integral_gain(void)
 		{
 			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				if (param2.present)
-				{
-					if (param2.type == TOKEN_INT)
-					{
-						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
-						if (0 <= intparam2 && intparam2 <= 255)
-						{
-							unsigned char motor = 1 << (param1.value.letter - 'A');
-							int gain = motorctl_get_integral_gain(motor);
-							const int size = 64;
-							char buf[size];
+				unsigned char motor = 1 << (param1.value.letter - 'A');
+				int gain = motorctl_get_integral_gain(motor);
+				const int size = 64;
+				char buf[size];
 
-							snprintf(buf, size, "%d" CMDEND, gain);
-							mcuicom_send(buf);
-						}
-					}
-				}
+				snprintf(buf, size, "%d" CMDEND, gain);
+				mcuicom_send(buf);
 			}
 		}
 	}
@@ -2764,23 +2744,13 @@ inline void read_differential_gain(void)
 		{
 			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				if (param2.present)
-				{
-					if (param2.type == TOKEN_INT)
-					{
-						int intparam2 = param2.value.integer.sign * param2.value.integer.abs_value;
-						if (0 <= intparam2 && intparam2 <= 255)
-						{
-							unsigned char motor = 1 << (param1.value.letter - 'A');
-							int gain = motorctl_get_differential_gain(motor);
-							const int size = 64;
-							char buf[size];
+				unsigned char motor = 1 << (param1.value.letter - 'A');
+				int gain = motorctl_get_differential_gain(motor);
+				const int size = 64;
+				char buf[size];
 
-							snprintf(buf, size, "%d" CMDEND, gain);
-							mcuicom_send(buf);
-						}
-					}
-				}
+				snprintf(buf, size, "%d" CMDEND, gain);
+				mcuicom_send(buf);
 			}
 		}
 	}
