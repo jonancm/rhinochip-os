@@ -4609,28 +4609,26 @@ inline void hostcmd_ra(void)
 	{
 		if (param1.type == TOKEN_LETTER)
 		{
-			switch (param1.value.letter)
+			if ('A' <= param1.value.letter && param1.value.letter <= 'F')
 			{
-				case 'A':
-					break;
-				case 'B':
-					break;
-				case 'C':
-					break;
-				case 'D':
-					break;
-				case 'E':
-					break;
-				case 'F':
-					break;
-				case 'G':
-					break;
-				case 'H':
-					break;
-				default:
-					// error: parameter 1 out of range
-					dbgmsg_uart2(ERR_OUT_OF_RANGE);
-					break;
+				const int size = 64;
+				char buf[size];
+				int recvd;
+
+				snprintf(buf, size, "WP,%c" CMDEND, param1.value.letter);
+				mcuicom_send(buf);
+
+				recvd = mctlcom_get_response(buf, size);
+				buf[recvd] = '\0';
+				// TODO: the previous line may be moved to 'mcuicom_read_cmd'.
+				// Another possible solution may be to enable 'hostcom_send' to
+				// accept a 'size' parameter that tells the size of the buffer.
+				hostcom_send(buf);
+			}
+			else
+			{
+				// error: parameter 1 out of range
+				dbgmsg_uart2(ERR_OUT_OF_RANGE);
 			}
 		}
 		else
