@@ -70,18 +70,18 @@ int abs_sign(int num, int *sig)
  *********************************************/
 
 typedef struct {
-	int enabled            : 1;
-	int phase              : 1;
-	int velocity_saturated : 1;
-	int flatcount;
-	int velocity;
-	int acceleration;
-	int phase1displacement;
-	int halfcount;
-	int max_velocity;
-	int position;
-	int start_pos;
-	int motion_dir;
+	int      enabled    : 1;
+	int      wdes;
+	int      alpha;
+	int      theta0;
+	int      theta1;
+	int      theta2;
+	int      thetaf;
+	float    tau1;
+	float    tau2;
+	float    tauf;
+	float    tau;
+	int      position;
 } motorctl_info_t;
 
 motorctl_info_t    motorctl_info[NUM_MOTORS];
@@ -92,19 +92,18 @@ motorctl_info_t    motorctl_info[NUM_MOTORS];
 void setup_trapezoidal_movement(void)
 {
 	// Initialize motor control data structure for motor A
-	absval = abs_sign(motor_commanded_pos[MOTOR_A] - motor_steps[MOTOR_A], &sig);
 	motorctl_info[MOTOR_A].enabled = false;
-	motorctl_info[MOTOR_A].phase = 0;
-	motorctl_info[MOTOR_A].velocity_saturated = false;
-	motorctl_info[MOTOR_A].flatcount = 0;
-	motorctl_info[MOTOR_A].velocity = 0;
-	motorctl_info[MOTOR_A].phase1displacement = 0;
-	motorctl_info[MOTOR_A].halfcount = absval / 2;
-	motorctl_info[MOTOR_A].max_velocity = (motor_desired_velocity[MOTOR_A] * system_velocity) / 100.0;
-	motorctl_info[MOTOR_A].acceleration = (system_acceleration / 100.) * motorctl_info[MOTOR_A].max_velocity;
+	motorctl_info[MOTOR_A].wdes = (motor_desired_velocity[MOTOR_A] * system_velocity) / 100.0;
+	motorctl_info[MOTOR_A].alpha = (system_acceleration / 100.) * motorctl_info[MOTOR_A].wdes;
+	motorctl_info[MOTOR_A].theta0 = motor_steps[MOTOR_A];
+	motorctl_info[MOTOR_A].thetaf = motor_commanded_pos[MOTOR_A];
+	motorctl_info[MOTOR_A].theta1 = motorctl_info[MOTOR_A].theta0 + 0.25*(motorctl_info[MOTOR_A].thetaf - motorctl_info[MOTOR_A].theta0);
+	motorctl_info[MOTOR_A].theta2 = motorctl_info[MOTOR_A].theta0 + 0.75*(motorctl_info[MOTOR_A].thetaf - motorctl_info[MOTOR_A].theta0);
+	motorctl_info[MOTOR_A].tau1 = ((float) motorctl_info[MOTOR_A].wdes) / motorctl_info[MOTOR_A].alpha;
+	motorctl_info[MOTOR_A].tau2 = 2*motorctl_info[MOTOR_A].tau1;
+	motorctl_info[MOTOR_A].tauf = motorctl_info[MOTOR_A].tau1 + motorctl_info[MOTOR_A].tau2;
+	motorctl_info[MOTOR_A].tau = 0;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
-	motorctl_info[MOTOR_A].start_pos = motor_steps[MOTOR_A];
-	motorctl_info[MOTOR_A].motion_dir = sig;
 
 	// Initialize motor control data structure for motor B
 
