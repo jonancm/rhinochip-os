@@ -2352,7 +2352,7 @@ inline void hostcmd_ac(void)
  * Set system acceleration as a percentage of system maximum acceleration.
  * 
  * System acceleration is a global parameter that affects all motors. If system acceleration is 0,
- * motors in trapezopidal mode will not be able to move and motors in velocity mode will be stopped.
+ * motors in trapezoidal mode will not be able to move and motors in velocity mode will be stopped.
  * 
  * Motors in trapezoidal mode must not be currently executing a trapezoidal move. This can be checked
  * by issuing the SS command.
