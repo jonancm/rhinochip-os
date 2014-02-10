@@ -106,6 +106,18 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 
 	// Initialize motor control data structure for motor B
+	motorctl_info[MOTOR_B].enabled = false;
+	motorctl_info[MOTOR_B].wdes = (motor_desired_velocity[MOTOR_B] * system_velocity) / 100.0;
+	motorctl_info[MOTOR_B].alpha = (system_acceleration / 100.) * motorctl_info[MOTOR_B].wdes;
+	motorctl_info[MOTOR_B].theta0 = motor_steps[MOTOR_B];
+	motorctl_info[MOTOR_B].thetaf = motor_commanded_pos[MOTOR_B];
+	motorctl_info[MOTOR_B].theta1 = motorctl_info[MOTOR_B].theta0 + 0.25*(motorctl_info[MOTOR_B].thetaf - motorctl_info[MOTOR_B].theta0);
+	motorctl_info[MOTOR_B].theta2 = motorctl_info[MOTOR_B].theta0 + 0.75*(motorctl_info[MOTOR_B].thetaf - motorctl_info[MOTOR_B].theta0);
+	motorctl_info[MOTOR_B].tau1 = ((float) motorctl_info[MOTOR_B].wdes) / motorctl_info[MOTOR_B].alpha;
+	motorctl_info[MOTOR_B].tau2 = 2*motorctl_info[MOTOR_B].tau1;
+	motorctl_info[MOTOR_B].tauf = motorctl_info[MOTOR_B].tau1 + motorctl_info[MOTOR_B].tau2;
+	motorctl_info[MOTOR_B].tau = 0;
+	motorctl_info[MOTOR_B].position = motor_steps[MOTOR_B];
 
 	// Initialize motor control data structure for motor C
 
@@ -175,7 +187,42 @@ inline void generate_trapezoidal_profile_motor_a(void)
 
 inline void generate_trapezoidal_profile_motor_b(void)
 {
+	if (motorctl_info[MOTOR_B].enabled)
+	{
+		motorctl_info[MOTOR_B].tau += T4PERIOD;
 
+		if (0 <= motorctl_info[MOTOR_B].tau
+		      && motorctl_info[MOTOR_B].tau < motorctl_info[MOTOR_B].tau1)
+		{
+			motorctl_info[MOTOR_B].position = h1(motorctl_info[MOTOR_B].tau,
+			                                     motorctl_info[MOTOR_B].tau1,
+			                                     motorctl_info[MOTOR_B].theta0,
+			                                     motorctl_info[MOTOR_B].theta1);
+		}
+		else if (motorctl_info[MOTOR_B].tau1 <= motorctl_info[MOTOR_B].tau
+		      && motorctl_info[MOTOR_B].tau  <  motorctl_info[MOTOR_B].tau2)
+		{
+			motorctl_info[MOTOR_B].position = h2(motorctl_info[MOTOR_B].tau,
+			                                     motorctl_info[MOTOR_B].tau1,
+			                                     motorctl_info[MOTOR_B].tau2,
+			                                     motorctl_info[MOTOR_B].theta1,
+			                                     motorctl_info[MOTOR_B].theta2);
+		}
+		else if (motorctl_info[MOTOR_B].tau2 <  motorctl_info[MOTOR_B].tau
+		      && motorctl_info[MOTOR_B].tau  <= motorctl_info[MOTOR_B].tauf)
+		{
+			motorctl_info[MOTOR_B].position = h3(motorctl_info[MOTOR_B].tau,
+			                                     motorctl_info[MOTOR_B].tau2,
+			                                     motorctl_info[MOTOR_B].tauf,
+			                                     motorctl_info[MOTOR_B].theta2,
+			                                     motorctl_info[MOTOR_B].thetaf);
+		}
+		else
+		{
+			motorctl_info[MOTOR_B].enabled = false;
+			motorctl_info[MOTOR_B].tau = 0;
+		}
+	}
 }
 
 inline void generate_trapezoidal_profile_motor_c(void)
