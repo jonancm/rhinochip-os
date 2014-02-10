@@ -2314,6 +2314,13 @@ inline void hostcmd_ac(void)
 						buf[5] = '\0';
 						mcuicom_send(buf);
 
+						// TODO: set the commanded position register to 0, too?
+						// After the issuance of an AC command on any motor, the
+						// commanded position still contains the old value. The
+						// motor won't move unless an MC or MI command is issued,
+						// but the register still contains the old value. Should
+						// this be changed?
+
 						// Re-enable PID control on the given motor
 						buf[0] = 'E';
 						buf[2] = *CMDEND;
