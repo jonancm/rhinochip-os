@@ -9,7 +9,7 @@
 #ifndef HOSTCOM_H
 #define HOSTCOM_H
 
-#include "clock.h"
+#include "../clock.h"
 
 #define BAUDRATE        9600                    //Desired Baud Rate
 #define BRGVAL          ((FCY/BAUDRATE)/16)-1   //Formula for U1BRG register
@@ -21,12 +21,7 @@
 /**
  * Set up the UART2 to be used to communicate with the host PC.
  */
-void hostcom_setup(void);
-
-/**
- * UART2 receive ISR.
- */
-void __attribute__((__interrupt__)) _U2RXInterrupt(void);
+inline void hostcom_setup(void);
 
 /**
  * Copy the first fully received host command from the receive buffer to the
@@ -43,8 +38,14 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void);
  * 
  * @returns       Amount of bytes copied.
  */
-int hostcom_read_cmd(byte_t buf[], int size, bool_t *full);
+int hostcom_read_cmd(char buf[], int size, bool_t *full);
 
-int hostcom_send(const char * const data, const int size);
+int hostcom_send(const char * const data);
+
+/**
+ * Return true if a full command is available (i.e. a command end mark has been
+ * received).
+ */
+bool_t hostcom_cmd_available(void);
 
 #endif

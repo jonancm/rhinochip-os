@@ -1,7 +1,23 @@
 #ifndef DELAY_H
 #define DELAY_H
 
-extern void Delay5us(int Count);
-extern void Delay5ms(int Count);
+#include "../clock.h"
 
-#endif // DELAY_H
+void delay_us(unsigned int duration)
+{
+	#define NINST 2 // Number of instructions
+	unsigned long count, limit = duration / (NINST * FCY);
+	for (count = 0; count < limit; ++count);
+}
+
+void delay_ms(unsigned int duration)
+{
+	delay_us(duration * 1000);
+}
+
+void delay_s(unsigned int duration)
+{
+	delay_us(duration * 1000000);
+}
+
+#endif

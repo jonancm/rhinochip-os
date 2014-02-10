@@ -1,60 +1,37 @@
 #include <p30fxxxx.h>
 
-//_FWDT(WDT_OFF); // Turn off watchdog timer
+// Set processor configuration bits for the dsPIC30F4013
+_FOSC(CSW_FSCM_OFF & XT_PLL16); // Fosc = 16x 7.37 MHz, Fcy = 29.50 MHz
+_FWDT(WDT_OFF);                 // Turn off the watchdog timer
+_FBORPOR(MCLR_EN & PWRT_OFF);   // Enable reset pin and turn off the power-up timers.
 
-//Macros for Configuration Fuse Registers:
-//Invoke macros to set up  device configuration fuse registers.
-//The fuses will select the oscillator source, power-up timers, watch-dog
-//timers, BOR characteristics etc. The macros are defined within the device
-//header files. The configuration fuse registers reside in Flash memory.
-_FOSC(CSW_FSCM_OFF & XT_PLL8);  //Run this project using an external crystal
-                                //routed via the PLL in 8x multiplier mode
-                                //For the 7.3728 MHz crystal we will derive a
-                                //throughput of 7.3728e+6*8/4 = 14.74 MIPS(Fcy)
-                                //,~67nanoseconds instruction cycle time(Tcy).
-_FWDT(WDT_OFF);                 //Turn off the Watch-Dog Timer.
-_FBORPOR(MCLR_EN & PWRT_OFF);   //Enable MCLR reset pin and turn off the
-                                //power-up timers.
-_FGS(CODE_PROT_OFF);            //Disable Code Protection
-
-#include "../delay.h"
 #include "hostcom.h"
-#include "../lcd.h"
 #include "../types.h"
 #include "../macros.h"
+#include "shell.h"
+#include "../mcuicom.h"
+#include "mctlcom.h"
+#include "controller_status.h"
+#include "hardhome.h"
 
-#define BUF_SIZE    64
-
-#define LCD_READY    "GPMCU ready"
-#define MSG_READY    "GPMCU ready\n"
+#include "../debug.h"
 
 int main(void)
 {
 	hostcom_setup();
-	lcd_setup();
+	mcuicom_setup();
+	controller_status_setup();
+	lmtswitch_setup();
 	
-	// Set up port pin RB0 the LED D3
-	LATBbits.LATB0 = 0;     // Clear Latch bit for RB0 port pin
-	TRISBbits.TRISB0 = 0;   // Set the RB0 pin direction to be an output
+	// Code for debugging. Send a message over RS232 notifying that the UART 1
+	// and the UART 2 of the GPMCU are ready and working fine.
+	#ifndef NDEBUG
+	mcuicom_send("UART 1 GPMCU ready\n", STRLEN("UART 1 GPMCU ready\n"));
+	hostcom_send("UART 2 GPMCU ready\n", STRLEN("UART 2 GPMCU ready\n"));
+	#endif
 	
-	lcd_write(LCD_READY);
-	hostcom_send(MSG_READY, STRLEN(MSG_READY));
-	
-	while (1)
-	{
-		bool_t full;
-		int copied;
-		byte_t buf[BUF_SIZE];
-		
-		copied = hostcom_read_cmd(buf, BUF_SIZE, &full);
-		if (copied && full)
-		{
-			buf[copied - 1] = '\0';
-			lcd_write((char *) buf);
-			buf[copied - 1] = '\n';
-			hostcom_send((char *) buf, copied);
-		}
-	}
+	// Start shell in interactive mode
+	shell_run_interactive();
 	
 	return 0;
 }

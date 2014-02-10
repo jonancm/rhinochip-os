@@ -10,7 +10,7 @@ static buffer_t hostcom_rcv_buf;
 
 static int first_cmdend = -1;
 
-void hostcom_setup(void)
+inline void hostcom_setup(void)
 {
 	// Set up the receive buffer
 	buffer_init(&hostcom_rcv_buf);
@@ -42,7 +42,10 @@ void hostcom_setup(void)
 	U2STAbits.UTXEN = 1;
 }
 
-void __attribute__((__interrupt__)) _U2RXInterrupt(void)
+/**
+ * UART2 receive ISR.
+ */
+void __attribute__((interrupt, auto_psv)) _U2RXInterrupt(void)
 {
 	// While UART2 receive buffer has data and the 'hostcom_rcv_buf' has free
 	// space...
@@ -67,7 +70,7 @@ void __attribute__((__interrupt__)) _U2RXInterrupt(void)
 	IFS1bits.U2RXIF = 0;
 }
 
-int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
+int hostcom_read_cmd(char buf[], int size, bool_t *full)
 {
 	int copied;
 	int i, j;
@@ -109,13 +112,18 @@ int hostcom_read_cmd(byte_t buf[], int size, bool_t *full)
 	return copied;
 }
 
-int hostcom_send(const char * const data, const int size)
+int hostcom_send(const char * const data)
 {
 	int sent;
-	for (sent = 0; sent < size; ++sent)
+	for (sent = 0; data[sent] != '\0'; ++sent)
 	{
 		while (U2STAbits.UTXBF); // Wait while the transmit buffer is full
 		U2TXREG = data[sent];
 	}
 	return sent;
+}
+
+bool_t hostcom_cmd_available(void)
+{
+	return first_cmdend > -1;
 }
