@@ -66,6 +66,7 @@ extern int motor_desired_pos[NUM_MOTORS];
 extern char motor_pwm_level[NUM_MOTORS];
 extern char motor_direction[NUM_MOTORS];
 extern char motor_desired_velocity[NUM_MOTORS];
+extern float motor_max_velocity[NUM_MOTORS];
 
 extern float cartesian_desired_pos[NUM_COORDS];
 
