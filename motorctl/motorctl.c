@@ -102,21 +102,20 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
 
-inline int h1(float t, float tau1, float th0, float th1)
+inline int h1(float tau, float wdes, float tau1, float th0)
 {
-	float tmp = t / tau1;
-	return (th1 - th0) * tmp * tmp + th0;
+	return (wdes / (2. * tau1)) * (tau * tau) + th0;
 }
 
-inline int h2(float t, float tau1,  float tau2, float th1, float th2)
+inline int h2(float tau, float wdes, float tau1, float th0)
 {
-	return (th2 - th1) * ((t - tau1) / (tau2 - tau1)) + th1;
+	return wdes * (tau - (tau1 / 2.)) + th0;
 }
 
-inline int h3(float t, float tau2, float tauf, float th2, float thf)
+inline int h3(float tau, float wdes, float tau1, float tauf, float thf)
 {
-	float tmp = (t - tau2) / (tauf - tau2) - 1;
-	return (th2 - thf) * tmp * tmp + thf;
+	float tmp = tau - tauf;
+	return ((-wdes) / (2. * tau1)) * (tmp * tmp) + thf;
 }
 
 inline void generate_trapezoidal_profile_motor_a(void)
@@ -129,26 +128,25 @@ inline void generate_trapezoidal_profile_motor_a(void)
 		      && motorctl_info[MOTOR_A].tau < motorctl_info[MOTOR_A].tau1)
 		{
 			motorctl_info[MOTOR_A].position = h1(motorctl_info[MOTOR_A].tau,
+			                                     motorctl_info[MOTOR_A].wdes,
 			                                     motorctl_info[MOTOR_A].tau1,
-			                                     motorctl_info[MOTOR_A].theta0,
-			                                     motorctl_info[MOTOR_A].theta1);
+			                                     motorctl_info[MOTOR_A].theta0);
 		}
 		else if (motorctl_info[MOTOR_A].tau1 <= motorctl_info[MOTOR_A].tau
 		      && motorctl_info[MOTOR_A].tau  <  motorctl_info[MOTOR_A].tau2)
 		{
 			motorctl_info[MOTOR_A].position = h2(motorctl_info[MOTOR_A].tau,
+			                                     motorctl_info[MOTOR_A].wdes,
 			                                     motorctl_info[MOTOR_A].tau1,
-			                                     motorctl_info[MOTOR_A].tau2,
-			                                     motorctl_info[MOTOR_A].theta1,
-			                                     motorctl_info[MOTOR_A].theta2);
+			                                     motorctl_info[MOTOR_A].theta0);
 		}
 		else if (motorctl_info[MOTOR_A].tau2 <  motorctl_info[MOTOR_A].tau
 		      && motorctl_info[MOTOR_A].tau  <= motorctl_info[MOTOR_A].tauf)
 		{
 			motorctl_info[MOTOR_A].position = h3(motorctl_info[MOTOR_A].tau,
-			                                     motorctl_info[MOTOR_A].tau2,
+			                                     motorctl_info[MOTOR_A].wdes,
+			                                     motorctl_info[MOTOR_A].tau1,
 			                                     motorctl_info[MOTOR_A].tauf,
-			                                     motorctl_info[MOTOR_A].theta2,
 			                                     motorctl_info[MOTOR_A].thetaf);
 		}
 		else
