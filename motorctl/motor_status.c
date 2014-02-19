@@ -34,4 +34,4 @@ float motor_max_velocity[NUM_MOTORS] = {
 float           cartesian_desired_pos[NUM_COORDS] = {0, 0, 0};
 
 char            system_velocity = 100;
-char            system_acceleration = 25;
+char            system_acceleration = 35;
