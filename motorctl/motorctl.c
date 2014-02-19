@@ -93,7 +93,7 @@ void setup_trapezoidal_movement(void)
 {
 	// Initialize motor control data structure for motor A
 	motorctl_info[MOTOR_A].enabled = false;
-	motorctl_info[MOTOR_F].wdes = (motor_desired_velocity[MOTOR_F] / 100) * (system_velocity / 100.0) * motor_max_velocity[MOTOR_F];
+	motorctl_info[MOTOR_A].wdes = (motor_desired_velocity[MOTOR_A] / 100) * (system_velocity / 100.0) * motor_max_velocity[MOTOR_A];
 	motorctl_info[MOTOR_A].alpha = (system_acceleration / 100.) * motorctl_info[MOTOR_A].wdes;
 	motorctl_info[MOTOR_A].theta0 = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].thetaf = motor_commanded_pos[MOTOR_A];
@@ -163,7 +163,7 @@ void setup_trapezoidal_movement(void)
 
 	// Initialize motor control data structure for motor F
 	motorctl_info[MOTOR_F].enabled = false;
-	motorctl_info[MOTOR_A].wdes = (motor_desired_velocity[MOTOR_A] / 100) * (system_velocity / 100.0) * motor_max_velocity[MOTOR_A];
+	motorctl_info[MOTOR_F].wdes = (motor_desired_velocity[MOTOR_F] / 100) * (system_velocity / 100.0) * motor_max_velocity[MOTOR_F];
 	motorctl_info[MOTOR_F].alpha = (system_acceleration / 100.) * motorctl_info[MOTOR_F].wdes;
 	motorctl_info[MOTOR_F].theta0 = motor_steps[MOTOR_F];
 	motorctl_info[MOTOR_F].thetaf = motor_commanded_pos[MOTOR_F];
