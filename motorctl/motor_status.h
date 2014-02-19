@@ -67,6 +67,7 @@ extern char motor_pwm_level[NUM_MOTORS];
 extern char motor_direction[NUM_MOTORS];
 extern char motor_desired_velocity[NUM_MOTORS];
 extern float motor_max_velocity[NUM_MOTORS];
+extern float motor_max_acceleration[NUM_MOTORS];
 
 extern float cartesian_desired_pos[NUM_COORDS];
 
@@ -74,5 +75,7 @@ extern char system_velocity;
 extern char system_acceleration;
 
 #endif /* MOTOR_STATUS_C */
+
+void motor_status_setup(void);
 
 #endif /* MOTOR_STATUS_H */
