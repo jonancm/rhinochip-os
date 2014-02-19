@@ -28,7 +28,19 @@ float motor_max_velocity[NUM_MOTORS] = {
 	((6000./60) * 24)  // Max vel = 6000 rpm
 };
 
+float           motor_max_acceleration[NUM_MOTORS];
+
 float           cartesian_desired_pos[NUM_COORDS] = {0, 0, 0};
 
 char            system_velocity = 100;
 char            system_acceleration = 25;
+
+void motor_status_setup(void)
+{
+	motor_max_acceleration[MOTOR_A] = motor_max_velocity[MOTOR_A] / 2;
+	motor_max_acceleration[MOTOR_B] = motor_max_velocity[MOTOR_B] / 2;
+	motor_max_acceleration[MOTOR_C] = motor_max_velocity[MOTOR_C] / 2;
+	motor_max_acceleration[MOTOR_D] = motor_max_velocity[MOTOR_D] / 2;
+	motor_max_acceleration[MOTOR_E] = motor_max_velocity[MOTOR_E] / 2;
+	motor_max_acceleration[MOTOR_F] = motor_max_velocity[MOTOR_F] / 2;
+}
