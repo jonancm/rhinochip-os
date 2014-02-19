@@ -96,8 +96,8 @@ void setup_trapezoidal_movement(void)
 	motorctl_info[MOTOR_A].theta0 = motor_steps[MOTOR_A];
 	motorctl_info[MOTOR_A].thetaf = motor_commanded_pos[MOTOR_A];
 	motorctl_info[MOTOR_A].tau1 = motorctl_info[MOTOR_A].wdes / motorctl_info[MOTOR_A].alpha;
-	motorctl_info[MOTOR_A].tau2 = 2*motorctl_info[MOTOR_A].tau1;
-	motorctl_info[MOTOR_A].tauf = motorctl_info[MOTOR_A].tau1 + motorctl_info[MOTOR_A].tau2;
+	motorctl_info[MOTOR_A].tauf = motorctl_info[MOTOR_A].tau1 + (motorctl_info[MOTOR_A].thetaf - motorctl_info[MOTOR_A].theta0) / motorctl_info[MOTOR_A].wdes;
+	motorctl_info[MOTOR_A].tau2 = motorctl_info[MOTOR_A].tauf - motorctl_info[MOTOR_A].tau1;
 	motorctl_info[MOTOR_A].tau = 0;
 	motorctl_info[MOTOR_A].position = motor_steps[MOTOR_A];
 }
