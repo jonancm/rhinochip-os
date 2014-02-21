@@ -49,6 +49,5 @@ inline void pwm_set_duty3(int duty);
 inline void pwm_set_duty4(int duty);
 inline void pwm_set_duty5(int duty);
 inline void pwm_set_duty6(int duty);
-void __attribute__((__interrupt__)) _T1Interrupt(void);
 
 #endif

@@ -41,10 +41,4 @@
  */
 inline void qei_setup(void);
 
-/**
- * Timer 2 ISR to sample the QEA and QEB lines for each motor and count motor
- * steps.
- */
-void __attribute__((__interrupt__)) _T2Interrupt(void);
-
 #endif
