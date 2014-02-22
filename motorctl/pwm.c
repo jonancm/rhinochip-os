@@ -107,9 +107,9 @@ inline void pwm_setup(void)
 	pwmduty.channel5 = 0;
 	pwmduty.channel6 = 0;
 	
-	/**********************************************************
-	 * Set up Timer 1 to implement a custom multi-channel QEI *
-	 **********************************************************/
+	/*******************************************************************
+	 * Set up Timer 1 to implement a multi-channel software PWM module *
+	 *******************************************************************/
 	
 	// Clear the Timer 1 interrupt flag
 	
