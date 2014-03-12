@@ -1,5 +1,11 @@
 # RhinoChip OS
 
-RhinoChip OS is the firmware of the RhinoChip Controller for Educational Robotics. The RhinoChip platform provides a controller for the educational robots Rhino XR-4 and Rhino SCARA which is intended to replace the Rhino Mark IV controller. RhinoChip OS is the software that powers the RhinoChip platform.
+RhinoChip OS is the firmware of the RhinoChip Controller for Educational Robotics.
 
-RhinoChip OS consists of two programs: the general purpose core (`gpcore`) and the motor control program (`motorctl`). The `gpcore` is the program that runs on the dsPIC30F4013 General Purpose Microcontroller and communicates with the host PC. `motorctl` is the program that runs on the dsPIC30F4011 Motor Control Microcontroller and drives the motors of the robotic arm.
+The RhinoChip platform provides a controller for the educational robots Rhino XR-4 and Rhino SCARA and is intended to replace the Rhino Mark IV controller. RhinoChip OS is the software that powers the RhinoChip platform.
+
+RhinoChip OS consists of two programs: the *general purpose core* (`gpcore`) and the *motor control program* (`motorctl`).
+
+The `gpcore` is the program that runs on the *General Purpose Microcontroller Unit* (GPMCU) and communicates with the host PC over the RS-232C protocol in order to interpret the commands sent from the host PC and coordinate the actions and movements indicated by those commands, which are excecuted by `motorctl`.
+
+`motorctl` is the program that runs on the *Motor Control Microcontroller* (MCMCU) and drives the motors of the robotic arm, executing the movement commands indicated by the `gpcore`.
